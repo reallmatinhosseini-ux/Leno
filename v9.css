@@ -306,3 +306,30 @@ body{cursor:auto}
 .remind .rx svg{width:15px;height:15px}
 @media (max-width:640px){.remind{left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 100px)}}
 @media (pointer:coarse){.lk-m .hs span,.chap-media .hs span{display:none}}
+
+/* ===== v11 polish ===== */
+.cont{padding-block:70px 0}
+.cont .grid{gap:24px 8px}
+.ed-tile{order:99;grid-column:span 2;position:relative;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;padding:clamp(18px,2.4vw,32px);min-height:380px;border-radius:2px;overflow:hidden;color:var(--cream);background:var(--ink)}
+.ed-tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.72;transition:transform 1.4s var(--ease),opacity .6s}
+.ed-tile:hover img{transform:scale(1.05);opacity:.6}
+.ed-tile>*:not(img){position:relative}
+.ed-tile .H{font-size:clamp(40px,4.4vw,72px);color:var(--cream)}
+.ed-tile-c{font-size:13.5px}
+@media (max-width:640px){.ed-tile{grid-column:span 2;min-height:300px}}
+.co-steps{list-style:none;margin:0 0 -6px;padding:0;display:flex;gap:6px;flex-wrap:wrap;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.co-steps li{display:flex;align-items:center;gap:6px}
+.co-steps li+li::before{content:"";width:22px;height:1px;background:var(--line);margin-right:6px}
+.co-steps li.done{color:var(--ok)}
+.co-steps li.done::after{content:"✓"}
+.co-steps li.on{color:var(--ink)}
+.gift{display:grid;grid-template-columns:20px 1fr;gap:12px;align-items:start;padding:14px 16px;border-radius:10px;box-shadow:inset 0 0 0 1px var(--line);background:var(--paper);font-size:13.5px;cursor:pointer}
+.gift input{accent-color:var(--red);width:17px;height:17px;margin:2px 0 0}
+.gift:has(input:checked){box-shadow:inset 0 0 0 1.5px var(--red)}
+.gift b{font-weight:600}
+.co-trust{list-style:none;margin:-14px 0 0;padding:0;display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--mute)}
+.co-trust li{display:flex;align-items:center;gap:6px}
+.co-trust svg{width:16px;height:16px;color:var(--ok)}
+.ed-tile{grid-column:span 1;min-height:0}
+.ed-tile .H{font-size:clamp(30px,2.6vw,44px)}
+@media (max-width:640px){.ed-tile{grid-column:span 1;min-height:0}.ed-tile .H{font-size:28px}.ed-tile-c{font-size:12px}}
