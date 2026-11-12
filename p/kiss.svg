@@ -1,37 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" role="img" aria-label="LENO WEAR kiss">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 12 200 104" role="img" aria-label="LENO WEAR kiss">
   <defs>
-    <radialGradient id="lg" cx="50%" cy="42%" r="62%">
-      <stop offset="0" stop-color="#F0263F"/>
-      <stop offset=".55" stop-color="#D4142E"/>
-      <stop offset="1" stop-color="#9E0A1F"/>
+    <linearGradient id="up" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#A80E27"/>
+      <stop offset=".55" stop-color="#D51934"/>
+      <stop offset="1" stop-color="#EE2A46"/>
+    </linearGradient>
+    <radialGradient id="lo" cx="50%" cy="30%" r="75%">
+      <stop offset="0" stop-color="#FF4561"/>
+      <stop offset=".5" stop-color="#E11D3D"/>
+      <stop offset="1" stop-color="#9C0B23"/>
     </radialGradient>
-    <filter id="print" x="-8%" y="-12%" width="116%" height="124%" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="2" seed="11" result="edge"/>
-      <feDisplacementMap in="SourceGraphic" in2="edge" scale="4.5" xChannelSelector="R" yChannelSelector="G" result="rough"/>
-      <feTurbulence type="fractalNoise" baseFrequency=".02 .55" numOctaves="2" seed="4" result="streak"/>
-      <feColorMatrix in="streak" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.05 1.6" result="streakA"/>
-      <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="9" result="grain"/>
-      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -.45 1.22" result="grainA"/>
-      <feComposite in="streakA" in2="grainA" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" result="tex"/>
-      <feComposite in="rough" in2="tex" operator="in"/>
-    </filter>
-    <mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="150">
-      <rect width="240" height="150" fill="#000"/>
-      <!-- upper lip -->
-      <path fill="#fff" d="M8 72C26 52 46 30 74 20c14-5 27-3 37 6 4 3.5 6.5 6.5 9 6.5s5.5-3.2 10-6.8c10-8.2 23-10.6 37-5.6 28 10 47 31 64 51-14-1.6-30-3.6-45-5.2-11-1.1-21-.9-30 .8-9 1.7-14 4.6-36 4.6s-27-3-36-4.6c-9-1.7-19-1.9-30-.8-15 1.6-31 3.6-45 5.2z"/>
-      <!-- lower lip -->
-      <path fill="#fff" d="M12 79c15 .8 30 1.2 45 1.6 12 .3 22 1.5 31 3.4 10 2.1 16 3.6 32 3.6s22-1.5 32-3.6c9-1.9 19-3.1 31-3.4 15-.4 30-.8 45-1.6-12 22-31 41-58 50-15 5-30 6.5-50 6.5s-35-1.5-50-6.5C43 120 24 101 12 79z"/>
-      <!-- lip-line creases (gaps in the print) -->
-      <g fill="none" stroke="#000" stroke-linecap="round" stroke-opacity=".82">
-        <path stroke-width="0.99" d="M34 63c3-9 8-17 14-24"/><path stroke-width="0.74" d="M46 61c2-11 6-21 12-30"/><path stroke-width="1.24" d="M58 60c1-12 4-23 9-33"/><path stroke-width="0.68" d="M70 59c0-12 2-24 6-35"/><path stroke-width="1.12" d="M82 59c-.4-12 1-23 4-34"/><path stroke-width="0.62" d="M93 60c-1-10-.4-19 2-27"/><path stroke-width="0.93" d="M104 62c-1.5-8-1.2-15 1-21"/>
-        <path stroke-width="0.93" d="M136 62c1.5-8 1.2-15-1-21"/><path stroke-width="0.62" d="M147 60c1-10 .4-19-2-27"/><path stroke-width="1.12" d="M158 59c.4-12-1-23-4-34"/><path stroke-width="0.68" d="M170 59c0-12-2-24-6-35"/><path stroke-width="1.24" d="M182 60c-1-12-4-23-9-33"/><path stroke-width="0.74" d="M194 61c-2-11-6-21-12-30"/><path stroke-width="0.99" d="M206 63c-3-9-8-17-14-24"/>
-        <path stroke-width="0.87" d="M30 88c4 10 10 19 17 26"/><path stroke-width="1.24" d="M44 89c3 13 8 25 15 34"/><path stroke-width="0.68" d="M57 90c2 15 6 28 11 38"/><path stroke-width="1.12" d="M70 91c1 16 3 29 7 40"/><path stroke-width="0.74" d="M84 92c0 16 2 30 5 41"/><path stroke-width="1.05" d="M98 92c-.4 16 .5 30 2.5 42"/><path stroke-width="0.62" d="M111 93c-.5 16 0 30 1.5 42"/>
-        <path stroke-width="0.62" d="M129 93c.5 16 0 30-1.5 42"/><path stroke-width="1.05" d="M142 92c.4 16-.5 30-2.5 42"/><path stroke-width="0.74" d="M156 92c0 16-2 30-5 41"/><path stroke-width="1.12" d="M170 91c-1 16-3 29-7 40"/><path stroke-width="0.68" d="M183 90c-2 15-6 28-11 38"/><path stroke-width="1.24" d="M196 89c-3 13-8 25-15 34"/><path stroke-width="0.87" d="M210 88c-4 10-10 19-17 26"/>
-        <path stroke-width="3.50" d="M14 76c30 0 60 2 82 7 10 2 16 2.5 24 2.5s14-.5 24-2.5c22-5 52-7 82-7"/>
-      </g>
-    </mask>
+    <filter id="soft" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="2.6"/></filter>
+    <filter id="soft2" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="1.4"/></filter>
+    <clipPath id="cu"><path d="M5 63C29 45 51 25 75 19.5c12-2.8 19.5 2.5 25 9 5.5-6.5 13-11.8 25-9C149 25 171 45 195 63c-24-2-44-7.5-66-6.5-14 .7-20 4.6-29 4.6s-15-3.9-29-4.6C49 55.5 29 61 5 63z"/></clipPath>
+    <clipPath id="cl"><path d="M7 67.5c24 .6 45-4.4 65-4.6 14-.1 19 3.9 28 3.9s14-4 28-3.9c20 .2 41 5.2 65 4.6-14 25-44 46-93 46S21 92.5 7 67.5z"/></clipPath>
   </defs>
-  <g filter="url(#print)">
-    <rect width="240" height="150" fill="url(#lg)" mask="url(#m)"/>
+  <g clip-path="url(#cu)">
+    <rect width="200" height="124" fill="url(#up)"/>
+    <g fill="none" stroke="#7A0618" stroke-width=".7" stroke-linecap="round" opacity=".38">
+      <path d="M30 56c3-8 7-15 12-21"/><path d="M42 55c2-10 6-19 11-27"/><path d="M54 54c1-11 4-21 8-30"/><path d="M66 54c0-12 2-22 5-31"/><path d="M78 55c-.5-11 .5-21 3-30"/><path d="M89 57c-1-8-.5-15 2-22"/>
+      <path d="M170 56c-3-8-7-15-12-21"/><path d="M158 55c-2-10-6-19-11-27"/><path d="M146 54c-1-11-4-21-8-30"/><path d="M134 54c0-12-2-22-5-31"/><path d="M122 55c.5-11-.5-21-3-30"/><path d="M111 57c1-8 .5-15-2-22"/>
+    </g>
+    <path d="M5 63c24-2 44-7.5 66-6.5 14 .7 20 4.6 29 4.6s15-3.9 29-4.6c22-1 42 4.5 66 6.5" fill="none" stroke="#5E0413" stroke-width="7" opacity=".45" filter="url(#soft)"/>
+    <path d="M58 30c8-4 16-5.5 24-4" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".42" filter="url(#soft2)"/>
+    <path d="M118 26c8-1.5 16 0 24 4" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".42" filter="url(#soft2)"/>
+  </g>
+  <g clip-path="url(#cl)" transform="translate(0,-2.2)">
+    <rect width="200" height="124" fill="url(#lo)"/>
+    <g fill="none" stroke="#7A0618" stroke-width=".7" stroke-linecap="round" opacity=".32">
+      <path d="M28 75c4 10 9 18 15 24"/><path d="M41 72c3 13 8 24 14 32"/><path d="M54 70c2 15 5 27 10 37"/><path d="M68 69c1 16 3 29 6 40"/><path d="M82 69c0 16 1 30 3 42"/><path d="M95 70c-.3 16 0 30 1 43"/>
+      <path d="M172 75c-4 10-9 18-15 24"/><path d="M159 72c-3 13-8 24-14 32"/><path d="M146 70c-2 15-5 27-10 37"/><path d="M132 69c-1 16-3 29-6 40"/><path d="M118 69c0 16-1 30-3 42"/><path d="M105 70c.3 16 0 30-1 43"/>
+    </g>
+    <path d="M7 67.5c24 .6 45-4.4 65-4.6 14-.1 19 3.9 28 3.9s14-4 28-3.9c20 .2 41 5.2 65 4.6" fill="none" stroke="#5E0413" stroke-width="6" opacity=".4" filter="url(#soft)"/>
+    <ellipse cx="100" cy="86" rx="38" ry="8.5" fill="#fff" opacity=".38" filter="url(#soft)"/>
+    <ellipse cx="96" cy="84.5" rx="16" ry="3" fill="#fff" opacity=".55" filter="url(#soft2)"/>
+    <path d="M14 78c18 22 46 34 86 34s68-12 86-34" fill="none" stroke="#5E0413" stroke-width="8" opacity=".35" filter="url(#soft)"/>
   </g>
 </svg>
