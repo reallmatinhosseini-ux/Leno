@@ -1,14 +1,17 @@
-/* LENO WEAR · v7 home page (red / cream / black). Replaces V.home. */
+/* LENO WEAR · v9 home page. Every section has one job. */
 (function(){
 "use strict";
 var L = window.LENO, V = L.V, $ = L.$, $$ = L.$$, G = L.G, RM = L.reduce;
 var desk = function(){ return window.innerWidth > 900; };
-var K = function(cls){ return '<span class="kiss-m ' + (cls || "") + '" aria-hidden="true"></span>'; };
 
 function reveals(root){
   if (!G || RM || !window.ScrollTrigger) return;
-  $$("[data-rise]", root).forEach(function(h){ var ch = L.split(h); gsap.from(ch, {yPercent:110, duration:1.2, ease:"expo.out", stagger:.02, scrollTrigger:{trigger:h, start:"top 88%"}}); });
-  $$("[data-fade]", root).forEach(function(el){ gsap.from(el, {y:40, opacity:0, duration:1.1, ease:"expo.out", scrollTrigger:{trigger:el, start:"top 90%"}}); });
+  $$("[data-rise]", root).forEach(function(h){ var ch = L.split(h); gsap.from(ch, {yPercent:110, duration:1.1, ease:"expo.out", stagger:.018, scrollTrigger:{trigger:h, start:"top 88%"}}); });
+  $$("[data-fade]", root).forEach(function(el){ gsap.from(el, {y:30, opacity:0, duration:1, ease:"expo.out", scrollTrigger:{trigger:el, start:"top 92%"}}); });
+  $$("[data-reveal]", root).forEach(function(el){
+    gsap.fromTo(el, {clipPath:"inset(12% 6% 12% 6%)"}, {clipPath:"inset(0% 0% 0% 0%)", duration:1.4, ease:"expo.out", scrollTrigger:{trigger:el, start:"top 90%"}});
+    var im = $("img", el); if (im) gsap.fromTo(im, {scale:1.18}, {scale:1, duration:1.8, ease:"expo.out", scrollTrigger:{trigger:el, start:"top 90%"}});
+  });
 }
 function dragScroll(el){
   var down = null, vel = 0, moved = 0, raf;
@@ -20,104 +23,79 @@ function dragScroll(el){
   return function(){ window.removeEventListener("pointermove", mv); window.removeEventListener("pointerup", up); };
 }
 
-/* hero columns: each column cycles through its own photos */
 var COLS = [["h-pleat-white","knot-sand-2","h-set-white"], ["h-knot-navy","pleat-blue-2","h-tulle-ivory"], ["set-navy-3","pleat-white-1","knot-navy-3"]];
 var LOOK = ["knot-navy","pleat-blue","tulle-ivory"];
-var TABS = [["all","All"],["dresses","Dresses"],["sets","Sets"],["navy","Navy edit"],["light","Light edit"]];
+var TABS = [["all","All"],["dresses","Dresses"],["sets","Sets"],["navy","Navy"],["light","Light"]];
 
 V.home = function(){
-  var lineup = ["pleat","knot","set","tulle"].map(function(k, i){
-    var ps = L.P.filter(function(p){ return p.s === k; }), st = L.STYLES[k];
-    return '<div class="lrow" data-href="#p-' + ps[0].id + '" data-img="' + ps[0].im[0] + '" role="link" tabindex="0"><span class="mono mute">0' + (i + 1) + '</span><span class="H">' + st.en + '</span><span class="verb">' + st.verb.en + '.</span>' +
-      '<span class="dots">' + ps.map(function(p){ return '<i style="background:' + p.hex + '"></i>'; }).join("") + '</span><span class="arr">' + L.I.arrow + '</span></div>';
-  }).join("");
-  var marqWords = ["Leave your mark","Court 01","Padel","Tennis","Studio","Dubai"];
-  var mq = marqWords.map(function(w, i){ return (i % 2 ? "<em>" + w + "</em>" : "<span>" + w + "</span>") + K(); }).join("");
   var last = [];
   L.P.forEach(function(p){ var zs = L.SIZES.filter(function(z){ return p.stock[z] === 1; }); if (zs.length) last.push({p:p, zs:zs}); });
-  var cylIm = [["set-navy-1","set-navy"],["set-white-1","set-white"],["set-navy-3","set-navy"],["set-white-3","set-white"],["set-navy-2","set-navy"],["set-white-4","set-white"],["set-navy-5","set-navy"],["set-white-2","set-white"]];
+  var cats = [["#dresses","Dresses","pleat-white-3"],["#sets","Sets","set-navy-3"],["#navy-edit","The Navy Edit","knot-navy-2"],["#light-edit","The Light Edit","tulle-ivory-1"]];
 
   var html =
-  /* HERO */
+  /* 1 · HERO: one message, one action */
   '<section class="hx" id="hx">' +
-    '<div class="hx-cols">' + COLS.map(function(c, ci){ return '<div class="hx-col" data-c="' + ci + '"><div class="sl"><img src="' + L.img(c[0]) + '" alt="" ' + (ci === 0 ? 'fetchpriority="high"' : "") + ' draggable="false"></div></div>'; }).join("") + '</div>' +
+    '<div class="hx-cols">' + COLS.map(function(c, ci){ return '<div class="hx-col"><div class="sl"><img src="' + L.img(c[0]) + '" alt="" ' + (ci === 0 ? 'fetchpriority="high"' : 'loading="eager"') + ' draggable="false"></div></div>'; }).join("") + '</div>' +
     '<div class="hx-shade"></div>' +
     '<div class="hx-txt">' +
-      '<div class="hx-l"><span class="hx-k mono">Court 01 · New season</span>' +
+      '<div class="hx-l"><span class="hx-k mono">Court 01</span>' +
         '<h1 class="H hx-h"><span class="ln">Leave your</span><span class="ln"><em>mark.</em></span></h1>' +
-        '<p class="hx-p">Court-wear made in Dubai, for padel, tennis and everything after.</p>' +
-        '<div class="hx-cta"><a class="btn red" href="#shop" data-mag>Shop Court 01</a><a class="btn line light" href="#dresses">Shop dresses</a></div></div>' +
-      '<div class="hx-r"><button type="button" class="look-pill" id="hxLook"><i></i>Shop this look</button><span class="hx-count" id="hxN">01 / 03</span>' +
+        '<div class="hx-cta"><a class="btn red" href="#shop" data-mag>Shop the collection</a></div></div>' +
+      '<div class="hx-r"><button type="button" class="look-pill" id="hxLook"><i></i>Shop this look</button>' +
         '<div class="hx-dots">' + [0,1,2].map(function(i){ return '<button type="button" data-hx="' + i + '" class="' + (i ? "" : "on") + '" aria-label="Look ' + (i + 1) + '"><b></b></button>'; }).join("") + '</div></div>' +
     '</div>' +
   '</section>' +
-  /* MARQUEE */
-  '<div class="marq red" aria-hidden="true"><div class="t" id="mq">' + mq + mq + mq + mq + '</div></div>' +
-  /* SHOP GRID (shop-first) */
-  '<section class="g shop-sec"><div class="w"><div class="rail-hd"><div><div class="kick mono">Court 01 · New season</div><h2 class="H" data-rise>Shop the <em>collection</em></h2></div>' +
+
+  /* 2 · CATEGORIES: the fastest route into the shop */
+  '<section class="g cat2"><div class="w cat2-grid" id="cats">' + cats.map(function(c, i){
+    return '<a class="c2' + (i < 2 ? " big" : "") + '" href="' + c[0] + '" data-cursor="Shop"><div class="c2-m" data-reveal><img src="' + L.img(c[2]) + '" alt="" loading="lazy"></div><div class="c2-t"><span>' + c[1] + '</span><i>' + L.I.arrow + '</i></div></a>'; }).join("") +
+  '</div></section>' +
+
+  /* 3 · SHOP GRID */
+  '<section class="g shop-sec"><div class="w"><div class="sh-hd"><h2 class="H" data-rise>New <em>season</em></h2>' +
     '<div class="tabs" id="tabs">' + TABS.map(function(tb, i){ return '<button type="button" data-tab="' + tb[0] + '" class="' + (i ? "" : "on") + '">' + tb[1] + '</button>'; }).join("") + '</div></div>' +
     '<div class="grid g4" id="rail">' + L.P.map(function(p){ return L.card(p); }).join("") + '</div>' +
-    '<div class="shop-more"><a class="btn" href="#shop" data-mag>View all 7 pieces</a></div></div></section>' +
-  /* CATEGORIES + PROMISES */
-  '<section class="g"><div class="w cats" id="cats" style="padding-top:70px">' +
-    [["#dresses","Dresses","5 colourways","pleat-white-3"],["#sets","Sets","2 colourways","set-navy-3"],["#navy-edit","Navy Edit","3 pieces","knot-navy-2"],["#light-edit","Light Edit","4 pieces","tulle-ivory-1"]].map(function(c){
-      return '<a class="cat" href="' + c[0] + '" data-cursor="Shop"><div class="cat-m"><img src="' + L.img(c[3]) + '" alt="" loading="lazy"></div><div class="cat-t"><span class="H">' + c[1] + '</span><span class="mono mute">' + c[2] + '</span></div></a>'; }).join("") +
-  '</div></section>' +
-  '<section class="g"><div class="w svc svc-top"><div data-fade><b>Same-day Dubai</b><span>Order by 2 pm</span></div><div data-fade><b>Free returns</b><span>14 days, collected from you</span></div><div data-fade><b>Tabby · Tamara</b><span>4 interest-free payments</span></div><div data-fade><b>WhatsApp styling</b><span>Real people, 10am to 10pm</span></div></div></section>' +
-  /* RED CHAPTER */
-  '<section class="chap" id="chap" style="margin-top:120px"><div class="g"><div class="w chap-in">' +
-    '<div class="chap-media" data-cursor="View" data-href="#p-pleat-white"><button type="button" class="hs" data-qv="pleat-white" style="left:50%;top:60%" aria-label="Shop the Pleat Dress"><span>Shop the Pleat Dress</span></button><span class="tag">The Pleat Dress · Court 01</span>' +
-      '<div class="fr"><img src="' + L.img("h-pleat-white") + '" alt="Pleat Dress, front"></div><div class="fr f2"><img src="' + L.img("pleat-white-1") + '" alt="Pleat Dress, twirl"></div><div class="fr f3"><img src="' + L.img("pleat-white-4") + '" alt="Pleat Dress, open back"></div></div>' +
-    '<div class="chap-txt"><div class="kick mono" style="color:var(--cream)">The signature</div><h2 class="H" data-rise>The open <em>back</em></h2>' +
-      '<div class="chap-steps"><div class="chap-step s1"><b>01</b><h3 class="H" style="font-size:38px">Knife pleats</h3><p>Pleats that swing with every step, on court and off it.</p></div><div class="chap-step s2"><b>02</b><h3 class="H" style="font-size:38px">The V waist</h3><p>The front waist dips into a V that lengthens the whole line.</p></div><div class="chap-step s3"><b>03</b><h3 class="H" style="font-size:38px">Cut wide open</h3><p>The back opens wide and is held in place by a single band.</p></div></div>' +
+    '<div class="shop-more"><a class="ulink mono" href="#shop">View all pieces →</a></div></div></section>' +
+
+  /* 4 · SIGNATURE STORY (one editorial moment) */
+  '<section class="chap" id="chap"><div class="g"><div class="w chap-in">' +
+    '<div class="chap-media" data-cursor="View" data-href="#p-pleat-white"><button type="button" class="hs" data-qv="pleat-white" style="left:50%;top:60%" aria-label="Shop the Pleat Dress"><span>The Pleat Dress · ' + L.money(365) + '</span></button>' +
+      '<div class="fr"><img src="' + L.img("h-pleat-white") + '" alt="Pleat Dress, front"></div><div class="fr f2"><img src="' + L.img("pleat-white-1") + '" alt="Pleat Dress, in motion"></div><div class="fr f3"><img src="' + L.img("pleat-white-4") + '" alt="Pleat Dress, open back"></div></div>' +
+    '<div class="chap-txt"><span class="mono" style="color:var(--cream)">The signature</span><h2 class="H" data-rise>The Pleat <em>Dress</em></h2>' +
+      '<div class="chap-steps"><div class="chap-step s1"><p>Knife pleats that move with every step.</p></div><div class="chap-step s2"><p>A V-shaped waist that lengthens the line.</p></div><div class="chap-step s3"><p>An open back, held by a single band.</p></div></div>' +
       '<div class="chap-bar"><i></i></div>' +
       '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn light" href="#p-pleat-white" data-mag>Shop white</a><a class="btn line light" href="#p-pleat-blue">Shop blue</a></div></div>' +
   '</div></div></section>' +
-  /* LINEUP */
-  '<section class="g"><div class="w"><div class="shead"><div><div class="kick mono">Shop by style</div><h2 class="H" data-rise>Four <em>styles</em></h2></div><p data-fade>Each style is built around one movement.</p></div><div class="lineup" id="lineup">' + lineup + '</div></div></section>' +
-  '<div class="lfloat" id="lfloat"><img id="lf1" alt=""><img id="lf2" alt="" style="opacity:0"></div>' +
-  /* DUO */
-  '<section class="duo" id="duo" data-cursor="Drag" style="margin-top:130px">' +
-    '<div class="layer light">' + ["pleat-white-3","tulle-ivory-1","set-white-3"].map(function(n){ return '<img src="' + L.img(n) + '" alt="">'; }).join("") + '</div>' +
-    '<div class="layer navy" id="duoNavy">' + ["knot-navy-2","set-navy-3","pleat-blue-2"].map(function(n){ return '<img src="' + L.img(n) + '" alt="">'; }).join("") + '</div>' +
-    '<div class="shade"></div>' +
-    '<div class="lab l"><span class="H">Navy <em>hours</em></span><a class="btn red" href="#navy-edit">Navy edit</a></div>' +
-    '<div class="lab r"><span class="H" style="color:#fff">Light <em>hours</em></span><a class="btn" href="#light-edit">Light edit</a></div>' +
-    '<div class="hdl" id="duoH"><span>⇆</span></div><input type="range" id="duoR" min="0" max="100" value="50" aria-label="Compare Navy and Light edits">' +
-  '</section>' +
-  /* MANIFESTO */
-  '<section class="mf" id="mf"><div class="g"><div class="w mf-in"><span class="mono">The LENO WEAR promise</span>' +
-    '<p class="mf-t" id="mft">Made in small runs. Built to move on court. Cut to be seen off it. Wear it hard and <em>leave your mark.</em></p>' + K("mf-kiss") + '</div></div></section>' +
-  /* CYLINDER */
-  '<section class="cyl-sec" id="cylsec"><div class="cyl-stage"><div class="cyl" id="cyl">' + cylIm.map(function(c, i){ return '<div class="cc" data-href="#p-' + c[1] + '" data-cursor="View"><img src="' + L.img(c[0]) + '" alt=""><span>0' + (i % 4 + 1) + '</span></div>'; }).join("") + '</div>' +
-    '<div class="cyl-txt"><div><span class="mono">The Studio Set · Navy and White</span><h2 class="H">Four ways to <em>wear it</em></h2><a class="btn red" href="#sets" data-mag>Shop the set</a></div></div></div></section>' +
-  /* LAST ONES */
-  '<section class="ag" id="ag"><div class="g"><div class="w ag-head"><div><div class="kick mono">Live stock</div><h2 class="H" data-rise>Last <em>ones</em></h2></div>' +
-    '<p class="mute">These sizes have a single piece left. When they go, they are gone until the next drop. <span class="ag-drag">Drag to browse →</span></p></div></div>' +
+
+  /* 5 · LAST PIECES (true scarcity from the stock sheet) */
+  (last.length ? '<section class="ag" id="ag"><div class="g"><div class="w sh-hd"><h2 class="H" data-rise>Last <em>pieces</em></h2><span class="mono mute">One left in these sizes</span></div></div>' +
     '<div class="ag-track" id="agt">' + last.map(function(x){ var s = L.st(x.p);
       return '<article class="ag-card"><div class="ag-m" data-href="#p-' + x.p.id + '" data-cursor="View"><img src="' + L.img(x.p.im[0]) + '" alt="' + s.en + ' in ' + x.p.c.en + '" loading="lazy" draggable="false"><span class="ag-badge">Last one · ' + x.zs.join(" · ") + '</span></div>' +
         '<div class="ag-i"><div><b>' + s.en + '</b><span class="mute">' + x.p.c.en + '</span></div><span>' + L.money(s.price) + '</span></div>' +
         '<div class="ag-btns">' + x.zs.map(function(z){ return '<button type="button" class="btn ag-add" data-agadd="' + x.p.id + '" data-size="' + z + '">Add ' + z + '</button>'; }).join("") + '</div></article>'; }).join("") +
-    '</div></section>' +
-  /* EDITION */
-  '<section class="edition" style="margin-top:120px"><div class="g"><div class="w ed-in">' +
-    '<div class="ed-media" data-href="#p-tulle-ivory" data-cursor="View"><button type="button" class="hs" data-qv="tulle-ivory" style="left:52%;top:66%" aria-label="Shop the Tulle Dress"><span>Shop the Tulle Dress</span></button><img id="edimg" src="' + L.img("tulle-ivory-lips") + '" alt="The Tulle Dress in Ivory with the LENO WEAR kiss"></div>' +
-    '<div class="ed-txt"><div class="ed-stock mono"><i></i>Edition · Last piece</div><h2 class="H" data-rise>The Tulle <em>Dress</em></h2><p>Ivory tulle over a racer-back bodice. One piece left in M. Join the list for the next release.</p>' +
-      '<form class="field" data-form="wl"><input type="text" placeholder="Email or mobile" aria-label="Email or mobile" required><button class="btn red" type="submit">Join the list</button></form>' +
-      '<a class="ulink" href="#p-tulle-ivory" style="justify-self:start">View the last one →</a></div>' +
-  '</div></div></section>';
+    '</div></section>' : "") +
+
+  /* 6 · EDITION */
+  '<section class="edition"><div class="g"><div class="w ed-in">' +
+    '<div class="ed-media" data-href="#p-tulle-ivory" data-cursor="View"><img id="edimg" src="' + L.img("tulle-ivory-lips") + '" alt="The Tulle Dress in Ivory, with the LENO WEAR kiss"></div>' +
+    '<div class="ed-txt"><span class="ed-stock mono"><i></i>Edition · 1 piece left</span><h2 class="H" data-rise>The Tulle <em>Dress</em></h2><p>Ivory tulle over a racer-back bodice.</p>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn red" href="#p-tulle-ivory">Shop the last one</a></div></div>' +
+  '</div></div></section>' +
+
+  /* 7 · TRUST */
+  '<section class="g trust"><div class="w trust-in">' +
+    [["truck","Same-day delivery","In Dubai, order by 2 pm"],["return","Free 14-day returns","Collected from your door"],["card","Pay your way","Apple Pay, cards, Tabby, Tamara"],["chat","Personal styling","WhatsApp, 10 am to 10 pm"]].map(function(t){ return '<div data-fade>' + L.ICON(t[0]) + '<b>' + t[1] + '</b><span>' + t[2] + '</span></div>'; }).join("") +
+  '</div></section>';
 
   return {title:"", html:html, init:function(){
-    var kill = [], introDone = false, slide = 0, timer = null, gx = null;
-    var cols = $$(".hx-col");
+    var kill = [], introDone = false, slide = 0, timer = null, gx = null, cols = $$(".hx-col");
 
-    /* ---- hero cycling ---- */
-    function setDots(i){ $$(".hx-dots button").forEach(function(b, j){ b.classList.toggle("on", j === i); }); $("#hxN").textContent = "0" + (i + 1) + " / 03"; }
+    function setDots(i){ $$(".hx-dots button").forEach(function(b, j){ b.classList.toggle("on", j === i); }); }
     function runBar(){
       if (!G || RM) return;
       timer && timer.kill();
       $$(".hx-dots b").forEach(function(b){ gsap.set(b, {scaleX:0}); });
-      timer = gsap.to($$(".hx-dots b")[slide], {scaleX:1, duration:5.5, ease:"none", onComplete:function(){ go((slide + 1) % 3); }});
+      timer = gsap.to($$(".hx-dots b")[slide], {scaleX:1, duration:6, ease:"none", onComplete:function(){ go((slide + 1) % 3); }});
     }
     function go(i){
       if (i === slide) return;
@@ -127,9 +105,9 @@ V.home = function(){
         nx.innerHTML = '<img src="' + L.img(COLS[ci][i]) + '" alt="" draggable="false">';
         col.appendChild(nx);
         if (G && !RM){
-          gsap.fromTo(nx, {clipPath:"inset(100% 0% 0% 0%)"}, {clipPath:"inset(0% 0% 0% 0%)", duration:1.25, ease:"expo.inOut", delay:ci * .12});
-          gsap.fromTo($("img", nx), {scale:1.35}, {scale:1, duration:1.8, ease:"expo.out", delay:ci * .12});
-          gsap.to($("img", cur), {scale:.92, yPercent:-6, duration:1.25, ease:"expo.inOut", delay:ci * .12, onComplete:function(){ if (cur.parentNode) cur.parentNode.removeChild(cur); }});
+          gsap.fromTo(nx, {clipPath:"inset(100% 0% 0% 0%)"}, {clipPath:"inset(0% 0% 0% 0%)", duration:1.3, ease:"expo.inOut", delay:ci * .1});
+          gsap.fromTo($("img", nx), {scale:1.25}, {scale:1, duration:1.9, ease:"expo.out", delay:ci * .1});
+          gsap.to($("img", cur), {scale:.94, yPercent:-5, duration:1.3, ease:"expo.inOut", delay:ci * .1, onComplete:function(){ if (cur.parentNode) cur.parentNode.removeChild(cur); }});
         } else if (cur.parentNode) cur.parentNode.removeChild(cur);
       });
       runBar();
@@ -137,112 +115,50 @@ V.home = function(){
     $$(".hx-dots button").forEach(function(b){ b.addEventListener("click", function(){ go(+b.getAttribute("data-hx")); }); });
     $("#hxLook").addEventListener("click", function(e){ e.stopPropagation(); L.quick(LOOK[slide]); });
     kill.push(function(){ timer && timer.kill(); });
-    /* preload the other hero photos */
     COLS.forEach(function(c){ c.slice(1).forEach(function(n){ var im = new Image(); im.src = L.img(n); }); });
 
-    /* ---- rail ---- */
+    /* tabs filter the grid with a smooth re-layout */
     var rail = $("#rail");
     $("#tabs").addEventListener("click", function(e){
-      var b = e.target.closest("[data-tab]"); if (!b) return;
+      var b = e.target.closest("[data-tab]"); if (!b || b.classList.contains("on")) return;
       var tab = b.getAttribute("data-tab");
       $$("#tabs button").forEach(function(x){ x.classList.toggle("on", x === b); });
       var show = function(p){ return tab === "all" || (tab === "dresses" && L.st(p).cat === "dresses") || (tab === "sets" && L.st(p).cat === "sets") || p.edit === tab; };
-      var cards = $$(".card", rail);
-      var apply = function(){ cards.forEach(function(c){ c.style.display = show(L.byId(c.getAttribute("data-id"))) ? "" : "none"; }); };
-      if (G && !RM){ gsap.to(cards, {opacity:0, y:20, duration:.25, stagger:.02, onComplete:function(){ apply(); gsap.fromTo(cards.filter(function(c){ return c.style.display !== "none"; }), {opacity:0, y:40}, {opacity:1, y:0, duration:.8, ease:"expo.out", stagger:.06}); }}); }
-      else apply();
+      var cards = $$(".card", rail), state = G && window.Flip && !RM ? Flip.getState(cards) : null;
+      cards.forEach(function(c){ c.style.display = show(L.byId(c.getAttribute("data-id"))) ? "" : "none"; });
+      if (state) Flip.from(state, {duration:.7, ease:"expo.inOut", absolute:true, scale:true,
+        onEnter:function(els){ return gsap.fromTo(els, {opacity:0, y:30}, {opacity:1, y:0, duration:.6, ease:"expo.out"}); },
+        onLeave:function(els){ return gsap.to(els, {opacity:0, duration:.3}); }});
     });
 
-    /* ---- last ones ---- */
     var agt = $("#agt");
-    kill.push(dragScroll(agt));
-    agt.addEventListener("click", function(e){ var b = e.target.closest("[data-agadd]"); if (!b) return; e.stopPropagation(); var card = b.closest(".ag-card");
-      if (L.add(b.getAttribute("data-agadd"), b.getAttribute("data-size"), $("img", card))){ b.textContent = "Added ✓"; b.disabled = true; } });
-
-    /* ---- forms ---- */
-    var wl = $("[data-form=wl]");
-    wl.addEventListener("submit", function(e){ e.preventDefault(); wl.reset(); L.toast("You are on the list"); });
-
-    /* ---- lineup floating photo ---- */
-    var lf = $("#lfloat"); document.body.appendChild(lf); kill.push(function(){ if (lf.parentNode) lf.parentNode.removeChild(lf); });
-    if (G && L.fine && !RM){
-      var qx = gsap.quickTo(lf, "x", {duration:.6, ease:"power3"}), qy = gsap.quickTo(lf, "y", {duration:.6, ease:"power3"}), qr = gsap.quickTo(lf, "rotation", {duration:.8, ease:"power3"});
-      var lastX = 0, on = 0, lu = $("#lineup");
-      lu.addEventListener("pointermove", function(e){ qx(e.clientX + 170); qy(e.clientY); qr(Math.max(-14, Math.min(14, (e.clientX - lastX) * .6))); lastX = e.clientX; });
-      $$(".lrow", lu).forEach(function(r){ r.addEventListener("pointerenter", function(){ var a = $("#lf1"), b = $("#lf2"); on ^= 1; var s = on ? b : a, h = on ? a : b; s.src = L.img(r.getAttribute("data-img")); s.style.opacity = 1; h.style.opacity = 0; gsap.to(lf, {opacity:1, scale:1, duration:.5, ease:"expo.out"}); }); });
-      lu.addEventListener("pointerleave", function(){ gsap.to(lf, {opacity:0, scale:.6, duration:.4, ease:"power2.in"}); });
+    if (agt){
+      kill.push(dragScroll(agt));
+      agt.addEventListener("click", function(e){ var b = e.target.closest("[data-agadd]"); if (!b) return; e.stopPropagation();
+        if (L.add(b.getAttribute("data-agadd"), b.getAttribute("data-size"), $("img", b.closest(".ag-card")))){ b.textContent = "Added ✓"; b.disabled = true; } });
     }
-
-    /* ---- duo ---- */
-    var duoR = $("#duoR"), dn = $("#duoNavy"), dh = $("#duoH");
-    function duo(v){ dn.style.clipPath = "inset(0 " + (100 - v) + "% 0 0)"; dh.style.left = v + "%"; }
-    duoR.addEventListener("input", function(){ duo(+duoR.value); }); duo(50);
-
-    /* ---- cylinder ---- */
-    var cyl = $("#cyl"), cc = $$(".cc", cyl);
-    function cylLayout(){ var w = cyl.offsetWidth, R = Math.round((w / 2) / Math.tan(Math.PI / cc.length) + (desk() ? 60 : 30)); cc.forEach(function(c, i){ c.style.transform = "rotateY(" + (i * 360 / cc.length) + "deg) translateZ(" + R + "px)"; }); }
-    cylLayout(); window.addEventListener("resize", cylLayout); kill.push(function(){ window.removeEventListener("resize", cylLayout); });
-
-    /* ---- marquee words for manifesto ---- */
-    var words = [];
-    (function wrap(node){ Array.prototype.slice.call(node.childNodes).forEach(function(n){
-      if (n.nodeType === 3){ var f = document.createDocumentFragment(); n.textContent.split(/(\s+)/).forEach(function(w){ if (!w) return; if (/^\s+$/.test(w)){ f.appendChild(document.createTextNode(w)); return; } var s = document.createElement("span"); s.className = "w"; s.textContent = w; f.appendChild(s); words.push(s); }); n.parentNode.replaceChild(f, n); }
-      else if (n.nodeType === 1) wrap(n); }); })($("#mft"));
 
     if (G && !RM && window.ScrollTrigger){
       gx = gsap.context(function(){
-        if (!introDone){ gsap.set(".hx-col", {clipPath:"inset(100% 0% 0% 0%)"}); gsap.set(".hx-l > *:not(h1), .hx-r > *", {opacity:0, y:30}); }
-        /* hero parallax: columns move at different speeds, headline lifts away */
-        cols.forEach(function(c, i){ gsap.to(c, {yPercent:[8, 16, 4][i], ease:"none", scrollTrigger:{trigger:"#hx", start:"top top", end:"bottom top", scrub:true}}); });
-        gsap.to(".hx-txt", {yPercent:-30, opacity:0, ease:"none", scrollTrigger:{trigger:"#hx", start:"20% top", end:"80% top", scrub:true}});
-        if (L.fine){
-          var hx = $("#hx"), qs = cols.map(function(c){ return gsap.quickTo(c, "y", {duration:1.2, ease:"power3"}); }), qh = gsap.quickTo(".hx-h", "x", {duration:1.2, ease:"power3"});
-          hx.addEventListener("pointermove", function(e){ var py = e.clientY / innerHeight - .5, px = e.clientX / innerWidth - .5; qs.forEach(function(q, i){ q(py * [-14, 18, -8][i]); }); qh(px * -30); });
-        }
-        /* marquee speed follows scroll velocity */
-        var mq = $("#mq"), mxv = 0, vel = 0, dir = 1, half = 0;
-        var measure = function(){ half = mq.scrollWidth / 2; }; measure(); setTimeout(measure, 900);
-        ScrollTrigger.create({trigger:".marq", start:"top bottom", end:"bottom top", onUpdate:function(s){ vel = s.getVelocity(); dir = s.direction; }});
-        var tick = function(){ vel *= .92; mxv -= (1.2 + Math.min(Math.abs(vel) * .006, 14)) * dir; if (half){ if (mxv < -half) mxv += half; if (mxv > 0) mxv -= half; }
-          mq.style.transform = "translate3d(" + mxv.toFixed(1) + "px,0,0) skewX(" + Math.max(-10, Math.min(10, -vel * .003)).toFixed(2) + "deg)"; };
-        gsap.ticker.add(tick); kill.push(function(){ gsap.ticker.remove(tick); });
-        /* rail cards rise in */
-        gsap.from("#rail .card", {y:90, opacity:0, rotateX:-20, transformPerspective:1200, stagger:.07, duration:1.3, ease:"expo.out", clearProps:"transform,opacity", scrollTrigger:{trigger:"#rail", start:"top 88%"}});
-        /* categories drift */
-        $$(".cat-m img").forEach(function(im){ gsap.fromTo(im, {yPercent:-6, scale:1.12}, {yPercent:6, scale:1.12, ease:"none", scrollTrigger:{trigger:im.parentNode, start:"top bottom", end:"bottom top", scrub:true}}); });
-        gsap.from(".cat", {y:80, opacity:0, stagger:.08, duration:1.2, ease:"expo.out", clearProps:"transform,opacity", scrollTrigger:{trigger:"#cats", start:"top 88%"}});
-        /* red chapter: pinned three-frame story */
+        if (!introDone){ gsap.set(".hx-col", {clipPath:"inset(100% 0% 0% 0%)"}); gsap.set(".hx-l > *:not(h1), .hx-r > *", {opacity:0, y:24}); }
+        cols.forEach(function(c, i){ gsap.to(c, {yPercent:[8, 15, 5][i], ease:"none", scrollTrigger:{trigger:"#hx", start:"top top", end:"bottom top", scrub:true}}); });
+        gsap.to(".hx-txt", {yPercent:-25, opacity:0, ease:"none", scrollTrigger:{trigger:"#hx", start:"25% top", end:"80% top", scrub:true}});
+        gsap.from("#rail .card", {y:70, opacity:0, stagger:.06, duration:1.1, ease:"expo.out", clearProps:"transform,opacity", scrollTrigger:{trigger:"#rail", start:"top 90%"}});
         if (desk()){
           gsap.set(".chap-media .f2, .chap-media .f3", {clipPath:"inset(100% 0% 0% 0%)"});
-          var tl = gsap.timeline({scrollTrigger:{trigger:"#chap", start:"top top", end:"+=230%", pin:true, scrub:1}});
+          var tl = gsap.timeline({scrollTrigger:{trigger:"#chap", start:"top top", end:"+=200%", pin:true, scrub:1}});
           tl.to(".chap-media .f2", {clipPath:"inset(0% 0% 0% 0%)", duration:1, ease:"none"})
-            .from(".chap-media .f2 img", {scale:1.35, duration:1, ease:"none"}, "<")
-            .to(".chap-step.s1", {opacity:0, y:-30, duration:.4}, "<.1").fromTo(".chap-step.s2", {opacity:0, y:30}, {opacity:1, y:0, duration:.4}, ">-.1")
+            .from(".chap-media .f2 img", {scale:1.3, duration:1, ease:"none"}, "<")
+            .to(".chap-step.s1", {opacity:0, y:-24, duration:.4}, "<.1").fromTo(".chap-step.s2", {opacity:0, y:24}, {opacity:1, y:0, duration:.4}, ">-.1")
             .to(".chap-bar i", {scaleX:.66, duration:1, ease:"none"}, "<-.5")
             .to(".chap-media .f3", {clipPath:"inset(0% 0% 0% 0%)", duration:1, ease:"none"})
-            .from(".chap-media .f3 img", {scale:1.35, duration:1, ease:"none"}, "<")
-            .to(".chap-step.s2", {opacity:0, y:-30, duration:.4}, "<.1").fromTo(".chap-step.s3", {opacity:0, y:30}, {opacity:1, y:0, duration:.4}, ">-.1")
+            .from(".chap-media .f3 img", {scale:1.3, duration:1, ease:"none"}, "<")
+            .to(".chap-step.s2", {opacity:0, y:-24, duration:.4}, "<.1").fromTo(".chap-step.s3", {opacity:0, y:24}, {opacity:1, y:0, duration:.4}, ">-.1")
             .to(".chap-bar i", {scaleX:1, duration:1, ease:"none"}, "<-.5");
-          gsap.from(".chap-media", {rotateY:-25, rotateX:8, scale:.85, transformPerspective:1600, ease:"none", scrollTrigger:{trigger:"#chap", start:"top bottom", end:"top top", scrub:1}});
         }
-        gsap.from(".hs", {scale:0, duration:.9, ease:"back.out(2.5)", stagger:.2, scrollTrigger:{trigger:"#chap", start:"top 60%"}});
-        gsap.from(".lrow", {yPercent:60, opacity:0, stagger:.08, duration:1.2, ease:"expo.out", scrollTrigger:{trigger:"#lineup", start:"top 85%"}});
-        /* duo hint */
-        ScrollTrigger.create({trigger:"#duo", start:"top 60%", once:true, onEnter:function(){ var o = {v:50};
-          gsap.timeline().to(o, {v:18, duration:.9, ease:"power2.inOut", onUpdate:function(){ duo(o.v); duoR.value = o.v; }}).to(o, {v:82, duration:1.2, ease:"power2.inOut", onUpdate:function(){ duo(o.v); duoR.value = o.v; }}).to(o, {v:50, duration:.9, ease:"power2.inOut", onUpdate:function(){ duo(o.v); duoR.value = o.v; }}); }});
-        /* manifesto: words light up, then the kiss stamps down */
-        gsap.to(words, {color:function(i, el){ return el.closest("em") ? "#D71E28" : "#F4EEE4"; }, stagger:.1, ease:"none", scrollTrigger:{trigger:"#mft", start:"top 78%", end:"bottom 45%", scrub:true}});
-        gsap.fromTo(".mf-kiss", {scale:3.2, rotation:-30, opacity:0}, {scale:1, rotation:-8, opacity:1, duration:.55, ease:"power4.in", scrollTrigger:{trigger:"#mft", start:"bottom 55%"},
-          onComplete:function(){ gsap.fromTo(".mf-in", {x:-6}, {x:0, duration:.5, ease:"elastic.out(1,.3)"}); }});
-        /* cylinder */
-        if (desk()) gsap.fromTo("#cyl", {rotateY:0, rotateX:-6}, {rotateY:-315, rotateX:6, ease:"none", scrollTrigger:{trigger:"#cylsec", start:"top top", end:"+=180%", pin:true, scrub:1}});
-        else gsap.fromTo("#cyl", {rotateY:40}, {rotateY:-280, ease:"none", scrollTrigger:{trigger:"#cylsec", start:"top bottom", end:"bottom top", scrub:1}});
-        gsap.from(".cyl-txt .H", {scale:.6, opacity:0, ease:"none", scrollTrigger:{trigger:"#cylsec", start:"top 80%", end:"top 20%", scrub:1}});
-        /* last ones */
-        gsap.from(".ag-card", {x:160, opacity:0, rotateY:-25, transformPerspective:1200, stagger:.08, duration:1.4, ease:"expo.out", scrollTrigger:{trigger:"#ag", start:"top 75%"}});
-        /* edition */
-        gsap.fromTo("#edimg", {yPercent:-7}, {yPercent:7, ease:"none", scrollTrigger:{trigger:".edition", start:"top bottom", end:"bottom top", scrub:true}});
-        gsap.from(".ed-media", {clipPath:"inset(0% 0% 100% 0%)", duration:1.6, ease:"expo.inOut", scrollTrigger:{trigger:".edition", start:"top 75%"}});
+        if ($("#ag")) gsap.from(".ag-card", {x:120, opacity:0, stagger:.07, duration:1.2, ease:"expo.out", scrollTrigger:{trigger:"#ag", start:"top 78%"}});
+        gsap.fromTo("#edimg", {yPercent:-6}, {yPercent:6, ease:"none", scrollTrigger:{trigger:".edition", start:"top bottom", end:"bottom top", scrub:true}});
+        gsap.from(".ed-media", {clipPath:"inset(0% 0% 100% 0%)", duration:1.5, ease:"expo.inOut", scrollTrigger:{trigger:".edition", start:"top 75%"}});
         reveals(document);
       });
       kill.push(function(){ gx.revert(); });
@@ -250,47 +166,68 @@ V.home = function(){
 
     function intro(){
       if (introDone) return; introDone = true;
-      if (!G || RM){ return; }
+      if (!G || RM) return;
       var ch = [];
       $$(".hx-h .ln").forEach(function(el){ ch = ch.concat(L.split(el)); });
-      gsap.to(".hx-col", {clipPath:"inset(0% 0% 0% 0%)", duration:1.5, ease:"expo.inOut", stagger:.12});
-      gsap.fromTo(".hx-col img", {scale:1.4}, {scale:1, duration:2.2, ease:"expo.out", stagger:.12});
-      gsap.from(ch, {yPercent:115, duration:1.4, ease:"expo.out", stagger:.035, delay:.45});
-      gsap.to(".hx-l > *:not(h1), .hx-r > *", {opacity:1, y:0, duration:1.1, ease:"expo.out", stagger:.07, delay:.9, onComplete:runBar});
+      gsap.to(".hx-col", {clipPath:"inset(0% 0% 0% 0%)", duration:1.4, ease:"expo.inOut", stagger:.1});
+      gsap.fromTo(".hx-col img", {scale:1.3}, {scale:1, duration:2, ease:"expo.out", stagger:.1});
+      gsap.from(ch, {yPercent:115, duration:1.3, ease:"expo.out", stagger:.03, delay:.4});
+      gsap.to(".hx-l > *:not(h1), .hx-r > *", {opacity:1, y:0, duration:1, ease:"expo.out", stagger:.07, delay:.85, onComplete:runBar});
     }
     if (!G || RM) runBar();
     return {cleanup:function(){ kill.forEach(function(f){ try { f(); } catch(e){} }); }, intro:intro, enter:function(){ if (L.loaded) intro(); }};
   }};
 };
 
-/* ---------------- welcome gift: opens with the site (once per visit) and on exit intent ---------------- */
+/* ---------------- line icons ---------------- */
+L.ICON = function(n){
+  var p = {
+    truck:'<path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/>',
+    return:'<path d="M9 7 5 11l4 4"/><path d="M5 11h9a5 5 0 0 1 0 10h-3"/>',
+    card:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h4"/>',
+    chat:'<path d="M4 18l1.4-3.6A7.5 7.5 0 1 1 8 17.2z"/>',
+    lock:'<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+    ruler:'<path d="M3 15 15 3l6 6L9 21z"/><path d="M7 11l2 2M10 8l2 2M13 5l2 2"/>'
+  }[n] || "";
+  return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>';
+};
+
+/* ---------------- welcome offer: a quiet corner card, never a blocking pop-up ---------------- */
 L.promo = null;
 try { L.promo = localStorage.getItem("leno-promo"); } catch(e){}
 L.disc = function(){ return L.promo ? Math.round(L.bagTotal() * .10) : 0; };
 L.claim = function(){ L.promo = "LENO10"; try { localStorage.setItem("leno-promo", "LENO10"); } catch(e){} L.renderBag(); };
+var offer = null;
+function closeOffer(snooze){
+  if (!offer) return;
+  if (snooze) try { localStorage.setItem("leno-offer-snooze", String(Date.now())); } catch(e){}
+  var o = offer; offer = null;
+  if (G && !RM) gsap.to(o, {y:40, opacity:0, duration:.4, ease:"power2.in", onComplete:function(){ o.parentNode && o.parentNode.removeChild(o); }}); else o.parentNode && o.parentNode.removeChild(o);
+}
 L.welcome = function(force){
-  if (L.promo) return;
-  var shown = false; try { shown = sessionStorage.getItem("leno-wshown") === "1"; } catch(e){}
-  if (shown && !force) return;
-  if (document.querySelector(".modal.open") || (L.route && (L.route.name === "checkout" || L.route.name === "confirmed"))) return;
-  try { sessionStorage.setItem("leno-wshown", "1"); } catch(e){}
-  L.openModal('<div class="wg"><div class="wg-card"><span class="kiss-m wg-stamp" id="wgk"></span><span class="mono">Sealed with a kiss</span><h3 class="H">Your welcome <em>gift</em></h3>' +
-    '<span class="wg-off">10% off</span><p class="mute" style="max-width:30ch">your first order, plus early access to every drop.</p></div>' +
-    '<form class="field lt" id="wgf"><input type="text" placeholder="Email or mobile" aria-label="Email or mobile" required><button class="btn red" type="submit">Unlock 10%</button></form>' +
-    '<button type="button" class="later" data-mclose>No thanks, I will pay full price</button><span class="mute" style="font-size:11px">Demo: offer and code are placeholders.</span></div>', "sm");
-  if (G && !RM) gsap.fromTo("#wgk", {scale:3, rotation:-35, opacity:0}, {scale:1, rotation:-8, opacity:1, duration:.5, ease:"power4.in", delay:.4, onComplete:function(){ gsap.fromTo(".wg-card", {y:-4}, {y:0, duration:.5, ease:"elastic.out(1,.3)"}); }});
-  $("#wgf").addEventListener("submit", function(e){
+  if (L.promo || offer) return;
+  if (!force){
+    var sn = 0; try { sn = +localStorage.getItem("leno-offer-snooze") || 0; } catch(e){}
+    if (Date.now() - sn < 7 * 864e5) return;
+    if (L.route && (L.route.name === "checkout" || L.route.name === "confirmed")) return;
+  }
+  offer = document.createElement("aside"); offer.className = "offer"; offer.setAttribute("aria-label", "Welcome offer");
+  offer.innerHTML = '<button type="button" class="ox" aria-label="Close">' + L.I.close + '</button>' +
+    '<div class="of-top"><span class="kiss-m"></span><div><b>10% off your first order</b><span>Join First Serve for early access to every drop.</span></div></div>' +
+    '<form class="field lt" id="ofForm"><input type="email" placeholder="Your email" aria-label="Your email" required><button class="btn red" type="submit">Join</button></form>';
+  document.body.appendChild(offer);
+  if (G && !RM) gsap.fromTo(offer, {y:60, opacity:0}, {y:0, opacity:1, duration:.8, ease:"expo.out"});
+  $(".ox", offer).addEventListener("click", function(){ closeOffer(true); });
+  $("#ofForm", offer).addEventListener("submit", function(e){
     e.preventDefault(); L.claim();
-    var lt = $(".wg .later"); if (lt) lt.parentNode.removeChild(lt);
-    $("#wgf").outerHTML = '<div style="display:grid;gap:10px;justify-items:center"><span class="mono">Your code</span><span class="wg-code">LENO10</span><span class="mute" style="font-size:13px">Applied automatically to your bag and checkout.</span><a class="btn red" href="#shop">Start shopping</a></div>';
-    L.toast("10% welcome gift unlocked");
+    $("#ofForm", offer).outerHTML = '<p class="of-done">Code <b>LENO10</b> is saved to your bag. Welcome to LENO WEAR.</p>';
+    L.toast("10% welcome offer saved to your bag");
+    setTimeout(function(){ closeOffer(false); }, 4200);
   });
 };
-var wTries = 0;
-(function waitLoaded(){ if (L.loaded){ setTimeout(function(){ L.welcome(); }, 900); return; } if (++wTries < 80) setTimeout(waitLoaded, 100); })();
-document.addEventListener("mouseout", function(e){
-  if (e.relatedTarget || e.clientY > 4 || !L.fine) return;
-  if (L.promo || L.exitShown) return;
-  L.exitShown = true; L.welcome(true);
-});
+/* show once the visitor has engaged: 20 seconds in, or halfway down a page */
+var armed = false;
+function arm(){ if (armed) return; armed = true; L.welcome(); }
+setTimeout(function(){ if (L.loaded) arm(); }, 20000);
+window.addEventListener("scroll", function(){ if (!armed && L.loaded && scrollY > (document.documentElement.scrollHeight - innerHeight) * .5 && scrollY > 900) arm(); }, {passive:true});
 })();

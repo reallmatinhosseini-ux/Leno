@@ -26,7 +26,7 @@ document.addEventListener("click", function(e){ if (e.target.closest("#modal a[h
 L.notify = function(id, size){
   var p = L.byId(id), s = L.st(p);
   var opts = L.SIZES.filter(function(z){ return !p.stock[z]; });
-  L.openModal('<div class="nt"><img src="p/kiss-print.svg" alt="" class="nt-k"><span class="mono">Notify me</span><h3 class="H">' + s.en + '</h3>' +
+  L.openModal('<div class="nt"><img src="p/kiss-tag.png" alt="" class="nt-k"><span class="mono">Notify me</span><h3 class="H">' + s.en + '</h3>' +
     '<p class="mute">' + p.c.en + (size ? " · size " + size : "") + ' is sold out. Leave your email or mobile and we will tell you the moment it is back.</p>' +
     (size ? "" : '<div class="nt-sz">' + opts.map(function(z, i){ return '<label><input type="radio" name="ntz" value="' + z + '"' + (i ? "" : " checked") + '><span>' + z + '</span></label>'; }).join("") + '</div>') +
     '<form class="field lt" id="ntf"><input type="text" placeholder="Email or mobile" aria-label="Email or mobile" required><button class="btn" type="submit">Notify me</button></form>' +
@@ -79,7 +79,7 @@ V.story = function(){
   ];
   var html =
   '<section class="st-hero g"><div class="w"><div class="kick mono">Our story</div><h1 class="H" id="sth">Made for the hours <em>around the game.</em></h1>' +
-    '<div class="st-row"><p class="mute">LENO WEAR is court-wear from Dubai. Four styles in small runs, built for padel, tennis and the studio, and cut to be worn long after.</p><img src="p/kiss-print.svg" alt="" class="st-kiss" id="stkiss"></div></div></section>' +
+    '<div class="st-row"><p class="mute">LENO WEAR is court-wear from Dubai. Four styles in small runs, built for padel, tennis and the studio, and cut to be worn long after.</p><img src="p/kiss-tag.png" alt="" class="st-kiss" id="stkiss"></div></div></section>' +
   '<section class="hday" id="hday"><div class="hday-track" id="hdt">' + ch.map(function(c, i){
     return '<article class="hd" style="--bg:' + c.bg + ';--fg:' + c.fg + '"><div class="hd-in"><div class="hd-t"><span class="hd-time">' + c.time + '</span><span class="mono">' + c.sub + ' · 0' + (i + 1) + ' / 03</span><h2 class="H">' + c.t + '</h2><p>' + c.p + '</p><a class="btn' + (i === 2 ? " light" : "") + '" href="#p-' + c.id + '">Shop the look</a></div>' +
       '<div class="hd-m" data-href="#p-' + c.id + '" data-cursor="View"><img src="' + L.img(c.im) + '" alt=""></div></div></article>';
@@ -215,6 +215,9 @@ L.renderBag = function(){
   tot.parentNode.insertBefore(row, tot);
   $("b", tot).textContent = L.money(L.bagTotal() - L.disc());
 };
+var v9Render = L.renderBag;
+L.renderBag = function(){ v9Render(); var ft = $("#drft"); if (!ft || !L.bag.length || $(".dr-trust", ft)) return;
+  var t = document.createElement("div"); t.className = "dr-trust"; t.innerHTML = "<span>Free 14-day returns</span><span>Secure checkout</span><span>Same-day Dubai</span>"; ft.appendChild(t); };
 /* product cards: honest low-stock line */
 var v8Card = L.card;
 L.card = function(p, cls){

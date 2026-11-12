@@ -814,7 +814,7 @@ body::before{background:var(--bg)}
 ::selection{background:var(--red);color:var(--cream)}
 
 /* kiss mark: one SVG, any colour (CSS mask) */
-.kiss-m{display:inline-block;aspect-ratio:220/132;height:1em;background:currentColor;color:var(--red);-webkit-mask:url(p/kiss-print.svg) center/contain no-repeat;mask:url(p/kiss-print.svg) center/contain no-repeat;flex:none}
+.kiss-m{display:inline-block;aspect-ratio:220/132;height:1em;background:currentColor;color:var(--red);-webkit-mask:url(p/kiss-tag.png) center/contain no-repeat;mask:url(p/kiss-tag.png) center/contain no-repeat;flex:none}
 
 /* logo lockup */
 .logo{gap:12px;color:var(--ink)}

@@ -114,7 +114,7 @@ L.I = {
   minus: sv('<path d="M6 12h12"/>', 14), plus: sv('<path d="M12 6v12M6 12h12"/>', 14),
   wa: sv('<path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c.3 2 2.5 4.2 4.5 4.5l1-1.2 1.8.8c-.2 1.3-1.2 2-2.6 1.8-2.7-.4-5.2-2.9-5.6-5.6-.2-1.4.5-2.4 1.8-2.6l.8 1.8z"/>', 18)
 };
-L.KISS = "p/kiss-print.svg";
+L.KISS = "p/kiss-tag.png";
 L.LOGO = '<span class="kiss-m" aria-hidden="true"></span><span class="lw"><b>LENO WEAR</b><small>LEAVE YOUR MARK</small></span>';
 
 /* ---------------- state ---------------- */
@@ -452,14 +452,14 @@ L.rerender = function(){ swap(L.route || L.resolve()); if (ctx && ctx.enter) ctx
 function curtain(r){
   var tl = gsap.timeline({onComplete:function(){ busy = false; if (queued){ queued = false; nav(); } }});
   tl.set("#curtain .cp", {transformOrigin:"50% 100%"})
-    .to("#curtain .cp.b", {scaleY:1, duration:.6, ease:"expo.inOut"})
-    .to("#curtain .cp.a", {scaleY:1, duration:.6, ease:"expo.inOut"}, "-=.48")
+    .to("#curtain .cp.b", {scaleY:1, duration:.42, ease:"expo.inOut"})
+    .to("#curtain .cp.a", {scaleY:1, duration:.42, ease:"expo.inOut"}, "-=.34")
     .fromTo("#curtain .cur-kiss", {opacity:0, scale:.6, rotation:-12}, {opacity:1, scale:1, rotation:0, duration:.45, ease:"back.out(2)"}, "-=.2")
     .add(function(){ swap(r); })
     .set("#curtain .cp", {transformOrigin:"50% 0%"})
     .to("#curtain .cur-kiss", {opacity:0, scale:1.3, duration:.3, ease:"power2.in"}, "+=.08")
-    .to("#curtain .cp.a", {scaleY:0, duration:.7, ease:"expo.inOut"}, "-=.1")
-    .to("#curtain .cp.b", {scaleY:0, duration:.7, ease:"expo.inOut"}, "-=.58")
+    .to("#curtain .cp.a", {scaleY:0, duration:.55, ease:"expo.inOut"}, "-=.1")
+    .to("#curtain .cp.b", {scaleY:0, duration:.55, ease:"expo.inOut"}, "-=.45")
     .add(function(){ if (ctx && ctx.enter) ctx.enter(); }, "-=.55");
 }
 function travel(r, img){
