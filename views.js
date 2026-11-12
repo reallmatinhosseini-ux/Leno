@@ -194,7 +194,7 @@ V.home = function(){
   '<div class="lfloat" id="lfloat"><img id="lf1" alt=""><img id="lf2" alt="" style="opacity:0"></div>' +
   '<section class="chap" id="chap" style="margin-top:120px"><div class="g"><div class="w chap-in">' +
     '<div class="chap-media" data-cursor="' + t("view") + '" data-href="#p-pleat-white"><span class="tag">' + L.STYLES.pleat[L.lang] + ' · ' + t("court") + '</span>' +
-      '<div class="fr"><img src="p/h-pleat-white.jpg" alt="Pleat Dress, front"></div><div class="fr f2"><img src="p/pleat-white-1.jpg" alt="Pleat Dress, twirl"></div><div class="fr f3"><img src="p/pleat-white-4.jpg" alt="Pleat Dress, open back"></div></div>' +
+      '<div class="fr"><img src="p/h-pleat-white.webp" alt="Pleat Dress, front"></div><div class="fr f2"><img src="p/pleat-white-1.webp" alt="Pleat Dress, twirl"></div><div class="fr f3"><img src="p/pleat-white-4.webp" alt="Pleat Dress, open back"></div></div>' +
     '<div class="chap-txt"><div class="kick mono" style="color:var(--ivory)">' + t("court") + ' · I</div><h2 class="H" data-rise>' + t("ch1t") + '</h2>' +
       '<div class="chap-steps"><div class="chap-step s1"><b>01</b><h3 class="H" style="font-size:36px">' + t("ch1a") + '</h3><p>' + t("ch1ap") + '</p></div><div class="chap-step s2"><b>02</b><h3 class="H" style="font-size:36px">' + t("ch1b") + '</h3><p>' + t("ch1bp") + '</p></div><div class="chap-step s3"><b>03</b><h3 class="H" style="font-size:36px">' + t("ch1c") + '</h3><p>' + t("ch1cp") + '</p></div></div>' +
       '<div class="chap-bar"><i></i></div>' +
@@ -214,7 +214,7 @@ V.home = function(){
   '<section class="g"><div class="w"><div class="shead"><div><div class="kick mono">' + t("court") + '</div><h2 class="H" data-rise>' + t("gridT") + '</h2></div><p data-fade>' + t("gridP") + '</p></div>' +
     '<div class="grid" id="hgrid">' + L.P.map(function(p, i){ return L.card(p, i === 0 ? "big" : ""); }).join("") + '</div></div></section>' +
   '<section class="edition" style="margin-top:140px"><div class="g"><div class="w ed-in">' +
-    '<div class="ed-media" data-href="#p-tulle-ivory" data-cursor="' + t("view") + '"><img id="edimg" src="p/tulle-ivory-lips.jpg" alt="The Tulle Dress in Ivory with the LENO WEAR kiss"></div>' +
+    '<div class="ed-media" data-href="#p-tulle-ivory" data-cursor="' + t("view") + '"><img id="edimg" src="p/tulle-ivory-lips.webp" alt="The Tulle Dress in Ivory with the LENO WEAR kiss"></div>' +
     '<div class="ed-txt"><div class="ed-stock mono"><i></i>' + t("edK") + '</div><h2 class="H" data-rise>' + t("edT") + '</h2><p>' + t("edP") + '</p>' +
       '<form class="field" data-form="wl"><input type="text" placeholder="' + t("email") + '" aria-label="' + t("email") + '" required id="wl-in"><button class="btn light" type="submit">' + t("edBtn") + '</button></form>' +
       '<a class="ulink" href="#p-tulle-ivory" style="justify-self:start">' + t("viewLast") + ' →</a></div>' +
@@ -454,8 +454,9 @@ V.product = function(r){
     '<div class="pg">' +
       '<div class="main" id="pmain" data-cursor="' + t("drag") + '"><div class="spin" id="spin"><div class="face"><img id="pfront" src="' + L.img(p.im[0]) + '" alt="' + L.esc(s.en + " in " + p.c.en + ", front") + '"></div><div class="face bk"><img src="' + L.img(p.im[1]) + '" alt="' + L.esc(s.en + " in " + p.c.en + ", second view") + '"></div></div>' +
         '<span class="hot" id="phot" tabindex="0" style="left:' + H.x + '%;top:' + H.y + '%">+<span class="tip">' + L.tx(H) + '</span></span>' +
-        '<span class="hint">' + L.I.turn + t("dragTurn") + '</span></div>' + gal +
+        '<span class="hint">' + L.I.turn + '<span class="hint-d">' + t("dragTurn") + '</span><span class="hint-m">Tap to turn</span></span></div>' + gal +
     '</div>' +
+    '<div class="pg-dots" id="pgd" aria-hidden="true">' + p.im.slice(1).map(function(_, i){ return '<i class="' + (i ? "" : "on") + '"></i>'; }).join("") + '</div>' +
     '<div class="pi" id="pi">' +
       '<span class="crumb"><a class="ulink" href="#shop">' + t("shop") + '</a> / <a class="ulink" href="#' + s.cat + '">' + t(s.cat) + '</a> / ' + s.code + '</span>' +
       '<h1 class="H" id="pname"><span>' + s[L.lang] + '</span><em>' + s.verb[L.lang] + '.</em></h1>' +
@@ -529,7 +530,18 @@ V.product = function(r){
     /* 3D drag-to-turn viewer */
     var spin = $("#spin"), main = $("#pmain"), hot = $("#phot"), ang = 0, v = 0, drag = null, raf;
     function setA(a){ spin.style.transform = "rotateY(" + a + "deg)"; var n = ((a % 360) + 360) % 360; hot.style.opacity = (n < 40 || n > 320) ? 1 : 0; }
-    main.addEventListener("pointerdown", function(e){ if (e.target.closest(".hot")) return; drag = {x:e.clientX, last:e.clientX}; main.setPointerCapture(e.pointerId); cancelAnimationFrame(raf); if (G) gsap.killTweensOf(o); });
+    /* touch: tap turns the dress, horizontal swipe scrolls the gallery */
+    var tapX = null;
+    main.addEventListener("touchstart", function(e){ tapX = e.touches[0].clientX; }, {passive:true});
+    main.addEventListener("touchend", function(e){
+      if (tapX === null || e.target.closest(".hot")) return;
+      if (Math.abs(e.changedTouches[0].clientX - tapX) < 8){ var to = Math.round(ang / 180) * 180 + 180;
+        if (G){ o.a = ang; gsap.to(o, {a:to, duration:1, ease:"expo.inOut", onUpdate:function(){ ang = o.a; setA(ang); }}); } else { ang = to; setA(ang); } }
+      tapX = null;
+    }, {passive:true});
+    var pg = $(".pg"), dots = $$("#pgd i");
+    pg.addEventListener("scroll", function(){ var i = Math.round(pg.scrollLeft / (pg.clientWidth || 1)); dots.forEach(function(d, j){ d.classList.toggle("on", j === Math.abs(i)); }); }, {passive:true});
+    main.addEventListener("pointerdown", function(e){ if (e.pointerType !== "mouse" || e.target.closest(".hot")) return; drag = {x:e.clientX, last:e.clientX}; main.setPointerCapture(e.pointerId); cancelAnimationFrame(raf); if (G) gsap.killTweensOf(o); });
     main.addEventListener("pointermove", function(e){ if (!drag) return; var dx = e.clientX - drag.last; drag.last = e.clientX; v = dx * .5; ang += v; setA(ang); });
     var o = {a:0};
     function release(){

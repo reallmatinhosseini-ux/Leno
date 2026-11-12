@@ -48,7 +48,7 @@ L.byId = function(id){ for (var i = 0; i < L.P.length; i++) if (L.P[i].id === id
 L.sib = function(p){ return L.P.filter(function(q){ return q.s === p.s; }); };
 L.st = function(p){ return L.STYLES[p.s]; };
 L.total = function(p){ var n = 0; for (var k in p.stock) n += p.stock[k]; return n; };
-L.img = function(n){ return "p/" + n + ".jpg"; };
+L.img = function(n){ return "p/" + n + ".webp"; };
 
 /* ---------------- i18n ---------------- */
 var T = {

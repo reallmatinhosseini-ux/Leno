@@ -713,3 +713,23 @@ img{-webkit-user-drag:none}
 .ed-txt,.nt,.sg,.foot-top .nl{grid-template-columns:minmax(0,1fr)}
 .field input{width:0;flex:1 1 auto}
 @media (max-width:420px){.field .btn{padding:14px 16px}}
+
+/* v5: hero type sits behind the photo (no colour inversion) */
+.hero-title{mix-blend-mode:normal;color:var(--ink);z-index:0}
+.hero-media{z-index:1}
+.hero-cap,.hero-side{z-index:3}
+
+/* v5: product gallery becomes a swipe carousel on phones */
+.pg-dots{display:none}
+.hint-m{display:none}
+@media (max-width:900px){
+  .pg{display:flex;grid-template-columns:none;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;gap:0;padding:0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .pg::-webkit-scrollbar{display:none}
+  .pg>*{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always}
+  .pg .main{aspect-ratio:4/5;touch-action:pan-x pan-y;cursor:default}
+  .pg .im{aspect-ratio:4/5;cursor:default}
+  .pg-dots{display:flex;justify-content:center;gap:6px;padding:12px 0 0}
+  .pg-dots i{width:18px;height:2px;border-radius:2px;background:var(--line);transition:background .3s,width .3s}
+  .pg-dots i.on{background:var(--ink);width:30px}
+  .hint-d{display:none}.hint-m{display:inline}
+}
