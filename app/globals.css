@@ -1372,3 +1372,149 @@ html.ov-open,html.ov-open body{overflow:hidden}
   .card .ci{flex-direction:column;gap:2px;align-items:flex-start}
   .card .ci .pr{font-weight:500}
 }
+
+/* =====================================================================
+   v10 · Minimal. One bold moment (hero + red kiss/CTA); everything else
+   quiet: sentence-case headings, clean sans labels, light palette, air.
+   ===================================================================== */
+:root{
+  --bg:#F7F5F1; --paper:#FFFFFF; --studio:#EEEBE5; --cream:#F7F5F1;
+  --ink:#141414; --ink2:#3A3A3A; --mute:#8A8884; --line:rgba(20,20,20,.08);
+  --mono:var(--font-sans),"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --r:6px;
+}
+body{background:var(--bg);color:var(--ink);font-size:15px;letter-spacing:-.005em}
+::selection{background:var(--ink);color:#fff}
+.route-line{display:none}
+
+/* labels: small sans caps instead of typewriter text */
+.mono{font-family:var(--body);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+.kick::before,.hx-k::before{display:none}
+
+/* headings: sentence case, medium weight, tight tracking */
+.H{font-family:var(--display);font-weight:600;font-stretch:100%;text-transform:none;letter-spacing:-.035em;line-height:1.02}
+.H em{font-family:inherit;font-style:normal;font-weight:inherit;font-stretch:inherit;letter-spacing:inherit;color:inherit}
+.sh-hd .H,.faq .H,.pd-more .H,.ctl2-t .H,.st-end .H{font-size:clamp(28px,3.2vw,44px)}
+.shop-hd .H,.ph .H,.st-hero .H,.co-l .H,.conf .H,.empty .H{font-size:clamp(38px,5.4vw,76px)}
+.chap-txt .H,.ed-txt .H{font-size:clamp(36px,4.4vw,64px)}
+.hd-t .H{font-size:clamp(44px,6vw,96px)}
+.foot-top .nl .H{font-size:clamp(26px,2.6vw,36px)}
+.lk-h .H,.qv-i .H,.sg .H{font-size:26px}
+.ed-tile .H{font-size:clamp(30px,3vw,44px)}
+.H sup,.shop-hd .H sup{font-family:var(--body);font-size:.32em;font-weight:500;letter-spacing:0;color:var(--mute);margin-left:.35em}
+
+/* hero keeps the one loud statement */
+.hx-h{font-weight:800;font-stretch:72%;text-transform:uppercase;letter-spacing:-.02em;line-height:.9;font-size:clamp(56px,9vw,164px)}
+.hx-l{gap:22px}
+.look-pill{font-family:var(--body);font-size:12px;letter-spacing:0;text-transform:none}
+.hx-h em{color:var(--red)}
+.hx-shade{background:linear-gradient(180deg,rgba(0,0,0,.18) 0,rgba(0,0,0,0) 25%,rgba(0,0,0,0) 50%,rgba(0,0,0,.55) 100%)}
+.hx-cols{gap:2px}
+
+/* buttons: quiet sans, sentence case */
+.btn{font-family:var(--body);font-size:14px;font-weight:500;letter-spacing:-.005em;text-transform:none;padding:14px 24px}
+.btn.red,.atb,#place,.dr-ft .btn,.ag-add{background:var(--red)}
+.btn.line{box-shadow:inset 0 0 0 1px var(--line)}
+.btn.line:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.chip{font-size:13px;background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.chip.on{background:var(--ink);color:#fff}
+.ulink.mono,.shop-more .ulink{font-size:13px;letter-spacing:0;text-transform:none}
+
+/* chrome */
+.ann{background:var(--ink);height:32px;font-family:var(--body);font-size:11.5px;letter-spacing:.02em;text-transform:none}
+.ann .nudge{font-family:var(--body);font-size:11.5px;letter-spacing:.02em;text-transform:none}
+.hdr .nl{font-family:var(--body);font-size:13px;letter-spacing:0;text-transform:none;font-weight:500}
+.hdr.solid{background:rgba(247,245,241,.86);box-shadow:0 1px 0 var(--line)}
+.tabbar button,.tabbar a{font-family:var(--body);font-size:10px;letter-spacing:.02em;text-transform:none}
+.mmenu nav a{font-weight:600;font-stretch:100%;text-transform:none;letter-spacing:-.035em;font-size:clamp(34px,10vw,52px);line-height:1.15;padding-block:8px;border-color:var(--line)}
+.mmenu nav a small{font-size:12px;letter-spacing:0}
+.srch input{font-weight:500;font-stretch:100%;text-transform:none;letter-spacing:-.035em;font-size:clamp(36px,6vw,72px)}
+
+/* product cards */
+.cm{border-radius:var(--r)}
+.cm .badge{font-family:var(--body);font-size:11px;font-weight:500;letter-spacing:0;text-transform:none;padding:4px 9px;background:rgba(255,255,255,.92)}
+.cm .badge.red{background:var(--red);color:#fff}
+.ci{font-size:13.5px}
+.ci .nm{font-weight:500}
+.cmeta{font-family:var(--body);font-size:12px;letter-spacing:0;text-transform:none;color:var(--red)}
+.cmeta.ok{color:var(--mute)}
+.cmeta.out{color:var(--mute)}
+.quick .mono{font-size:10.5px}
+.quick button{font-family:var(--body);font-size:12.5px}
+.qvb{font-family:var(--body);font-size:12px;letter-spacing:0;text-transform:none}
+.sws a{width:12px;height:12px}
+
+/* sections breathe */
+.shop-sec,.looks,.cont,.pd-more{padding-block:clamp(64px,8vw,120px) 0}
+.sh-hd{margin-bottom:clamp(22px,3vw,36px)}
+.cat2{padding-top:clamp(48px,6vw,90px)}
+.c2-t span{font-family:var(--body);font-weight:500;font-size:16px;letter-spacing:-.01em;text-transform:none}
+.c2-t i{font-style:normal}
+
+/* signature: calm studio tone instead of a red slab */
+.chap{background:var(--studio);color:var(--ink)}
+.chap .H em{color:inherit}
+.chap-step p{color:var(--ink2);font-size:17px}
+.chap-step b{color:var(--red)}
+.chap-bar{background:var(--line)}
+.chap-bar i{background:var(--ink)}
+.chap .btn.light{background:var(--ink);color:#fff}
+.chap .btn.line.light{color:var(--ink);box-shadow:inset 0 0 0 1px rgba(20,20,20,.25)}
+.chap .btn.line.light:hover{color:#fff}
+.chap .mono{color:var(--mute)!important}
+
+/* edition: light, editorial */
+.edition{background:var(--paper);color:var(--ink)}
+.ed-txt p{color:var(--ink2)}
+.ed-media,.chap-media,.lk-m,.c2-m,.ag-m,.ctl2-m,.hd-m{border-radius:var(--r)}
+
+/* looks + last pieces */
+.lk{background:var(--paper);border-radius:10px;box-shadow:none}
+.lk-save,.ag-badge{font-family:var(--body);font-size:11px;letter-spacing:0;text-transform:none}
+.ag-add{font-size:13px}
+
+/* trust row: ink icons, hairline */
+.trust{border-top:1px solid var(--line)}
+.trust-in svg{color:var(--ink)}
+
+/* product page */
+.pd-name{font-family:var(--display);font-weight:600;font-stretch:100%;text-transform:none;letter-spacing:-.03em;font-size:clamp(28px,2.6vw,38px);line-height:1.05}
+.pd-name .mute{font-weight:400;font-size:.8em}
+.pd-crumb{font-size:11px}
+.pd-labels .lbl{font-family:var(--body);font-size:11px;letter-spacing:0;text-transform:none}
+.pd-sizes button,.szs button,.sizes-f button{font-family:var(--body);font-weight:500}
+.pd-add .a1,.pd-add .a2{font-family:var(--body);font-size:14px;letter-spacing:0;text-transform:none}
+
+/* footer: smaller, cleaner */
+.foot{background:var(--ink);padding-top:72px}
+.foot-top h4{font-family:var(--body);font-size:11px;font-weight:500;letter-spacing:.08em}
+.foot-word{font-weight:700;font-stretch:80%;font-size:clamp(64px,13vw,220px);letter-spacing:-.03em;opacity:.95}
+.foot-bot{font-size:12px}
+
+/* checkout + misc */
+.step h3{font-family:var(--display);font-weight:600;font-stretch:100%;text-transform:none;letter-spacing:-.025em;font-size:20px}
+.step h3 span{font-family:var(--body);font-size:12px}
+.co-steps,.demo-note{font-size:12px}
+.toast{font-size:13px}
+.offer{border-radius:14px}
+.H em,.st-hero .H em,.hd-t em,.st-words .big em{text-transform:none;font-stretch:inherit;font-weight:inherit;letter-spacing:inherit}
+.hx-h em{text-transform:uppercase;color:var(--red)}
+.st-words .big em{color:var(--red)}
+.hx-k{font-size:11px;opacity:.85}
+.ag-add{background:transparent!important;color:var(--ink)!important;box-shadow:inset 0 0 0 1px rgba(20,20,20,.18);padding:11px 16px}
+.ag-add::before{background:var(--ink)}
+.ag-add:hover{color:#fff!important}
+.ag-add:disabled{opacity:.5}
+.foot-word{justify-content:center;gap:.02em;font-size:clamp(64px,15vw,250px)}
+.foot-word .kiss-m{margin-inline:.12em}
+.chap .btn.light,.chap .btn.light:hover{background:var(--ink);color:#fff!important}
+.foot-word{font-size:clamp(56px,12vw,200px)}
+.foot-word .kiss-m{height:.62em;align-self:center}
+@media (hover:none),(max-width:900px){.qvb{display:none}}
+@media (max-width:760px){
+  .bar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:calc(-1 * var(--gut));padding-inline:var(--gut);gap:8px}
+  .bar::-webkit-scrollbar{display:none}
+  .bar>*{flex:none}
+  .bar .sp{display:none}
+  .shop-hd .kick{display:none}
+}

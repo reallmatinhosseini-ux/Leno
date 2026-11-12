@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Instrument_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Archivo, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import { StoreProvider } from "@/lib/store";
 import Motion from "@/components/Motion";
@@ -9,7 +9,6 @@ import JsonLd from "@/components/JsonLd";
 
 const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo", display: "swap" });
 const sans = Instrument_Sans({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
-const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL + "/"),
@@ -35,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     ],
   };
   return (
-    <html lang="en" className={`${archivo.variable} ${sans.variable} ${mono.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${sans.variable}`}>
       <body style={{ ["--kiss-url" as string]: `url(${asset("/p/kiss-tag.png")})` }}>
         <JsonLd data={org} />
         <StoreProvider>
