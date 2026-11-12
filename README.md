@@ -1,8 +1,19 @@
-# LENO WEAR
+# LENO WEAR — store
 
-Front-end preview of the LENO WEAR store (Court 01): an animated court-wear shop with a WebGL hero, 3D scroll scenes, bag, wishlist, search, quick view and a demo checkout.
+Next.js 15 (App Router, React 19, TypeScript) static store for LENO WEAR court-wear.
 
-This is a static site. Open `index.html` through any static web server, or view it on GitHub Pages.
+- Real URLs per product and category (`/products/pleat-dress-white/`, `/shop/dresses/`)
+- Per-page titles, descriptions, canonical URLs, Open Graph and Twitter cards
+- schema.org structured data: Organization, WebSite, Product + Offer (price, stock, shipping, returns), BreadcrumbList, ItemList, FAQPage
+- `sitemap.xml` (with product images), `robots.txt`, web app manifest
+- Self-hosted fonts via `next/font`, GSAP + Lenis motion, reduced-motion support
+- Admin panel at `/admin/` (demo: data stays in the browser)
 
-- Prices are placeholders and checkout is a demo: no payment is taken and no order is sent.
-- Product photos come from the supplier file; replace them with campaign photography before launch.
+```bash
+npm install
+npm run dev          # http://localhost:3000
+npm run build        # static site in out/
+npm run build:pages  # same, with the /Leno base path for GitHub Pages
+```
+
+Set `NEXT_PUBLIC_SITE_URL` to the final domain before launch so canonical URLs and the sitemap point to it.

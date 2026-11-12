@@ -45,10 +45,10 @@ L.P = [
 L.SIZES = ["S","M","L","XL"];
 L.FREE = 600;
 L.byId = function(id){ for (var i = 0; i < L.P.length; i++) if (L.P[i].id === id) return L.P[i]; return null; };
-L.sib = function(p){ return L.P.filter(function(q){ return q.s === p.s; }); };
+L.sib = function(p){ return L.P.filter(function(q){ return q.s === p.s && (!q.hidden || q.id === p.id); }); };
 L.st = function(p){ return L.STYLES[p.s]; };
 L.total = function(p){ var n = 0; for (var k in p.stock) n += p.stock[k]; return n; };
-L.img = function(n){ return "p/" + n + ".webp"; };
+L.img = function(n){ return "../p/" + n + ".webp"; };
 
 /* ---------------- i18n ---------------- */
 var T = {
@@ -114,7 +114,7 @@ L.I = {
   minus: sv('<path d="M6 12h12"/>', 14), plus: sv('<path d="M12 6v12M6 12h12"/>', 14),
   wa: sv('<path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c.3 2 2.5 4.2 4.5 4.5l1-1.2 1.8.8c-.2 1.3-1.2 2-2.6 1.8-2.7-.4-5.2-2.9-5.6-5.6-.2-1.4.5-2.4 1.8-2.6l.8 1.8z"/>', 18)
 };
-L.KISS = "p/kiss-tag.png";
+L.KISS = "../p/kiss-tag.png";
 L.LOGO = '<span class="kiss-m" aria-hidden="true"></span><span class="lw"><b>LENO WEAR</b><small>LEAVE YOUR MARK</small></span>';
 
 /* ---------------- state ---------------- */
@@ -212,7 +212,7 @@ L.renderChrome = function(){
       '<a href="#shop" data-mimg="pleat-white-3">' + t("all") + '<sup>7</sup></a><a href="#dresses" data-mimg="knot-navy-2">' + t("dresses") + '<sup>5</sup></a><a href="#sets" data-mimg="set-navy-3">' + t("sets") + '<sup>2</sup></a><a href="#wishlist" data-mimg="tulle-ivory-lips">' + t("wish") + '</a>' +
     '</div><div class="sm"><span class="mono mute">' + t("court") + '</span><a class="ulink" href="#navy-edit" data-mimg="pleat-blue-2">' + t("navyEdit") + '</a><a class="ulink" href="#light-edit" data-mimg="set-white-3">' + t("lightEdit") + '</a>' +
       '<span class="mono mute" style="margin-top:18px">LENO WEAR</span><a class="ulink" href="#story">Our story</a><a class="ulink" href="#help">' + t("help") + '</a><span class="mute">' + t("s1") + ' · ' + t("s2") + '</span></div>' +
-      '<a class="feat" href="#p-pleat-white"><img src="p/pleat-white-4.jpg" alt="" id="megaimg"><div class="cap"><span class="mono">' + t("court") + '</span><span class="H">' + L.name(L.byId("pleat-white")) + '</span></div></a>' +
+      '<a class="feat" href="#p-pleat-white"><img src="../p/pleat-white-4.jpg" alt="" id="megaimg"><div class="cap"><span class="mono">' + t("court") + '</span><span class="H">' + L.name(L.byId("pleat-white")) + '</span></div></a>' +
     '</div>';
   $("#mmenu").innerHTML =
     '<div class="top g"><a class="logo" href="#home" style="color:var(--ivory)">' + L.LOGO + '</a><button type="button" data-close aria-label="' + t("close") + '">' + L.I.close + '</button></div>' +
