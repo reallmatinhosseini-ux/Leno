@@ -55,14 +55,16 @@ export function Header() {
 /* ---------- mobile menu + tab bar ---------- */
 export function MobileMenu() {
   const s = useStore(); const close = () => s.open("menu", false);
+  const vis = s.catalog.filter((p) => !p.hidden);
+  const n = (f: (p: (typeof vis)[number]) => boolean) => String(vis.filter(f).length).padStart(2, "0");
   return (
     <div className={"mmenu" + (s.ui.menu ? " open" : "")} role="dialog" aria-label="Menu" aria-hidden={!s.ui.menu}>
       <div className="top g"><Link className="logo" href="/" onClick={close}><Logo /></Link><button type="button" onClick={close} aria-label="Close"><Close /></button></div>
       <nav className="g">
-        {[["/shop/", "Shop all", "07"], ["/shop/dresses/", "Dresses", "05"], ["/shop/sets/", "Sets", "02"], ["/shop/navy-edit/", "Navy edit", ""], ["/shop/light-edit/", "Light edit", ""], ["/wishlist/", "Wishlist", ""], ["/story/", "Story", ""], ["/help/", "Help", ""]].map(([h, l, n]) =>
-          <Link key={h} href={h} onClick={close}>{l}{n && <small>{n}</small>}</Link>)}
+        {[["/shop/", "Shop all", n(() => true)], ["/shop/dresses/", "Dresses", n((p) => STYLES[p.style].cat === "dresses")], ["/shop/sets/", "Sets", n((p) => STYLES[p.style].cat === "sets")], ["/shop/navy-edit/", "Navy edit", n((p) => p.edit === "navy")], ["/shop/light-edit/", "Light edit", n((p) => p.edit === "light")], ["/wishlist/", "Wishlist", ""], ["/story/", "Story", ""], ["/help/", "Help", ""]].map(([h, l, c]) =>
+          <Link key={h} href={h} onClick={close}>{l}{c && <small>{c}</small>}</Link>)}
       </nav>
-      <div className="foot g"><span className="mono">LENO WEAR · Dubai</span><span className="mono">AED · UAE</span></div>
+      <div className="mm-foot g"><span className="mono">LENO WEAR · Dubai</span><span className="mono">AED · UAE</span></div>
     </div>
   );
 }
@@ -178,7 +180,8 @@ export function QuickView() {
 export function Toast() { const s = useStore(); return <div className={"toast" + (s.toastMsg ? " on" : "")} role="status" aria-live="polite"><Kiss />{s.toastMsg}</div>; }
 export function OfferCard() {
   const s = useStore(); const path = usePathname();
-  const [show, setShow] = useState(false), [done, setDone] = useState(false);
+  const [show, setShow] = useState(false), [done, setDone] = useState(false), [atFoot, setAtFoot] = useState(false);
+  useEffect(() => { const f = document.querySelector("footer"); if (!f) return; const io = new IntersectionObserver(([e]) => setAtFoot(e.isIntersecting)); io.observe(f); return () => io.disconnect(); }, []);
   useEffect(() => {
     if (!s.ready || s.promo || !s.cfg.welcomeOn || s.count) return;
     let snooze = 0; try { snooze = +(localStorage.getItem("leno-offer-snooze") || 0); } catch { /* ignore */ }
@@ -189,7 +192,7 @@ export function OfferCard() {
   if (!show || path.startsWith("/checkout") || path.startsWith("/order")) return null;
   const close = () => { setShow(false); try { localStorage.setItem("leno-offer-snooze", String(Date.now())); } catch { /* ignore */ } };
   return (
-    <aside className="offer" aria-label="Welcome offer">
+    <aside className={"offer" + (atFoot ? " away" : "")} aria-label="Welcome offer">
       <button type="button" className="ox" aria-label="Close" onClick={close}><Close /></button>
       <div className="of-top"><Kiss /><div><b>{s.cfg.welcomePct}% off your first order</b><span>Join First Serve for early access to every drop.</span></div></div>
       {done ? <p className="of-done">Code <b>LENO10</b> is saved to your bag. Welcome to LENO WEAR.</p> :

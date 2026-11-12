@@ -55,7 +55,7 @@ export default function ProductView({ id }: { id: string }) {
   const show = (i: number) => { const n = p.images.length, j = (i + n) % n; track.current?.scrollTo({ left: j * track.current.clientWidth, behavior: "smooth" }); };
   const onScroll = () => { const t = track.current!; setIdx(Math.round(t.scrollLeft / (t.clientWidth || 1))); };
   const message = tot === 0 ? "Sold out in every size. Join the waitlist below." : need ? "Choose your size to continue." : size ? (p.stock[size] === 1 ? `Only one left in ${size}.` : p.stock[size] === 2 ? `Two left in ${size}.` : `In stock in ${size}, ready to ship.`) : ones.length ? `Only one left in ${ones.join(" and ")}.` : "In stock and ready to ship.";
-  const low = !!need || (size ? p.stock[size] <= 2 : false);
+  const low = !!need || (size ? p.stock[size] <= 2 : ones.length > 0);
 
   const pick = (z: Size) => { if (!p.stock[z]) { s.toast(`We'll let you know when ${z} is back`); return; } setSize(z); setNeed(0); };
   const resolve = (): Size | null => {
@@ -117,7 +117,7 @@ export default function ProductView({ id }: { id: string }) {
       <div className="ctl2-t"><span className="mono mute">Complete the look</span><h2 className="H" data-rise>Wear it <em>together</em></h2>
         <div className="ctl2-l">{[[p, z1, setZ1], [partner, z2, setZ2]].map(([q, z, set]) => { const qq = q as typeof p; return (
           <div className="ctl2-i" key={qq.id}><Link href={`/products/${qq.slug}/`}><img src={img(qq.images[0])} alt="" /></Link><div><b>{STYLES[qq.style].name}</b><span>{qq.color} · {money(qq.price)}</span></div>
-            <select aria-label={`Size for ${STYLES[qq.style].name}`} value={z as Size} onChange={(e) => (set as (v: Size) => void)(e.target.value as Size)}>{SIZES.map((x) => <option key={x} value={x} disabled={!qq.stock[x]}>{x}{qq.stock[x] ? "" : " · sold out"}</option>)}</select></div>); })}</div>
+            <select aria-label={`Size for ${STYLES[qq.style].name}`} value={z as Size} onChange={(e) => (set as (v: Size) => void)(e.target.value as Size)}>{SIZES.map((x) => <option key={x} value={x} disabled={!qq.stock[x]}>{x}{qq.stock[x] ? (qq.stock[x] === 1 ? " · last one" : "") : " · sold out"}</option>)}</select></div>); })}</div>
         <button type="button" className="btn red block" disabled={!tot || !total(partner.stock)} onClick={() => { const ims = document.querySelectorAll<HTMLElement>(".ctl2-i img"); s.add(p.id, z1, ims[0], { silent: true }); setTimeout(() => s.add(partner.id, z2, ims[1]), 260); setBoth(true); }}>
           {both ? "Both added ✓" : <>Add both · {money(now)} {now !== full && <s>{money(full)}</s>}</>}</button>
         <span className="mute" style={{ fontSize: 12.5 }}>{s.cfg.bundleOn ? `Save ${s.cfg.bundlePct}% when you buy the look together.` : "Made to be worn together."} Free same-day delivery in Dubai included.</span>

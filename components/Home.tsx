@@ -123,7 +123,7 @@ function LookCard({ lk }: { lk: (typeof LOOKS)[number] }) {
   return (
     <article className="lk">
       <div className="lk-m" data-reveal><img src={img(lk.img)} alt={lk.name} loading="lazy" />
-        {ps.map((p, i) => <button key={p.id} type="button" className="hs" style={{ left: i ? "58%" : "44%", top: i ? "36%" : "66%" }} aria-label={STYLES[p.style].name} onClick={() => s.quick(p.id)}><span>{STYLES[p.style].name} · {p.color}</span></button>)}</div>
+        {ps.filter((p) => STYLES[p.style].cat === "sets").map((p) => <button key={p.id} type="button" className="hs" style={{ left: "50%", top: "55%" }} aria-label={`Quick view ${STYLES[p.style].name}`} onClick={() => s.quick(p.id)}><span>{STYLES[p.style].name} · {p.color}</span></button>)}</div>
       <div className="lk-t">
         <div className="lk-h"><h3 className="H">{lk.name}</h3><span className="lk-save">Save {money(full - now)}</span></div>
         {ps.map((p, i) => (
@@ -165,13 +165,28 @@ export function Signature() {
 }
 
 /* ---------- last pieces (true scarcity from live stock) ---------- */
+function useDragScroll() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    let down: { x: number; s: number } | null = null, moved = 0;
+    const dn = (e: PointerEvent) => { if (e.pointerType !== "mouse" || (e.target as HTMLElement).closest("button")) return; down = { x: e.clientX, s: el.scrollLeft }; moved = 0; el.classList.add("drag"); };
+    const mv = (e: PointerEvent) => { if (!down) return; moved = Math.abs(e.clientX - down.x); el.scrollLeft = down.s - (e.clientX - down.x); };
+    const up = () => { down = null; el.classList.remove("drag"); };
+    const click = (e: MouseEvent) => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); moved = 0; } };
+    el.addEventListener("pointerdown", dn); addEventListener("pointermove", mv); addEventListener("pointerup", up); el.addEventListener("click", click, true);
+    return () => { el.removeEventListener("pointerdown", dn); removeEventListener("pointermove", mv); removeEventListener("pointerup", up); el.removeEventListener("click", click, true); };
+  }, []);
+  return ref;
+}
 export function LastPieces() {
+  const track = useDragScroll();
   const s = useStore(); const refs = useRef<Record<string, HTMLImageElement | null>>({}); const [added, setAdded] = useState<string[]>([]);
   const last = s.catalog.filter((p) => !p.hidden).map((p) => ({ p, zs: SIZES.filter((z) => p.stock[z] === 1) })).filter((x) => x.zs.length);
   if (!last.length) return null;
   return (
     <section className="ag"><div className="g"><div className="w sh-hd"><h2 className="H" data-rise>Last <em>pieces</em></h2><span className="mono mute">One left in these sizes</span></div></div>
-      <div className="ag-track">{last.map(({ p, zs }) => (
+      <div className="ag-track" ref={track}>{last.map(({ p, zs }) => (
         <article className="ag-card" key={p.id}>
           <Link className="ag-m" href={`/products/${p.slug}/`}><img ref={(el) => { refs.current[p.id] = el; }} src={img(p.images[0])} alt={`${STYLES[p.style].name} in ${p.color}`} loading="lazy" draggable={false} /><span className="ag-badge">Last one · {zs.join(" · ")}</span></Link>
           <div className="ag-i"><div><b>{STYLES[p.style].name}</b><span className="mute">{p.color}</span></div><span>{money(p.price)}</span></div>

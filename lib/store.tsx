@@ -127,6 +127,18 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     return order;
   }, [bag, disc, live, subtotal]);
 
+  /* overlays: Escape closes them, and the page behind stops scrolling */
+  const anyOpen = ui.bag || ui.search || ui.menu || ui.size || !!ui.quick;
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => { if (e.key === "Escape") setUi({ bag: false, search: false, menu: false, quick: null, size: false }); };
+    window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k);
+  }, []);
+  useEffect(() => {
+    const l = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
+    document.documentElement.classList.toggle("ov-open", anyOpen);
+    if (anyOpen) l?.stop(); else l?.start();
+  }, [anyOpen]);
+
   const value: Ctx = { ready, catalog, live, bag, wish, recent, count, subtotal, disc, discLabel, free, isBundle, promo, cfg, add, setQty, toggleWish, seen, claim, placeOrder, lastOrder, ui, open, quick, toast, toastMsg };
   return <C.Provider value={value}>{children}</C.Provider>;
 }

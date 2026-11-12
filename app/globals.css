@@ -3,10 +3,9 @@
   --bg:#F1F1EE; --paper:#FAFAF8; --studio:#E3E3E0; --ink:#0D0D10; --ink2:#2E2E34; --mute:#76767D; --line:rgba(13,13,16,.12);
   --red:#D3203A; --night:#0B0E1E; --night2:#141935; --ivory:#F2EEE6; --nline:rgba(242,238,230,.14); --ok:#1E7A4C;
   --display:"Archivo","Helvetica Neue",Arial,sans-serif;
-  --serif:"Instrument Serif","Times New Roman",serif;
+  --serif:"Archivo","Helvetica Neue",Arial,sans-serif;
   --body:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  --arabic:"IBM Plex Sans Arabic","Geeza Pro",Tahoma,sans-serif;
   --ease:cubic-bezier(.2,.7,.2,1); --ease2:cubic-bezier(.7,0,.2,1);
   --gut:max(20px, env(safe-area-inset-left, 0px));
   --gutr:max(20px, env(safe-area-inset-right, 0px));
@@ -473,8 +472,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .dr-sug{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;background:var(--bg);border-radius:12px;padding:10px;margin:16px 0 8px}
 .dr-sug img{aspect-ratio:3/4;object-fit:cover;border-radius:3px}
 .dr-sug .add{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:9px 12px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--ink)}
-html[dir="rtl"] .drawer{right:auto;left:0;transform:translateX(-100%)}
-html[dir="rtl"] .drawer.open{transform:none}
 
 /* ---------- search ---------- */
 .srch{position:fixed;inset:0;z-index:115;background:var(--paper);display:flex;flex-direction:column;clip-path:inset(0 0 100% 0);transition:clip-path .8s var(--ease2);visibility:hidden;padding-top:env(safe-area-inset-top,0px)}
@@ -510,7 +507,6 @@ html[dir="rtl"] .drawer.open{transform:none}
 .inp input,.inp select{width:100%;height:56px;border-radius:10px;border:0;box-shadow:inset 0 0 0 1px var(--line);background:var(--paper);padding:20px 14px 6px;font-size:15px;outline:0;transition:box-shadow .25s;appearance:none;-webkit-appearance:none}
 .inp input:focus,.inp select:focus{box-shadow:inset 0 0 0 1.5px var(--ink)}
 .inp label{position:absolute;left:14px;top:18px;font-size:14.5px;color:var(--mute);pointer-events:none;transition:transform .3s var(--ease),font-size .3s;transform-origin:0 0}
-html[dir="rtl"] .inp label{left:auto;right:14px}
 .inp input:focus+label,.inp input:not(:placeholder-shown)+label,.inp select+label{transform:translateY(-11px);font-size:11px}
 .inp.err input{box-shadow:inset 0 0 0 1.5px var(--red)}
 .opt{display:grid;gap:8px}
@@ -557,16 +553,6 @@ html[dir="rtl"] .inp label{left:auto;right:14px}
 .ph .H{font-size:clamp(70px,12vw,200px)}
 
 /* RTL */
-html[dir="rtl"] body{font-family:var(--arabic)}
-html[dir="rtl"] .H{font-family:var(--arabic);font-weight:700;font-stretch:100%;text-transform:none;letter-spacing:0;line-height:1.08}
-html[dir="rtl"] .H em{font-family:var(--arabic);font-style:normal;font-weight:400}
-html[dir="rtl"] .mono{font-family:var(--arabic);letter-spacing:0;text-transform:none;font-size:12.5px}
-html[dir="rtl"] .btn{font-family:var(--arabic);letter-spacing:0;font-size:13.5px;text-transform:none}
-html[dir="rtl"] .hdr .nl{font-family:var(--arabic);letter-spacing:0;font-size:13px;text-transform:none}
-html[dir="rtl"] .lrow:hover .H{transform:translateX(-24px)}
-html[dir="rtl"] .hero-title{direction:ltr}
-html[dir="rtl"] .kick::before{order:2}
-html[dir="rtl"] .lrow .arr svg{transform:scaleX(-1)}
 
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
@@ -586,9 +572,6 @@ html[dir="rtl"] .lrow .arr svg{transform:scaleX(-1)}
 .grid .card.big{display:flex;flex-direction:column}
 .grid .card.big .cm{flex:1;height:auto;min-height:420px;aspect-ratio:auto}
 .foot-word{font-size:clamp(70px,16.4vw,300px)}
-html[dir="rtl"] .hero-title .H{font-size:clamp(64px,12vw,200px);line-height:1.15}
-html[dir="rtl"] .hero-title .l1{align-self:flex-end;padding-right:var(--gutr);padding-left:0}
-html[dir="rtl"] .hero-title .l2{align-self:flex-start;padding-left:var(--gut);padding-right:0}
 
 /* ---------- v3: usability + new pages ---------- */
 .logo img{height:30px}
@@ -1369,3 +1352,23 @@ main#view{min-height:60vh}
 .bar .chip{display:inline-flex;align-items:center}
 .pd-name .mute{font-size:.7em}
 .mbox .mx{color:inherit}
+
+/* ---- type safety: only render weights/styles that are actually loaded ---- */
+html{font-synthesis:none;text-rendering:optimizeLegibility}
+.mono,.mono *,.H sup,.H .mono,.mmenu nav a small,.mega .big a sup,.shop-hd .H sup{font-weight:500;font-style:normal}
+.c2-t i,i:not([class]){font-style:normal}
+button,input,select,textarea{font-family:inherit}
+
+/* ---- review pass fixes ---- */
+.ag-track{scroll-padding-inline:var(--gut) var(--gutr)}
+.mm-foot{margin-top:auto;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-inline:var(--gut) var(--gutr)}
+.mm-foot .mono{color:var(--mute)}
+.of-top .kiss-m{color:var(--red)}
+.offer{transition:opacity .4s,transform .5s var(--ease)}
+.offer.away{opacity:0;transform:translateY(24px);pointer-events:none}
+.hl-h{font-size:clamp(34px,9vw,46px)!important;margin:6px 0 10px}
+html.ov-open,html.ov-open body{overflow:hidden}
+@media (max-width:560px){
+  .card .ci{flex-direction:column;gap:2px;align-items:flex-start}
+  .card .ci .pr{font-weight:500}
+}
