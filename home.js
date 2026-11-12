@@ -205,7 +205,8 @@ function closeOffer(snooze){
   if (G && !RM) gsap.to(o, {y:40, opacity:0, duration:.4, ease:"power2.in", onComplete:function(){ o.parentNode && o.parentNode.removeChild(o); }}); else o.parentNode && o.parentNode.removeChild(o);
 }
 L.welcome = function(force){
-  if (L.promo || offer) return;
+  if (L.promo || offer || document.querySelector(".remind")) return;
+  if (!force && L.bag.length) return;
   if (!force){
     var sn = 0; try { sn = +localStorage.getItem("leno-offer-snooze") || 0; } catch(e){}
     if (Date.now() - sn < 7 * 864e5) return;

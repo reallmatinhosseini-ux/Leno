@@ -604,7 +604,7 @@ V.checkout = function(){
     '<aside class="co-r"><div class="in"><span class="mono">' + t("summary") + '</span>' +
       L.bag.map(function(l){ var p = L.byId(l.id); return '<div class="sum-ln"><div class="th"><img src="' + L.img(p.im[0]) + '" alt=""><b>' + l.qty + '</b></div><span>' + L.name(p) + '<br><span class="mute">' + L.tx(p.c) + ' · ' + l.size + '</span></span><span>' + L.money(L.st(p).price * l.qty) + '</span></div>'; }).join("") +
       '<div class="sum-row"><span>' + t("subtotal") + '</span><span>' + L.money(L.bagTotal()) + '</span></div>' +
-      (L.disc && L.disc() ? '<div class="sum-row promo"><span>Welcome 10% · LENO10</span><span>−' + L.money(L.disc()) + '</span></div>' : '<div class="promo-f"><input id="c-code" type="text" placeholder="Discount code" aria-label="Discount code"><button type="button" id="c-apply">Apply</button></div>') +
+      (L.disc && L.disc() ? '<div class="sum-row promo"><span>' + (L.discLabel ? L.discLabel() : 'Saving') + '</span><span>−' + L.money(L.disc()) + '</span></div>' : '<div class="promo-f"><input id="c-code" type="text" placeholder="Discount code" aria-label="Discount code"><button type="button" id="c-apply">Apply</button></div>') +
       '<div class="sum-row"><span>' + t("shipping") + '</span><span id="sfee"></span></div>' +
       '<div class="sum-row big"><span>' + t("total") + '</span><span id="stot"></span></div><span class="mute" style="font-size:12px">' + t("vatIncl") + '</span></div></aside>' +
   '</section>';

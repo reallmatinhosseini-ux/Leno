@@ -211,7 +211,7 @@ L.renderBag = function(){
   if (!L.bag.length || !L.disc || !L.disc()) return;
   var tot = $("#drft .tot"); if (!tot) return;
   var row = document.createElement("div"); row.className = "tot promo";
-  row.innerHTML = '<span>Welcome 10% · LENO10</span><span>−' + L.money(L.disc()) + '</span>';
+  row.innerHTML = '<span>' + (L.discLabel ? L.discLabel() : 'Saving') + '</span><span>−' + L.money(L.disc()) + '</span>';
   tot.parentNode.insertBefore(row, tot);
   $("b", tot).textContent = L.money(L.bagTotal() - L.disc());
 };
