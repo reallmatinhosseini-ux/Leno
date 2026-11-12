@@ -178,7 +178,7 @@ V.home = function(){
     return one + one + one + one; };
   var html =
   '<section class="hero" id="hero">' +
-    '<div class="hero-media" id="hmedia" data-cursor="' + t("shopNow") + '" role="link" tabindex="0" aria-label="' + t("shopNow") + '"><img id="hfb" src="' + L.img(S[0].hero) + '" alt="' + L.esc(L.STYLES.pleat.en) + '"></div>' +
+    '<div class="hero-media" id="hmedia" data-cursor="' + t("shopNow") + '" role="link" tabindex="0" aria-label="' + t("shopNow") + '"><img id="hfb" fetchpriority="high" decoding="async" src="' + L.img(S[0].hero) + '" alt="' + L.esc(L.STYLES.pleat.en) + '"></div>' +
     '<div class="hero-title" aria-hidden="true"><div class="H l1"><span class="ln">' + t("heroL1") + '</span></div><div class="H l2"><span class="ln">' + t("heroL2") + '</span></div></div>' +
     '<h1 class="sr">LENO WEAR · ' + t("heroL1") + " " + t("heroL2") + '</h1>' +
     '<div class="hero-cap"><span class="mono" id="hnum">01 / 04</span><span class="nm"><span id="hname">' + L.name(S[0]) + " · " + L.money(L.st(S[0]).price) + '</span></span><a class="ulink" id="hshop" href="#p-' + S[0].id + '">' + t("shopNow") + '</a></div>' +

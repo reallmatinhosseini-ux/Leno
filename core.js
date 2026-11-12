@@ -423,7 +423,7 @@ function smooth(){
 }
 
 /* ---------------- router ---------------- */
-var view, ctx = null, first = true, busy = false, queued = false;
+var view, ctx = null, first = true, busy = false, queued = false, pending = null, navTok = 0;
 L.resolve = function(){
   var h = decodeURIComponent((location.hash || "#home").slice(1)) || "home";
   if (h.indexOf("p-") === 0 && L.byId(h.slice(2))) return {name:"product", id:h.slice(2)};
@@ -434,7 +434,7 @@ L.resolve = function(){
 function swap(r){
   if (ctx && ctx.cleanup) try { ctx.cleanup(); } catch(e){}
   if (window.ScrollTrigger) ScrollTrigger.getAll().forEach(function(s){ s.kill(); });
-  L.route = r;
+  L.route = r; pending = null;
   var v = L.V[r.name](r);
   view.innerHTML = v.html + (v.noFooter ? "" : L.V.footer());
   document.title = (v.title ? v.title + " · " : "") + "LENO WEAR";
@@ -487,7 +487,16 @@ function nav(){
   closeAll();
   if (busy){ queued = true; return; }
   if (first || !L.G || L.reduce){ first = false; swap(r); if (ctx && ctx.enter) ctx.enter(); L.travelFrom = null; return; }
-  busy = true;
+  busy = true; pending = r;
+  var tok = ++navTok;
+  setTimeout(function(){
+    if (!busy || tok !== navTok) return;
+    gsap.killTweensOf("#curtain .cp, #curtain img, #view");
+    gsap.set("#curtain .cp", {scaleY:0}); gsap.set("#curtain img", {opacity:0}); gsap.set("#view", {opacity:1, y:0});
+    $$(".travel").forEach(function(el){ el.parentNode && el.parentNode.removeChild(el); });
+    if (pending){ swap(pending); if (ctx && ctx.enter) ctx.enter(); }
+    busy = false; if (queued){ queued = false; nav(); }
+  }, 2600);
   var from = L.travelFrom; L.travelFrom = null;
   var prev = L.route;
   if (prev && prev.name === "product" && r.name === "product" && L.byId(prev.id).s === L.byId(r.id).s) fade(r);
@@ -515,6 +524,7 @@ function loader(done){
     if ((n >= srcs.length && t >= 1 && o.v > 99) || performance.now() - start > 4500) out(); else requestAnimationFrame(tick);
   })();
   var gone = false;
+  setTimeout(function(){ if (!gone){ gone = true; if (ld.parentNode) ld.parentNode.removeChild(ld); done(); } }, 5200);
   function out(){
     if (gone) return; gone = true; num.textContent = "100";
     var tl = gsap.timeline({onComplete:function(){ ld.remove(); }});

@@ -165,5 +165,18 @@ L.sizeGuide = function(){
 };
 document.addEventListener("click", function(e){ if (e.target.closest("[data-sizeguide]")){ e.preventDefault(); L.sizeGuide(); } });
 
+/* keep keyboard focus inside whichever overlay is open */
+document.addEventListener("keydown", function(e){
+  if (e.key !== "Tab") return;
+  var box = $("#modal.open .mbox") || $("#drawer.open") || $("#srch.open") || $("#mmenu.open") || $("#lb.open");
+  if (!box) return;
+  var f = $$('a[href], button:not([disabled]), input:not([disabled]), select, [tabindex="0"]', box).filter(function(el){ return el.offsetParent !== null || el === document.activeElement; });
+  if (!f.length) return;
+  var first = f[0], last = f[f.length - 1];
+  if (!box.contains(document.activeElement)){ e.preventDefault(); first.focus(); }
+  else if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+});
+
 L.boot();
 })();

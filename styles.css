@@ -699,3 +699,17 @@ html[dir="rtl"] .hero-title .l2{align-self:flex-start;padding-left:var(--gut);pa
 
 /* friendlier cursor */
 .cur.big{width:72px;height:72px;margin:-36px 0 0 -36px;background:rgba(211,32,58,.92)}
+
+/* v4 fixes */
+.ed-txt,.chap-txt,.hd-t,.pi,.co-l,.co-r,.qv-i,.shead>div{min-width:0}
+@media (max-width:900px){
+  .ed-txt .H{font-size:clamp(52px,15vw,110px)}
+  .chap-txt .H{font-size:clamp(56px,16vw,120px)}
+  .shead .H{font-size:clamp(52px,15vw,120px)}
+  .pi .H{font-size:clamp(52px,15vw,100px)}
+}
+.H{overflow-wrap:break-word}
+img{-webkit-user-drag:none}
+.ed-txt,.nt,.sg,.foot-top .nl{grid-template-columns:minmax(0,1fr)}
+.field input{width:0;flex:1 1 auto}
+@media (max-width:420px){.field .btn{padding:14px 16px}}
