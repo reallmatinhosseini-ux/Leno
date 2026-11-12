@@ -166,59 +166,6 @@ L.sizeGuide = function(){
 document.addEventListener("click", function(e){ if (e.target.closest("[data-sizeguide]")){ e.preventDefault(); L.sizeGuide(); } });
 
 /* ================= v6: shoppable home, honest urgency, faster buying ================= */
-var baseHome = V.home;
-V.home = function(r){
-  var v = baseHome(r), h = v.html;
-  /* 1. move the service promises up, right under the category tiles */
-  var si = h.indexOf('<section class="g"><div class="w svc">');
-  if (si > -1){
-    var svc = h.slice(si).replace('<div class="w svc">', '<div class="w svc svc-top">');
-    h = h.slice(0, si);
-    var ci = h.indexOf('id="cats"'), ce = h.indexOf('</div></section>', ci);
-    if (ci > -1 && ce > -1) h = h.slice(0, ce + 16) + svc + h.slice(ce + 16);
-  }
-  /* 2. shoppable hotspots */
-  h = h.replace('<div class="hero-title"', '<button type="button" class="look-pill" id="heroLook"><i></i>Shop this look</button><div class="hero-title"');
-  h = h.replace('<span class="tag">', '<button type="button" class="hs" data-qv="pleat-white" style="left:50%;top:60%" aria-label="Shop the Pleat Dress"><span>Shop the Pleat Dress</span></button><span class="tag">');
-  h = h.replace('<img id="edimg"', '<button type="button" class="hs" data-qv="tulle-ivory" style="left:52%;top:66%" aria-label="Shop the Tulle Dress"><span>Shop the Tulle Dress</span></button><img id="edimg"');
-  /* 3. "Last ones": every size that has exactly one piece left, straight from the stock sheet */
-  var last = [];
-  L.P.forEach(function(p){ var zs = L.SIZES.filter(function(z){ return p.stock[z] === 1; }); if (zs.length) last.push({p:p, zs:zs}); });
-  var ag = '<section class="ag" id="ag"><div class="g"><div class="w ag-head"><div><div class="kick mono">Live stock</div><h2 class="H" data-rise>Last ones</h2></div>' +
-    '<p class="mute">These sizes have a single piece left. When they go, they are gone until the next drop. <span class="ag-drag">Drag to browse →</span></p></div></div>' +
-    '<div class="ag-track" id="agt">' + last.map(function(x){ var s = L.st(x.p);
-      return '<article class="ag-card"><div class="ag-m" data-href="#p-' + x.p.id + '" data-cursor="View"><img src="' + L.img(x.p.im[0]) + '" alt="' + s.en + ' in ' + x.p.c.en + '" loading="lazy" draggable="false"><span class="ag-badge">Last one · ' + x.zs.join(" · ") + '</span></div>' +
-        '<div class="ag-i"><div><b>' + s.en + '</b><span class="mute">' + x.p.c.en + '</span></div><span>' + L.money(s.price) + '</span></div>' +
-        '<div class="ag-btns">' + x.zs.map(function(z){ return '<button type="button" class="btn ag-add" data-agadd="' + x.p.id + '" data-size="' + z + '">Add ' + z + '</button>'; }).join("") + '</div></article>'; }).join("") +
-    '</div></section>';
-  h = h.replace('<section class="edition"', ag + '<section class="edition"');
-  v.html = h;
-  var baseInit = v.init;
-  v.init = function(){
-    var res = baseInit() || {}, gx = null;
-    $("#heroLook").addEventListener("click", function(e){ e.stopPropagation(); var id = ($("#hshop").getAttribute("href") || "#p-pleat-white").slice(3); L.quick(id); });
-    /* drag-to-scroll with momentum for the Last ones track (mouse); touch scrolls natively */
-    var tr = $("#agt"), down = null, vel = 0, moved = 0, raf;
-    tr.addEventListener("pointerdown", function(e){ if (e.pointerType !== "mouse" || e.target.closest("button")) return; down = {x:e.clientX, s:tr.scrollLeft, t:performance.now()}; moved = 0; vel = 0; cancelAnimationFrame(raf); tr.classList.add("drag"); });
-    window.addEventListener("pointermove", function(e){ if (!down) return; var dx = e.clientX - down.x; moved = Math.max(moved, Math.abs(dx)); var prev = tr.scrollLeft; tr.scrollLeft = down.s - dx; vel = tr.scrollLeft - prev; });
-    var up = function(){ if (!down) return; down = null; tr.classList.remove("drag"); (function glide(){ vel *= .94; tr.scrollLeft += vel; if (Math.abs(vel) > .4) raf = requestAnimationFrame(glide); })(); };
-    window.addEventListener("pointerup", up);
-    tr.addEventListener("click", function(e){ if (moved > 6){ e.stopPropagation(); e.preventDefault(); moved = 0; } }, true);
-    tr.addEventListener("click", function(e){ var b = e.target.closest("[data-agadd]"); if (!b) return; e.stopPropagation(); var card = b.closest(".ag-card");
-      if (L.add(b.getAttribute("data-agadd"), b.getAttribute("data-size"), $("img", card))){ b.textContent = "Added ✓"; b.disabled = true; } });
-    if (G && !RM && window.ScrollTrigger){
-      gx = gsap.context(function(){
-        gsap.from(".ag-card", {x:160, opacity:0, rotateY:-25, transformPerspective:1200, stagger:.08, duration:1.4, ease:"expo.out", scrollTrigger:{trigger:"#ag", start:"top 75%"}});
-        $$(".cat-m img").forEach(function(im){ gsap.fromTo(im, {yPercent:-6, scale:1.12}, {yPercent:6, scale:1.12, ease:"none", scrollTrigger:{trigger:im.parentNode, start:"top bottom", end:"bottom top", scrub:true}}); });
-        gsap.from(".hs", {scale:0, duration:.9, ease:"back.out(2.5)", stagger:.2, scrollTrigger:{trigger:"#chap", start:"top 60%"}});
-        gsap.from("#heroLook", {y:20, opacity:0, duration:1, ease:"expo.out", delay:1.6});
-      });
-    }
-    return {cleanup:function(){ res.cleanup && res.cleanup(); gx && gx.revert(); window.removeEventListener("pointerup", up); }, intro:res.intro, enter:res.enter};
-  };
-  return v;
-};
-
 /* free same-day delivery nudge in the announcement bar */
 var baseRenderBag = L.renderBag;
 L.renderBag = function(){

@@ -115,6 +115,7 @@ L.I = {
   wa: sv('<path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c.3 2 2.5 4.2 4.5 4.5l1-1.2 1.8.8c-.2 1.3-1.2 2-2.6 1.8-2.7-.4-5.2-2.9-5.6-5.6-.2-1.4.5-2.4 1.8-2.6l.8 1.8z"/>', 18)
 };
 L.KISS = "p/kiss.svg";
+L.LOGO = '<span class="kiss-m" aria-hidden="true"></span><span class="lw"><b>LENO WEAR</b><small>LEAVE YOUR MARK</small></span>';
 
 /* ---------------- state ---------------- */
 function load(k, d){ try { var v = JSON.parse(localStorage.getItem(k)); return v || d; } catch(e){ return d; } }
@@ -201,7 +202,7 @@ L.renderChrome = function(){
       '<button class="burger" type="button" data-open="menu" aria-label="' + t("menu") + '"><i></i></button>' +
       '<a class="nl" href="#shop" data-mega>' + t("shop") + '</a><a class="nl" href="#dresses">' + t("dresses") + '</a><a class="nl" href="#sets">' + t("sets") + '</a><a class="nl" href="#story">Story</a>' +
     '</nav>' +
-    '<a class="logo" href="#home" aria-label="LENO WEAR home"><img src="' + L.KISS + '" alt=""><span>LENO WEAR</span></a>' +
+    '<a class="logo" href="#home" aria-label="LENO WEAR home">' + L.LOGO + '</a>' +
     '<nav class="r" aria-label="Utility">' +
       '<button class="nl ic hide-m" type="button" data-open="search" aria-label="' + t("search") + '">' + L.I.search + '<span>' + t("search") + '</span></button>' +
       '<a class="nl ic hide-m" href="#wishlist" aria-label="' + t("wish") + '">' + L.I.heart + '<span class="cnt" data-cnt="wish" hidden>0</span></a>' +
@@ -214,7 +215,7 @@ L.renderChrome = function(){
       '<a class="feat" href="#p-pleat-white"><img src="p/pleat-white-4.jpg" alt="" id="megaimg"><div class="cap"><span class="mono">' + t("court") + '</span><span class="H">' + L.name(L.byId("pleat-white")) + '</span></div></a>' +
     '</div>';
   $("#mmenu").innerHTML =
-    '<div class="top g"><a class="logo" href="#home" style="color:var(--ivory)"><img src="' + L.KISS + '" alt=""><span>LENO WEAR</span></a><button type="button" data-close aria-label="' + t("close") + '">' + L.I.close + '</button></div>' +
+    '<div class="top g"><a class="logo" href="#home" style="color:var(--ivory)">' + L.LOGO + '</a><button type="button" data-close aria-label="' + t("close") + '">' + L.I.close + '</button></div>' +
     '<nav class="g"><a href="#shop">' + t("all") + '<small>07</small></a><a href="#dresses">' + t("dresses") + '<small>05</small></a><a href="#sets">' + t("sets") + '<small>02</small></a><a href="#navy-edit">' + t("navyEdit") + '</a><a href="#light-edit">' + t("lightEdit") + '</a><a href="#wishlist">' + t("wish") + '</a><a href="#story">Story</a><a href="#help">' + t("help") + '</a></nav>' +
     '<div class="foot g"><span class="mono" style="color:var(--mute)">LENO WEAR · Dubai</span><span class="mono" style="color:var(--mute)">AED · UAE</span></div>';
   $("#tabbar").innerHTML =
@@ -222,7 +223,7 @@ L.renderChrome = function(){
     '<button type="button" data-open="search">' + L.I.search + '<span>' + t("search") + '</span></button>' +
     '<a href="#wishlist" style="position:relative">' + L.I.heart + '<span>' + t("wish") + '</span></a>' +
     '<button type="button" data-open="bag" style="position:relative">' + L.I.bag + '<span>' + t("bag") + ' <b class="cnt" data-cnt="bag" hidden>0</b></span></button>';
-  $("#srch .top").innerHTML = '<a class="logo" href="#home"><img src="' + L.KISS + '" alt=""><span>LENO WEAR</span></a><button type="button" data-close aria-label="' + t("close") + '">' + L.I.close + '</button>';
+  $("#srch .top").innerHTML = '<a class="logo" href="#home">' + L.LOGO + '</a><button type="button" data-close aria-label="' + t("close") + '">' + L.I.close + '</button>';
   $("#sq").placeholder = t("searchPh");
   $("#spop").innerHTML = '<span class="mono mute" style="align-self:center;margin-inline-end:6px">' + t("popular") + '</span>' + [["White","أبيض"],["Navy","كحلي"],["Dress","فستان"],["Set","طقم"],["Tulle","تول"]].map(function(w){ var v = L.lang === "ar" ? w[1] : w[0]; return '<button type="button" class="chip" data-q="' + v + '">' + v + '</button>'; }).join("");
   L.syncCounts(); L.renderBag(); L.markNav();
@@ -453,10 +454,10 @@ function curtain(r){
   tl.set("#curtain .cp", {transformOrigin:"50% 100%"})
     .to("#curtain .cp.b", {scaleY:1, duration:.6, ease:"expo.inOut"})
     .to("#curtain .cp.a", {scaleY:1, duration:.6, ease:"expo.inOut"}, "-=.48")
-    .fromTo("#curtain img", {opacity:0, scale:.6, rotation:-12}, {opacity:1, scale:1, rotation:0, duration:.45, ease:"back.out(2)"}, "-=.2")
+    .fromTo("#curtain .cur-kiss", {opacity:0, scale:.6, rotation:-12}, {opacity:1, scale:1, rotation:0, duration:.45, ease:"back.out(2)"}, "-=.2")
     .add(function(){ swap(r); })
     .set("#curtain .cp", {transformOrigin:"50% 0%"})
-    .to("#curtain img", {opacity:0, scale:1.3, duration:.3, ease:"power2.in"}, "+=.08")
+    .to("#curtain .cur-kiss", {opacity:0, scale:1.3, duration:.3, ease:"power2.in"}, "+=.08")
     .to("#curtain .cp.a", {scaleY:0, duration:.7, ease:"expo.inOut"}, "-=.1")
     .to("#curtain .cp.b", {scaleY:0, duration:.7, ease:"expo.inOut"}, "-=.58")
     .add(function(){ if (ctx && ctx.enter) ctx.enter(); }, "-=.55");
@@ -491,8 +492,8 @@ function nav(){
   var tok = ++navTok;
   setTimeout(function(){
     if (!busy || tok !== navTok) return;
-    gsap.killTweensOf("#curtain .cp, #curtain img, #view");
-    gsap.set("#curtain .cp", {scaleY:0}); gsap.set("#curtain img", {opacity:0}); gsap.set("#view", {opacity:1, y:0});
+    gsap.killTweensOf("#curtain .cp, #curtain .cur-kiss, #view");
+    gsap.set("#curtain .cp", {scaleY:0}); gsap.set("#curtain .cur-kiss", {opacity:0}); gsap.set("#view", {opacity:1, y:0});
     $$(".travel").forEach(function(el){ el.parentNode && el.parentNode.removeChild(el); });
     if (pending){ swap(pending); if (ctx && ctx.enter) ctx.enter(); }
     busy = false; if (queued){ queued = false; nav(); }
