@@ -603,11 +603,15 @@ V.checkout = function(){
     '</div>' +
     '<aside class="co-r"><div class="in"><span class="mono">' + t("summary") + '</span>' +
       L.bag.map(function(l){ var p = L.byId(l.id); return '<div class="sum-ln"><div class="th"><img src="' + L.img(p.im[0]) + '" alt=""><b>' + l.qty + '</b></div><span>' + L.name(p) + '<br><span class="mute">' + L.tx(p.c) + ' · ' + l.size + '</span></span><span>' + L.money(L.st(p).price * l.qty) + '</span></div>'; }).join("") +
-      '<div class="sum-row"><span>' + t("subtotal") + '</span><span>' + L.money(L.bagTotal()) + '</span></div><div class="sum-row"><span>' + t("shipping") + '</span><span id="sfee"></span></div>' +
+      '<div class="sum-row"><span>' + t("subtotal") + '</span><span>' + L.money(L.bagTotal()) + '</span></div>' +
+      (L.disc && L.disc() ? '<div class="sum-row promo"><span>Welcome 10% · LENO10</span><span>−' + L.money(L.disc()) + '</span></div>' : '<div class="promo-f"><input id="c-code" type="text" placeholder="Discount code" aria-label="Discount code"><button type="button" id="c-apply">Apply</button></div>') +
+      '<div class="sum-row"><span>' + t("shipping") + '</span><span id="sfee"></span></div>' +
       '<div class="sum-row big"><span>' + t("total") + '</span><span id="stot"></span></div><span class="mute" style="font-size:12px">' + t("vatIncl") + '</span></div></aside>' +
   '</section>';
   return {title:t("coT"), noFooter:true, html:html, init:function(){
-    var sub = L.bagTotal();
+    var sub = L.bagTotal() - (L.disc ? L.disc() : 0);
+    var ap = $("#c-apply");
+    if (ap) ap.addEventListener("click", function(){ var c = ($("#c-code").value || "").trim().toUpperCase(); if (c === "LENO10"){ L.claim(); L.toast("LENO10 applied: 10% off"); L.rerender(); } else { L.toast("That code is not valid"); } });
     function fee(){ var emi = $("#c-emi").value, same = $("input[name=spd][value=same]");
       same.disabled = emi !== "Dubai"; if (same.disabled && same.checked) $("input[name=spd][value=next]").checked = true;
       same.closest("label").style.opacity = same.disabled ? .45 : 1;

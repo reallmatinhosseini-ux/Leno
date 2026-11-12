@@ -114,7 +114,7 @@ L.I = {
   minus: sv('<path d="M6 12h12"/>', 14), plus: sv('<path d="M12 6v12M6 12h12"/>', 14),
   wa: sv('<path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c.3 2 2.5 4.2 4.5 4.5l1-1.2 1.8.8c-.2 1.3-1.2 2-2.6 1.8-2.7-.4-5.2-2.9-5.6-5.6-.2-1.4.5-2.4 1.8-2.6l.8 1.8z"/>', 18)
 };
-L.KISS = "p/kiss.svg";
+L.KISS = "p/kiss-print.svg";
 L.LOGO = '<span class="kiss-m" aria-hidden="true"></span><span class="lw"><b>LENO WEAR</b><small>LEAVE YOUR MARK</small></span>';
 
 /* ---------------- state ---------------- */

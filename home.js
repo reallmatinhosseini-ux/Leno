@@ -53,11 +53,11 @@ V.home = function(){
   '</section>' +
   /* MARQUEE */
   '<div class="marq red" aria-hidden="true"><div class="t" id="mq">' + mq + mq + mq + mq + '</div></div>' +
-  /* NEW IN RAIL */
-  '<section class="rail-sec"><div class="g"><div class="w rail-hd"><div><div class="kick mono">Court 01</div><h2 class="H" data-rise>New <em>in</em></h2></div>' +
-    '<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div class="tabs" id="tabs">' + TABS.map(function(tb, i){ return '<button type="button" data-tab="' + tb[0] + '" class="' + (i ? "" : "on") + '">' + tb[1] + '</button>'; }).join("") + '</div>' +
-    '<div class="arrows"><button type="button" data-rail="-1" aria-label="Previous">' + L.I.arrow.replace("<svg", '<svg style="transform:scaleX(-1)"') + '</button><button type="button" data-rail="1" aria-label="Next">' + L.I.arrow + '</button></div></div></div></div>' +
-    '<div class="rail" id="rail">' + L.P.map(function(p){ return L.card(p); }).join("") + '</div></section>' +
+  /* SHOP GRID (shop-first) */
+  '<section class="g shop-sec"><div class="w"><div class="rail-hd"><div><div class="kick mono">Court 01 · New season</div><h2 class="H" data-rise>Shop the <em>collection</em></h2></div>' +
+    '<div class="tabs" id="tabs">' + TABS.map(function(tb, i){ return '<button type="button" data-tab="' + tb[0] + '" class="' + (i ? "" : "on") + '">' + tb[1] + '</button>'; }).join("") + '</div></div>' +
+    '<div class="grid g4" id="rail">' + L.P.map(function(p){ return L.card(p); }).join("") + '</div>' +
+    '<div class="shop-more"><a class="btn" href="#shop" data-mag>View all 7 pieces</a></div></div></section>' +
   /* CATEGORIES + PROMISES */
   '<section class="g"><div class="w cats" id="cats" style="padding-top:70px">' +
     [["#dresses","Dresses","5 colourways","pleat-white-3"],["#sets","Sets","2 colourways","set-navy-3"],["#navy-edit","Navy Edit","3 pieces","knot-navy-2"],["#light-edit","Light Edit","4 pieces","tulle-ivory-1"]].map(function(c){
@@ -142,15 +142,13 @@ V.home = function(){
 
     /* ---- rail ---- */
     var rail = $("#rail");
-    kill.push(dragScroll(rail));
-    $$("[data-rail]").forEach(function(b){ b.addEventListener("click", function(){ var c = $(".card", rail); rail.scrollBy({left:(+b.getAttribute("data-rail")) * ((c ? c.offsetWidth : 300) + 8) * 2, behavior:"smooth"}); }); });
     $("#tabs").addEventListener("click", function(e){
       var b = e.target.closest("[data-tab]"); if (!b) return;
       var tab = b.getAttribute("data-tab");
       $$("#tabs button").forEach(function(x){ x.classList.toggle("on", x === b); });
       var show = function(p){ return tab === "all" || (tab === "dresses" && L.st(p).cat === "dresses") || (tab === "sets" && L.st(p).cat === "sets") || p.edit === tab; };
       var cards = $$(".card", rail);
-      var apply = function(){ cards.forEach(function(c){ c.style.display = show(L.byId(c.getAttribute("data-id"))) ? "" : "none"; }); rail.scrollLeft = 0; };
+      var apply = function(){ cards.forEach(function(c){ c.style.display = show(L.byId(c.getAttribute("data-id"))) ? "" : "none"; }); };
       if (G && !RM){ gsap.to(cards, {opacity:0, y:20, duration:.25, stagger:.02, onComplete:function(){ apply(); gsap.fromTo(cards.filter(function(c){ return c.style.display !== "none"; }), {opacity:0, y:40}, {opacity:1, y:0, duration:.8, ease:"expo.out", stagger:.06}); }}); }
       else apply();
     });
@@ -209,7 +207,7 @@ V.home = function(){
           mq.style.transform = "translate3d(" + mxv.toFixed(1) + "px,0,0) skewX(" + Math.max(-10, Math.min(10, -vel * .003)).toFixed(2) + "deg)"; };
         gsap.ticker.add(tick); kill.push(function(){ gsap.ticker.remove(tick); });
         /* rail cards rise in */
-        gsap.from("#rail .card", {y:110, opacity:0, rotateX:-20, transformPerspective:1200, stagger:.07, duration:1.3, ease:"expo.out", clearProps:"transform,opacity", scrollTrigger:{trigger:"#rail", start:"top 88%"}});
+        gsap.from("#rail .card", {y:90, opacity:0, rotateX:-20, transformPerspective:1200, stagger:.07, duration:1.3, ease:"expo.out", clearProps:"transform,opacity", scrollTrigger:{trigger:"#rail", start:"top 88%"}});
         /* categories drift */
         $$(".cat-m img").forEach(function(im){ gsap.fromTo(im, {yPercent:-6, scale:1.12}, {yPercent:6, scale:1.12, ease:"none", scrollTrigger:{trigger:im.parentNode, start:"top bottom", end:"bottom top", scrub:true}}); });
         gsap.from(".cat", {y:80, opacity:0, stagger:.08, duration:1.2, ease:"expo.out", clearProps:"transform,opacity", scrollTrigger:{trigger:"#cats", start:"top 88%"}});
@@ -265,23 +263,34 @@ V.home = function(){
   }};
 };
 
-/* ---------------- welcome gift (first visit, after a short delay) ---------------- */
-function welcome(){
-  var seen = false; try { seen = localStorage.getItem("leno-welcome") === "1"; } catch(e){}
-  if (seen) return;
-  setTimeout(function(){
-    if (document.querySelector(".modal.open, .drawer.open, .srch.open, .mmenu.open") || (L.route && L.route.name === "checkout")) return;
-    try { localStorage.setItem("leno-welcome", "1"); } catch(e){}
-    L.openModal('<div class="wg"><div class="wg-card"><span class="kiss-m wg-stamp" id="wgk"></span><span class="mono">Sealed with a kiss</span><h3 class="H">Your welcome <em>gift</em></h3>' +
-      '<span class="wg-off">10% off</span><p class="mute" style="max-width:32ch">your first order when you join First Serve: early access to every drop.</p></div>' +
-      '<form class="field lt" id="wgf"><input type="text" placeholder="Email or mobile" aria-label="Email or mobile" required><button class="btn red" type="submit">Claim 10%</button></form>' +
-      '<button type="button" class="later" data-mclose>Maybe later</button><span class="mute" style="font-size:11.5px">Demo: offer and code are placeholders.</span></div>', "sm");
-    if (G && !RM) gsap.fromTo("#wgk", {scale:3, rotation:-35, opacity:0}, {scale:1, rotation:-8, opacity:1, duration:.5, ease:"power4.in", delay:.45, onComplete:function(){ gsap.fromTo(".wg-card", {y:-4}, {y:0, duration:.5, ease:"elastic.out(1,.3)"}); }});
-    $("#wgf").addEventListener("submit", function(e){
-      e.preventDefault();
-      var f = $("#wgf"); f.outerHTML = '<div style="display:grid;gap:10px;justify-items:center"><span class="mono">Your code</span><span class="wg-code">LENO10</span><span class="mute" style="font-size:13px">Use it at checkout. Welcome to LENO WEAR.</span></div>';
-    });
-  }, 9000);
-}
-window.addEventListener("load", function(){ setTimeout(welcome, 0); });
+/* ---------------- welcome gift: opens with the site (once per visit) and on exit intent ---------------- */
+L.promo = null;
+try { L.promo = localStorage.getItem("leno-promo"); } catch(e){}
+L.disc = function(){ return L.promo ? Math.round(L.bagTotal() * .10) : 0; };
+L.claim = function(){ L.promo = "LENO10"; try { localStorage.setItem("leno-promo", "LENO10"); } catch(e){} L.renderBag(); };
+L.welcome = function(force){
+  if (L.promo) return;
+  var shown = false; try { shown = sessionStorage.getItem("leno-wshown") === "1"; } catch(e){}
+  if (shown && !force) return;
+  if (document.querySelector(".modal.open") || (L.route && (L.route.name === "checkout" || L.route.name === "confirmed"))) return;
+  try { sessionStorage.setItem("leno-wshown", "1"); } catch(e){}
+  L.openModal('<div class="wg"><div class="wg-card"><span class="kiss-m wg-stamp" id="wgk"></span><span class="mono">Sealed with a kiss</span><h3 class="H">Your welcome <em>gift</em></h3>' +
+    '<span class="wg-off">10% off</span><p class="mute" style="max-width:30ch">your first order, plus early access to every drop.</p></div>' +
+    '<form class="field lt" id="wgf"><input type="text" placeholder="Email or mobile" aria-label="Email or mobile" required><button class="btn red" type="submit">Unlock 10%</button></form>' +
+    '<button type="button" class="later" data-mclose>No thanks, I will pay full price</button><span class="mute" style="font-size:11px">Demo: offer and code are placeholders.</span></div>', "sm");
+  if (G && !RM) gsap.fromTo("#wgk", {scale:3, rotation:-35, opacity:0}, {scale:1, rotation:-8, opacity:1, duration:.5, ease:"power4.in", delay:.4, onComplete:function(){ gsap.fromTo(".wg-card", {y:-4}, {y:0, duration:.5, ease:"elastic.out(1,.3)"}); }});
+  $("#wgf").addEventListener("submit", function(e){
+    e.preventDefault(); L.claim();
+    var lt = $(".wg .later"); if (lt) lt.parentNode.removeChild(lt);
+    $("#wgf").outerHTML = '<div style="display:grid;gap:10px;justify-items:center"><span class="mono">Your code</span><span class="wg-code">LENO10</span><span class="mute" style="font-size:13px">Applied automatically to your bag and checkout.</span><a class="btn red" href="#shop">Start shopping</a></div>';
+    L.toast("10% welcome gift unlocked");
+  });
+};
+var wTries = 0;
+(function waitLoaded(){ if (L.loaded){ setTimeout(function(){ L.welcome(); }, 900); return; } if (++wTries < 80) setTimeout(waitLoaded, 100); })();
+document.addEventListener("mouseout", function(e){
+  if (e.relatedTarget || e.clientY > 4 || !L.fine) return;
+  if (L.promo || L.exitShown) return;
+  L.exitShown = true; L.welcome(true);
+});
 })();
