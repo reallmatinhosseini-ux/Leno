@@ -32,6 +32,11 @@ export default function ProductView({ id }: { id: string }) {
   const [idx, setIdx] = useState(0);
   const [lb, setLb] = useState<number | null>(null);
   const [guide, setGuide] = useState(false);
+  const [wait, setWait] = useState<Size | "any" | null>(null); const [waitDone, setWaitDone] = useState(false);
+  const joinWait = (email: string) => {
+    try { const k = "leno-waitlist", a = JSON.parse(localStorage.getItem(k) || "[]"); a.unshift({ id: p.id, size: wait, email, date: new Date().toISOString() }); localStorage.setItem(k, JSON.stringify(a)); } catch { /* storage unavailable */ }
+    setWaitDone(true);
+  };
   const [ship, setShip] = useState({ t: "Same-day delivery in Dubai", s: "Order by 2 pm" });
   const [sticky, setSticky] = useState(false);
   const first = (q: typeof p) => SIZES.find((z) => q.stock[z]) || "M";
@@ -52,14 +57,16 @@ export default function ProductView({ id }: { id: string }) {
   useEffect(() => { if (size && msg.current && !reduce()) gsap.fromTo(msg.current, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: .4 }); }, [size]);
   useEffect(() => { const k = (e: KeyboardEvent) => { if (lb === null) return; if (e.key === "Escape") setLb(null); if (e.key === "ArrowRight") setLb((lb + 1) % p.images.length); if (e.key === "ArrowLeft") setLb((lb - 1 + p.images.length) % p.images.length); }; addEventListener("keydown", k); return () => removeEventListener("keydown", k); }, [lb, p.images.length]);
 
+  useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === "Escape") { setWait(null); setGuide(false); } }; addEventListener("keydown", k); return () => removeEventListener("keydown", k); }, []);
+  useEffect(() => { document.documentElement.classList.toggle("ov-open", !!wait || guide || lb !== null); }, [wait, guide, lb]);
   const show = (i: number) => { const n = p.images.length, j = (i + n) % n; track.current?.scrollTo({ left: j * track.current.clientWidth, behavior: "smooth" }); };
   const onScroll = () => { const t = track.current!; setIdx(Math.round(t.scrollLeft / (t.clientWidth || 1))); };
   const message = tot === 0 ? "Sold out in every size. Join the waitlist below." : need ? "Choose your size to continue." : size ? (p.stock[size] === 1 ? `Only one left in ${size}.` : p.stock[size] === 2 ? `Two left in ${size}.` : `In stock in ${size}, ready to ship.`) : ones.length ? `Only one left in ${ones.join(" and ")}.` : "In stock and ready to ship.";
   const low = !!need || (size ? p.stock[size] <= 2 : ones.length > 0);
 
-  const pick = (z: Size) => { if (!p.stock[z]) { s.toast(`We'll let you know when ${z} is back`); return; } setSize(z); setNeed(0); };
+  const pick = (z: Size) => { if (!p.stock[z]) { setWaitDone(false); setWait(z); return; } setSize(z); setNeed(0); };
   const resolve = (): Size | null => {
-    if (!tot) { s.toast("You're on the waitlist. We'll message you when it's back"); return null; }
+    if (!tot) { setWaitDone(false); setWait("any"); return null; }
     if (size) return size;
     const only = SIZES.filter((z) => p.stock[z]); if (only.length === 1) { setSize(only[0]); return only[0]; }
     setNeed((n) => n + 1);
@@ -133,6 +140,18 @@ export default function ProductView({ id }: { id: string }) {
       <button type="button" className="x" aria-label="Close" onClick={() => setLb(null)}><Close /></button>
       <button type="button" className="nv p" aria-label="Previous" onClick={() => setLb(((lb || 0) - 1 + p.images.length) % p.images.length)}>‹</button>
       <button type="button" className="nv n" aria-label="Next" onClick={() => setLb(((lb || 0) + 1) % p.images.length)}>›</button>
+    </div>
+    <div className={"modal" + (wait ? " open" : "")} role="dialog" aria-modal="true" aria-label="Join the waitlist" onClick={(e) => { if (e.target === e.currentTarget) setWait(null); }}>
+      <div className="mbox sm wl"><button type="button" className="mx" aria-label="Close" onClick={() => setWait(null)} style={{ position: "absolute", top: 14, right: 14 }}><Close /></button>
+        <span className="mono mute">Back in stock</span>
+        <h3 className="H">{st.name} · {p.color}{wait && wait !== "any" ? ` · ${wait}` : ""}</h3>
+        {waitDone ? <p>You're on the list. We'll email you once, as soon as it's back. No other emails.</p> : <>
+          <p className="mute">{wait && wait !== "any" ? `Size ${wait} is sold out.` : "This piece is sold out."} Leave your email and we'll tell you when it returns.</p>
+          <form className="wl-f" onSubmit={(e) => { e.preventDefault(); joinWait(String(new FormData(e.currentTarget).get("email") || "")); }}>
+            <input name="email" type="email" required placeholder="Email address" aria-label="Email address" autoComplete="email" />
+            <button className="btn red" type="submit">Notify me</button>
+          </form></>}
+      </div>
     </div>
     <div className={"modal" + (guide ? " open" : "")} role="dialog" aria-modal="true" aria-label="Size guide" onClick={(e) => { if (e.target === e.currentTarget) setGuide(false); }}>
       <div className="mbox sm"><button type="button" className="mx" aria-label="Close" onClick={() => setGuide(false)} style={{ position: "absolute", top: 14, right: 14 }}><Close /></button>

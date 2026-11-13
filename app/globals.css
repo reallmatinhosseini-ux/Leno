@@ -1518,3 +1518,29 @@ body{background:var(--bg);color:var(--ink);font-size:15px;letter-spacing:-.005em
   .bar .sp{display:none}
   .shop-hd .kick{display:none}
 }
+
+/* ---- v11 polish ---- */
+.st-hero .H{max-width:14ch}
+.st-words .big{font-weight:500;font-stretch:100%;text-transform:none;letter-spacing:-.03em;font-size:clamp(28px,4vw,56px);line-height:1.12;max-width:24ch}
+.st-words .big .w{color:rgba(20,20,20,.14)}
+.st-pr div{border-top:1px solid var(--line)}
+.st-pr b{font-family:var(--body);font-weight:500;font-size:12px;letter-spacing:.04em}
+.st-pr h3{font-weight:600;font-stretch:100%;text-transform:none;letter-spacing:-.03em;font-size:24px;line-height:1.1}
+.hd-time{font-weight:600;font-stretch:100%;letter-spacing:-.05em;opacity:.07}
+.hd-m{box-shadow:0 40px 80px -40px rgba(0,0,0,.35)}
+.bundle-ok{background:rgba(211,32,58,.08);color:var(--red);font-weight:500}
+.qv-i .szs button{display:grid;place-content:center;gap:1px;height:54px}
+.qv-i .szs button small{position:static;transform:none;font-size:10px;color:var(--red);line-height:1}
+.srch input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
+.foot :focus-visible,.hx :focus-visible{outline-color:#fff}
+.btn:focus-visible{outline-offset:4px}
+html.focus-co .hdr nav.l .nl,html.focus-co .hdr nav.r .hide-m{visibility:hidden}
+.co-foot{padding-block:28px 40px;border-top:1px solid var(--line);font-size:12.5px;color:var(--mute)}
+.co-foot .w{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.wl{display:grid;gap:12px}
+.wl .H{font-size:24px;padding-right:30px}
+.wl-f{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.wl-f input{flex:1 1 200px;height:48px;border-radius:999px;border:1px solid var(--line);padding:0 18px;font:inherit;background:var(--bg)}
+.wl-f input:focus{outline:none;border-color:var(--ink)}
+html.focus-co .hdr .burger{visibility:hidden}

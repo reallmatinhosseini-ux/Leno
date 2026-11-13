@@ -15,12 +15,14 @@ function cutoff() {
   if (ms > 0) { const h = Math.floor(ms / 36e5), m = Math.floor((ms % 36e5) / 6e4); return `Order in ${h ? h + "h " : ""}${m}m for same-day delivery in Dubai`; }
   return "Order now for next-day delivery across the UAE";
 }
+const focused = (p: string) => p.startsWith("/checkout");
 export function Announcement() {
-  const s = useStore();
+  const s = useStore(); const path = usePathname();
   const [i, setI] = useState(0);
   const [cut, setCut] = useState("Same-day delivery in Dubai");
   useEffect(() => { setCut(cutoff()); const a = setInterval(() => setCut(cutoff()), 30000), b = setInterval(() => setI((x) => x + 1), 4200); return () => { clearInterval(a); clearInterval(b); }; }, []);
   const left = s.free - s.subtotal;
+  if (focused(path)) return null;
   if (s.ready && s.count) return <div className="ann"><button type="button" className={"nudge" + (left <= 0 ? " ok" : "")} onClick={() => s.open("bag")}>{left > 0 ? `You are ${money(left)} away from free same-day delivery` : "Free same-day delivery unlocked ✓"}</button></div>;
   const msgs = [cut, `Free same-day delivery over ${money(s.free)}`, "Free 14-day returns · Pay in 4 with Tabby"];
   return <div className="ann" aria-live="polite">{msgs.map((m, j) => <div key={j} className={j === i % 3 ? "on" : ""}>{m}</div>)}</div>;
@@ -70,6 +72,7 @@ export function MobileMenu() {
 }
 export function TabBar() {
   const s = useStore(), path = usePathname();
+  if (focused(path)) return null;
   return (
     <nav className="tabbar" aria-label="Quick">
       <Link href="/shop/" className={path.startsWith("/shop") ? "on" : ""}><Grid /><span>Shop</span></Link>
@@ -189,7 +192,7 @@ export function OfferCard() {
     const t = setTimeout(() => setShow(true), 20000);
     return () => clearTimeout(t);
   }, [s.ready, s.promo, s.cfg.welcomeOn, s.count]);
-  if (!show || path.startsWith("/checkout") || path.startsWith("/order")) return null;
+  if (!show || focused(path) || path.startsWith("/order")) return null;
   const close = () => { setShow(false); try { localStorage.setItem("leno-offer-snooze", String(Date.now())); } catch { /* ignore */ } };
   return (
     <aside className={"offer" + (atFoot ? " away" : "")} aria-label="Welcome offer">
@@ -204,7 +207,8 @@ export function OfferCard() {
 
 /* ---------- footer ---------- */
 export function Footer() {
-  const s = useStore(); const [joined, setJoined] = useState(false);
+  const s = useStore(); const path = usePathname(); const [joined, setJoined] = useState(false);
+  if (focused(path)) return <footer className="co-foot g"><div className="w"><span>Secure checkout · LENO WEAR, Dubai</span><Link className="ulink" href="/help/">Need help?</Link></div></footer>;
   return (
     <footer className="foot"><div className="g"><div className="w">
       <div className="foot-top">

@@ -53,8 +53,10 @@ export default function Motion() {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const lenis = (window as unknown as { __lenis?: Lenis }).__lenis;
     if (lenis) lenis.scrollTo(0, { immediate: true, force: true }); else window.scrollTo(0, 0);
+    document.documentElement.classList.toggle("focus-co", path.startsWith("/checkout"));
     if (reduce) return;
     const ctx = gsap.context(() => {
+      gsap.fromTo("#view", { opacity: 0 }, { opacity: 1, duration: .6, ease: "power2.out", clearProps: "opacity" });
       document.querySelectorAll("[data-rise]").forEach((h) => {
         gsap.from(splitChars(h), { yPercent: 110, duration: 1.1, ease: "expo.out", stagger: .018, scrollTrigger: { trigger: h, start: "top 88%" } });
       });
