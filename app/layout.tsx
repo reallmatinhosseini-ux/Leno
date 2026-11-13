@@ -3,7 +3,8 @@ import { Archivo, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import { StoreProvider } from "@/lib/store";
 import Motion from "@/components/Motion";
-import { Announcement, BagDrawer, Footer, Header, MobileMenu, OfferCard, QuickView, SearchOverlay, TabBar, Toast } from "@/components/Chrome";
+import { Announcement, BagDrawer, Footer, Header, MobileMenu, QuickView, SearchOverlay, TabBar, Toast } from "@/components/Chrome";
+import Welcome from "@/components/Welcome";
 import { BRAND, DESCRIPTION, SITE_URL, asset, jpg } from "@/lib/site";
 import JsonLd from "@/components/JsonLd";
 
@@ -48,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <BagDrawer />
           <QuickView />
           <TabBar />
-          <OfferCard />
+          <Welcome />
           <Toast />
           <Motion />
         </StoreProvider>

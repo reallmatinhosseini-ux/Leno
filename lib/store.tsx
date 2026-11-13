@@ -5,6 +5,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { PRODUCTS, STYLES, SIZES, FREE_DELIVERY, Product, Size, StyleKey, byId, total } from "./data";
 import { img } from "./site";
+import { bump, stampKiss } from "./fx";
 
 export type Line = { id: string; size: Size; qty: number };
 type AdminProduct = { stock?: Partial<Record<Size, number>>; badge?: string; hidden?: boolean };
@@ -90,8 +91,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if ((p.stock[size] || 0) <= have) { toast(p.stock[size] ? "No more stock in this size" : "This size is sold out"); return false; }
     const next = have ? bag.map((l) => (l.id === id && l.size === size ? { ...l, qty: l.qty + 1 } : l)) : [...bag, { id, size, qty: 1 }];
     setBag(next); write("leno-bag", next);
-    const done = () => { if (!opts?.silent) setUi((u) => ({ ...u, bag: true, quick: null })); };
     const target = Array.from(document.querySelectorAll<HTMLElement>("[data-bag-target]")).find((el) => el.offsetParent !== null);
+    const done = () => { if (target) { bump(target); stampKiss(target, { size: 30, rotate: -14 }); } if (!opts?.silent) setTimeout(() => setUi((u) => ({ ...u, bag: true, quick: null })), 380); };
     if (from && target && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       import("gsap").then(({ gsap }) => {
         const a = from.getBoundingClientRect(), b = target.getBoundingClientRect();

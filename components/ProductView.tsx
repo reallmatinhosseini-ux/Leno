@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { SIZES, STYLES, Size, byId, partnerOf, siblings, total } from "@/lib/data";
-import { img, money } from "@/lib/site";
+import { asset, img, money } from "@/lib/site";
+import { kissBurst } from "@/lib/fx";
 import { useStore } from "@/lib/store";
 import ProductCard from "./ProductCard";
 import { Arrow, Close, Heart, Lock, Return, Ruler, Truck } from "./icons";
@@ -102,7 +103,7 @@ export default function ProductView({ id }: { id: string }) {
           <div className={"pd-sizes" + (need ? " need" : "")} key={need}>{SIZES.map((z) => <button key={z} type="button" className={(p.stock[z] ? "" : "out") + (size === z ? " on" : "")} aria-pressed={size === z} aria-label={`Size ${z}${p.stock[z] ? "" : ", sold out"}`} onClick={() => pick(z)}>{z}</button>)}</div>
           <p className={"pd-msg" + (low ? " low" : "")} ref={msg} aria-live="polite">{message}</p></div>
         <div className="pd-buy"><button ref={addBtn} type="button" className={"btn red pd-add" + (done ? " done" : "")} onClick={addNow}><span className="a1">{tot ? (size ? `Add to bag · ${size}` : "Add to bag") : "Join the waitlist"}</span><span className="a2">Added to bag ✓</span></button>
-          <button type="button" className="pd-wish" aria-pressed={s.wish.includes(p.id)} aria-label="Save to wishlist" onClick={() => s.toggleWish(p.id)}><Heart /></button></div>
+          <button type="button" className="pd-wish" aria-pressed={s.wish.includes(p.id)} aria-label="Save to wishlist" onClick={(e) => { if (!s.wish.includes(p.id)) kissBurst(e.currentTarget, 7, .8); s.toggleWish(p.id); }}><Heart /></button></div>
         {tot > 0 && <button type="button" className="apay" onClick={buyNow}>Buy now with Apple Pay</button>}
         <ul className="pd-trust">
           <li><Truck /><div><b>{ship.t}</b><span>{ship.s} · free over {money(s.free)}</span></div></li>
@@ -121,16 +122,16 @@ export default function ProductView({ id }: { id: string }) {
 
     {!partner.hidden && <section className="g ctl2"><div className="w ctl2-in">
       <div className="ctl2-m" data-reveal><img src={img(partner.images[0])} alt={`${STYLES[partner.style].name} in ${partner.color}`} loading="lazy" /><img src={img(p.images[0])} alt="" loading="lazy" className="b" /></div>
-      <div className="ctl2-t"><span className="mono mute">Complete the look</span><h2 className="H" data-rise>Wear it <em>together</em></h2>
+      <div className="ctl2-t"><span className="mono mute">Complete the look</span><h2 className="H" data-rise>Wear it <em>together</em><img className="h-kiss" data-stamp src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" /></h2>
         <div className="ctl2-l">{[[p, z1, setZ1], [partner, z2, setZ2]].map(([q, z, set]) => { const qq = q as typeof p; return (
           <div className="ctl2-i" key={qq.id}><Link href={`/products/${qq.slug}/`}><img src={img(qq.images[0])} alt="" /></Link><div><b>{STYLES[qq.style].name}</b><span>{qq.color} · {money(qq.price)}</span></div>
             <select aria-label={`Size for ${STYLES[qq.style].name}`} value={z as Size} onChange={(e) => (set as (v: Size) => void)(e.target.value as Size)}>{SIZES.map((x) => <option key={x} value={x} disabled={!qq.stock[x]}>{x}{qq.stock[x] ? (qq.stock[x] === 1 ? " · last one" : "") : " · sold out"}</option>)}</select></div>); })}</div>
-        <button type="button" className="btn red block" disabled={!tot || !total(partner.stock)} onClick={() => { const ims = document.querySelectorAll<HTMLElement>(".ctl2-i img"); s.add(p.id, z1, ims[0], { silent: true }); setTimeout(() => s.add(partner.id, z2, ims[1]), 260); setBoth(true); }}>
+        <button type="button" className="btn red block" disabled={!tot || !total(partner.stock)} onClick={(e) => { kissBurst(e.currentTarget, 9); const ims = document.querySelectorAll<HTMLElement>(".ctl2-i img"); s.add(p.id, z1, ims[0], { silent: true }); setTimeout(() => s.add(partner.id, z2, ims[1]), 260); setBoth(true); }}>
           {both ? "Both added ✓" : <>Add both · {money(now)} {now !== full && <s>{money(full)}</s>}</>}</button>
         <span className="mute" style={{ fontSize: 12.5 }}>{s.cfg.bundleOn ? `Save ${s.cfg.bundlePct}% when you buy the look together.` : "Made to be worn together."} Free same-day delivery in Dubai included.</span>
       </div></div></section>}
 
-    <section className="g pd-more"><div className="w"><div className="sh-hd"><h2 className="H" data-rise>You may also <em>like</em></h2></div><div className="grid g4">{also.map((q) => <ProductCard key={q.id} product={q} />)}</div></div></section>
+    <section className="g pd-more"><div className="w"><div className="sh-hd"><h2 className="H" data-rise>You may also <em>like</em><img className="h-kiss" data-stamp src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" /></h2></div><div className="grid g4">{also.map((q) => <ProductCard key={q.id} product={q} />)}</div></div></section>
     {rec.length > 0 && <section className="g pd-more" style={{ paddingTop: 0 }}><div className="w"><div className="sh-hd"><h2 className="H">Recently <em>viewed</em></h2></div><div className="grid g4">{rec.map((q) => <ProductCard key={q.id} product={q} />)}</div></div></section>}
 
     <div className={"sticky-buy" + (sticky ? " on" : "")}><img src={img(p.images[0])} alt="" /><span className="sb-t"><b>{st.name}</b><span>{money(p.price)}{size ? ` · Size ${size}` : ""}</span></span><button type="button" className="btn red" onClick={addNow}>{tot ? (size ? `Add to bag · ${size}` : "Add to bag") : "Join the waitlist"}</button></div>

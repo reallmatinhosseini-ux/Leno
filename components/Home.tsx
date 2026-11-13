@@ -5,7 +5,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
 import { LOOKS, PRODUCTS, SIZES, STYLES, Size, byId } from "@/lib/data";
-import { img, money } from "@/lib/site";
+import { asset, img, money } from "@/lib/site";
+import { kissBurst } from "@/lib/fx";
 import { useStore } from "@/lib/store";
 import ProductCard from "./ProductCard";
 import { splitChars } from "./Motion";
@@ -29,6 +30,8 @@ export function Hero() {
       gsap.fromTo(".hx-col", { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.inOut", stagger: .1 });
       gsap.fromTo(".hx-col img", { scale: 1.3 }, { scale: 1, duration: 2, ease: "expo.out", stagger: .1 });
       gsap.from(ch, { yPercent: 115, duration: 1.3, ease: "expo.out", stagger: .03, delay: .4 });
+      gsap.fromTo(".hx-kiss", { opacity: 0, scale: 2.8, rotate: -30, filter: "blur(6px)" }, { opacity: 1, scale: 1, rotate: -12, filter: "blur(0px)", duration: .5, ease: "power4.in", delay: 1.55 });
+      gsap.to(".hx-kiss", { keyframes: [{ scaleX: 1.15, scaleY: .85, duration: .08 }, { scaleX: 1, scaleY: 1, duration: .6, ease: "elastic.out(1,.35)" }], delay: 2.05 });
       gsap.from(".hx-l > *:not(h1), .hx-r > *", { opacity: 0, y: 24, duration: 1, ease: "expo.out", stagger: .07, delay: .85 });
       gsap.utils.toArray<HTMLElement>(".hx-col").forEach((c, i) => gsap.to(c, { yPercent: [8, 15, 5][i], ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } }));
       gsap.to(".hx-txt", { yPercent: -25, opacity: 0, ease: "none", scrollTrigger: { trigger: root.current, start: "25% top", end: "80% top", scrub: true } });
@@ -62,7 +65,7 @@ export function Hero() {
       <div className="hx-shade" />
       <div className="hx-txt">
         <div className="hx-l"><span className="hx-k mono">Court 01</span>
-          <h1 className="H hx-h"><span className="ln">Leave your</span><span className="ln"><em>mark.</em></span></h1>
+          <h1 className="H hx-h"><span className="ln">Leave your</span><span className="ln"><em>mark.</em><img className="hx-kiss" src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" /></span></h1>
           <div className="hx-cta"><Link className="btn red" href="/shop/">Shop the collection</Link></div></div>
         <div className="hx-r"><button type="button" className="look-pill" onClick={() => s.quick(LOOK[slide])}><i />Shop this look</button>
           <div className="hx-dots">{[0, 1, 2].map((i) => <button key={i} type="button" className={i === slide ? "on" : ""} aria-label={`Look ${i + 1}`} onClick={() => setSlide(i)}><b /></button>)}</div></div>
@@ -97,7 +100,7 @@ export function ShopGrid() {
   useEffect(() => { if (state.current) { Flip.from(state.current, { duration: .7, ease: "expo.inOut", absolute: true, scale: true, onEnter: (els) => gsap.fromTo(els, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .6 }), onLeave: (els) => gsap.to(els, { opacity: 0, duration: .3 }) }); state.current = null; } }, [tab]);
   return (
     <section className="g shop-sec"><div className="w">
-      <div className="sh-hd"><h2 className="H" data-rise>New <em>season</em></h2>
+      <div className="sh-hd"><h2 className="H" data-rise>New <em>season</em><img className="h-kiss" data-stamp src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" /></h2>
         <div className="tabs" role="tablist">{TABS.map(([k, l]) => <button key={k} type="button" role="tab" aria-selected={tab === k} className={tab === k ? "on" : ""} onClick={() => pick(k)}>{l}</button>)}</div></div>
       <div className="grid g4" ref={grid}>{PRODUCTS.map((p, i) => <div key={p.id} style={{ display: show(p.id) ? "contents" : "none" }}><ProductCard product={p} priority={i < 4} /></div>)}</div>
       <div className="shop-more"><Link className="ulink mono" href="/shop/">View all pieces →</Link></div>
@@ -110,7 +113,7 @@ export function Looks() {
   const s = useStore();
   return (
     <section className="g looks" id="looks"><div className="w">
-      <div className="sh-hd"><h2 className="H" data-rise>Shop the <em>look</em></h2><span className="mono mute">Buy the outfit together and save {s.cfg.bundlePct}%</span></div>
+      <div className="sh-hd"><h2 className="H" data-rise>Shop the <em>look</em><img className="h-kiss" data-stamp src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" /></h2><span className="mono mute">Buy the outfit together and save {s.cfg.bundlePct}%</span></div>
       <div className="looks-grid">{LOOKS.map((lk) => <LookCard key={lk.id} lk={lk} />)}</div>
     </div></section>
   );
@@ -130,7 +133,7 @@ function LookCard({ lk }: { lk: (typeof LOOKS)[number] }) {
           <div className="lk-i" key={p.id}><Link href={`/products/${p.slug}/`}><img ref={(el) => { refs.current[i] = el; }} src={img(p.images[0])} alt="" /></Link><div><b>{STYLES[p.style].name}</b><span>{p.color} · {money(p.price)}</span></div>
             <select aria-label={`Size for ${STYLES[p.style].name}`} value={sz[i]} onChange={(e) => setSz(sz.map((x, j) => (j === i ? (e.target.value as Size) : x)))}>
               {SIZES.map((z) => <option key={z} value={z} disabled={!p.stock[z]}>{z}{p.stock[z] ? (p.stock[z] === 1 ? " · last one" : "") : " · sold out"}</option>)}</select></div>))}
-        <button type="button" className={"btn red block lk-add" + (ok ? " ok" : "")} onClick={() => { ps.forEach((p, i) => setTimeout(() => s.add(p.id, sz[i], refs.current[i], { silent: i === 0 }), i * 280)); setOk(true); setTimeout(() => setOk(false), 2500); }}>
+        <button type="button" className={"btn red block lk-add" + (ok ? " ok" : "")} onClick={(e) => { kissBurst(e.currentTarget, 9); ps.forEach((p, i) => setTimeout(() => s.add(p.id, sz[i], refs.current[i], { silent: i === 0 }), i * 280)); setOk(true); setTimeout(() => setOk(false), 2500); }}>
           {ok ? "Look added ✓" : <>Add the look · {money(now)} <s>{money(full)}</s></>}</button>
       </div>
     </article>
@@ -185,7 +188,7 @@ export function LastPieces() {
   const last = s.catalog.filter((p) => !p.hidden).map((p) => ({ p, zs: SIZES.filter((z) => p.stock[z] === 1) })).filter((x) => x.zs.length);
   if (!last.length) return null;
   return (
-    <section className="ag"><div className="g"><div className="w sh-hd"><h2 className="H" data-rise>Last <em>pieces</em></h2><span className="mono mute">One left in these sizes</span></div></div>
+    <section className="ag"><div className="g"><div className="w sh-hd"><h2 className="H" data-rise>Last <em>pieces</em><img className="h-kiss" data-stamp src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" /></h2><span className="mono mute">One left in these sizes</span></div></div>
       <div className="ag-track" ref={track}>{last.map(({ p, zs }) => (
         <article className="ag-card" key={p.id}>
           <Link className="ag-m" href={`/products/${p.slug}/`}><img ref={(el) => { refs.current[p.id] = el; }} src={img(p.images[0])} alt={`${STYLES[p.style].name} in ${p.color}`} loading="lazy" draggable={false} /><span className="ag-badge">Last one · {zs.join(" · ")}</span></Link>

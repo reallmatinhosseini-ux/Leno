@@ -65,7 +65,16 @@ export default function Motion() {
         gsap.fromTo(el, { clipPath: "inset(12% 6% 12% 6%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 90%" } });
         const im = el.querySelector("img"); if (im) gsap.fromTo(im, { scale: 1.18 }, { scale: 1, duration: 1.8, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 90%" } });
       });
-      gsap.utils.toArray<HTMLElement>(".grid .card").forEach((c, i) => gsap.from(c, { y: 60, opacity: 0, duration: 1.1, ease: "expo.out", delay: (i % 4) * .06, clearProps: "transform,opacity", scrollTrigger: { trigger: c, start: "top 94%" } }));
+      document.querySelectorAll<HTMLElement>("[data-stamp]").forEach((k) => {
+        gsap.timeline({ scrollTrigger: { trigger: k, start: "top 85%" }, delay: .5 })
+          .fromTo(k, { opacity: 0, scale: 2.6, rotate: -32, filter: "blur(5px)" }, { opacity: 1, scale: 1, rotate: -12, filter: "blur(0px)", duration: .45, ease: "power4.in" })
+          .to(k, { scaleX: 1.15, scaleY: .85, duration: .07 }).to(k, { scaleX: 1, scaleY: 1, duration: .6, ease: "elastic.out(1,.35)" });
+      });
+      gsap.utils.toArray<HTMLElement>(".grid .card").forEach((c, i) => {
+        const st = { trigger: c, start: "top 94%" }, d = (i % 4) * .07;
+        gsap.from(c, { y: 90, rotate: i % 2 ? 1.6 : -1.6, opacity: 0, duration: 1.2, ease: "expo.out", delay: d, clearProps: "transform,opacity", scrollTrigger: st });
+        const im = c.querySelector(".cm"); if (im) gsap.from(im, { clipPath: "inset(100% 0% 0% 0% round 6px)", duration: 1.1, ease: "expo.inOut", delay: d, clearProps: "clipPath", scrollTrigger: st });
+      });
     });
     const r = setTimeout(() => ScrollTrigger.refresh(), 400);
     return () => { clearTimeout(r); ctx.revert(); };

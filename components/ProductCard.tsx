@@ -5,6 +5,7 @@ import { SIZES, STYLES, siblings, total, Product } from "@/lib/data";
 import { img, money } from "@/lib/site";
 import { stockLine, useStore } from "@/lib/store";
 import { Heart } from "./icons";
+import { kissBurst } from "@/lib/fx";
 
 export default function ProductCard({ product, priority = false }: { product: Product; priority?: boolean }) {
   const s = useStore();
@@ -24,7 +25,7 @@ export default function ProductCard({ product, priority = false }: { product: Pr
           <img className="b" src={img(p.images[1])} alt="" loading="lazy" decoding="async" />
         </Link>
         {badge && <span className={badgeCls}>{badge}</span>}
-        <button type="button" className="wish" aria-pressed={s.wish.includes(p.id)} aria-label="Save to wishlist" onClick={() => s.toggleWish(p.id)}><Heart /></button>
+        <button type="button" className="wish" aria-pressed={s.wish.includes(p.id)} aria-label="Save to wishlist" onClick={(e) => { if (!s.wish.includes(p.id)) kissBurst(e.currentTarget, 6, .7); s.toggleWish(p.id); }}><Heart /></button>
         <button type="button" className="qvb" onClick={() => s.quick(p.id)}>Quick view</button>
         <div className="quick">
           <span className="mono mute" style={{ fontSize: 9.5 }}>Quick add</span>

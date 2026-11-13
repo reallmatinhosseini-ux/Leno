@@ -7,6 +7,7 @@ import { img, money } from "@/lib/site";
 import { useStore } from "@/lib/store";
 import { Bag, Close, Grid, Heart, Logo, Minus, Plus, Search, Kiss } from "./icons";
 import ProductCard from "./ProductCard";
+import { kissBurst } from "@/lib/fx";
 
 /* ---------- announcement bar: live same-day cut-off + offers ---------- */
 function cutoff() {
@@ -213,7 +214,7 @@ export function Footer() {
     <footer className="foot"><div className="g"><div className="w">
       <div className="foot-top">
         <div className="nl"><span className="mono" style={{ color: "var(--red)" }}>First Serve</span><span className="H">Early access to every drop.</span>
-          {joined ? <p>You are on the list.</p> : <form className="field" style={{ maxWidth: 460 }} onSubmit={(e) => { e.preventDefault(); setJoined(true); s.toast("You are on the list"); }}><input type="email" placeholder="Email address" aria-label="Email address" required /><button className="btn light" type="submit">Join</button></form>}</div>
+          {joined ? <p>You are on the list.</p> : <form className="field" style={{ maxWidth: 460 }} onSubmit={(e) => { e.preventDefault(); kissBurst(e.currentTarget.querySelector("button") || e.currentTarget, 8); setJoined(true); s.toast("You are on the list"); }}><input type="email" placeholder="Email address" aria-label="Email address" required /><button className="btn light" type="submit">Join</button></form>}</div>
         <div><h4>Shop</h4><ul><li><Link className="ulink" href="/shop/">Shop all</Link></li><li><Link className="ulink" href="/shop/dresses/">Dresses</Link></li><li><Link className="ulink" href="/shop/sets/">Sets</Link></li><li><Link className="ulink" href="/shop/navy-edit/">Navy edit</Link></li><li><Link className="ulink" href="/shop/light-edit/">Light edit</Link></li></ul></div>
         <div><h4>Help</h4><ul><li><Link className="ulink" href="/help/">Track order</Link></li><li><Link className="ulink" href="/help/">Delivery</Link></li><li><Link className="ulink" href="/help/">Returns</Link></li><li><Link className="ulink" href="/help/">Contact</Link></li></ul></div>
         <div><h4>LENO WEAR</h4><ul><li><Link className="ulink" href="/story/">Our story</Link></li><li>Instagram</li><li>TikTok</li></ul></div>
