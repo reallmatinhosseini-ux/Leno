@@ -30,8 +30,6 @@ export function Hero() {
       gsap.fromTo(".hx-col", { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.inOut", stagger: .1 });
       gsap.fromTo(".hx-col img", { scale: 1.3 }, { scale: 1, duration: 2, ease: "expo.out", stagger: .1 });
       gsap.from(ch, { yPercent: 115, duration: 1.3, ease: "expo.out", stagger: .03, delay: .4 });
-      gsap.fromTo(".hx-kiss", { opacity: 0, scale: 2.8, rotate: -30, filter: "blur(6px)" }, { opacity: 1, scale: 1, rotate: -12, filter: "blur(0px)", duration: .5, ease: "power4.in", delay: 1.55 });
-      gsap.to(".hx-kiss", { keyframes: [{ scaleX: 1.15, scaleY: .85, duration: .08 }, { scaleX: 1, scaleY: 1, duration: .6, ease: "elastic.out(1,.35)" }], delay: 2.05 });
       gsap.from(".hx-l > *:not(h1), .hx-r > *", { opacity: 0, y: 24, duration: 1, ease: "expo.out", stagger: .07, delay: .85 });
       gsap.utils.toArray<HTMLElement>(".hx-col").forEach((c, i) => gsap.to(c, { yPercent: [8, 15, 5][i], ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } }));
       gsap.to(".hx-txt", { yPercent: -25, opacity: 0, ease: "none", scrollTrigger: { trigger: root.current, start: "25% top", end: "80% top", scrub: true } });
@@ -64,8 +62,7 @@ export function Hero() {
       <div className="hx-cols">{COLS.map((c, ci) => <div className="hx-col" key={ci}><div className="sl"><img src={img(c[0])} alt={ci === 0 ? "The Pleat Dress in White" : ""} fetchPriority={ci === 0 ? "high" : "auto"} draggable={false} /></div></div>)}</div>
       <div className="hx-shade" />
       <div className="hx-txt">
-        <div className="hx-l"><span className="hx-k mono">Court 01</span>
-          <h1 className="H hx-h"><span className="ln">Leave your</span><span className="ln"><em>mark.</em><img className="hx-kiss" src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" /></span></h1>
+        <div className="hx-l">          <h1 className="H hx-h"><span className="ln">Leave your</span><span className="ln"><em>mark.</em></span></h1>
           <div className="hx-cta"><Link className="btn red" href="/shop/">Shop the collection</Link></div></div>
         <div className="hx-r"><button type="button" className="look-pill" onClick={() => s.quick(LOOK[slide])}><i />Shop this look</button>
           <div className="hx-dots">{[0, 1, 2].map((i) => <button key={i} type="button" className={i === slide ? "on" : ""} aria-label={`Look ${i + 1}`} onClick={() => setSlide(i)}><b /></button>)}</div></div>

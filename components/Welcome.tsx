@@ -139,7 +139,7 @@ export default function Welcome() {
   const hidden = !s.ready || !s.cfg.welcomeOn || /^\/(checkout|order|admin)/.test(path);
   const tab = !hidden && !show && (
     <button type="button" className={"we-tab" + (s.promo ? " got" : "")} onClick={reopen} aria-label={s.promo ? "Your 10% welcome code" : `Get ${s.cfg.welcomePct}% off`}>
-      <img src={KISS()} alt="" /><span>{s.promo ? "Your code: LENO10" : `Get ${s.cfg.welcomePct}% off`}</span>
+      <img src={KISS()} alt="" /><span className="full">{s.promo ? "Your code: LENO10" : `Get ${s.cfg.welcomePct}% off`}</span><span className="short">{s.promo ? "LENO10" : `${s.cfg.welcomePct}%`}</span>
     </button>
   );
   if (!show) return tab || null;
