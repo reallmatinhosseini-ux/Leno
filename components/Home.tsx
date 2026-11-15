@@ -206,14 +206,15 @@ export function Signature() {
     return () => ctx.revert();
   }, []);
   return (
-    <section className="chap" ref={root}><div className="g"><div className="w chap-in">
+    /* the pin wraps this section in a spacer; the outer div keeps React's node tree intact on navigation */
+    <div className="pin-wrap"><section className="chap" ref={root}><div className="g"><div className="w chap-in">
       <div className="chap-media"><button type="button" className="hs" style={{ left: "50%", top: "60%" }} aria-label="Shop the Pleat Dress" onClick={() => s.quick("pleat-white")}><span>The Pleat Dress · {money(s.live("pleat-white")?.price || 365)}</span></button>
         <div className="fr"><img src={img("h-pleat-white")} alt="The Pleat Dress, front" loading="lazy" /></div><div className="fr f2"><img src={img("pleat-white-1")} alt="The Pleat Dress in motion" loading="lazy" /></div><div className="fr f3"><img src={img("pleat-white-4")} alt="The Pleat Dress, open back" loading="lazy" /></div></div>
       <div className="chap-txt"><span className="mono" style={{ color: "var(--cream)" }}>The signature</span><h2 className="H" data-rise>The Pleat <em>Dress</em></h2>
         <div className="chap-steps"><div className="chap-step s1"><p>Knife pleats that move with every step.</p></div><div className="chap-step s2"><p>A V-shaped waist that lengthens the line.</p></div><div className="chap-step s3"><p>An open back, held by a single band.</p></div></div>
         <div className="chap-bar"><i /></div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}><Link className="btn light" href="/products/pleat-dress-white/">Shop white</Link><Link className="btn line light" href="/products/pleat-dress-blue/">Shop blue</Link></div></div>
-    </div></div></section>
+    </div></div></section></div>
   );
 }
 
