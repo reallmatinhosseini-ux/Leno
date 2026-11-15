@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PRODUCTS, SIZES, STYLES, Size, byId, siblings, total } from "@/lib/data";
 import { img, money } from "@/lib/site";
@@ -25,7 +25,7 @@ export function Announcement() {
   const left = s.free - s.subtotal;
   if (focused(path)) return null;
   if (s.ready && s.count) return <div className="ann"><button type="button" className={"nudge" + (left <= 0 ? " ok" : "")} onClick={() => s.open("bag")}>{left > 0 ? `You are ${money(left)} away from free same-day delivery` : "Free same-day delivery unlocked ✓"}</button></div>;
-  const msgs = [cut, `Free same-day delivery over ${money(s.free)}`, "Free 14-day returns · Pay in 4 with Tabby"];
+  const msgs = [cut, `Free same-day delivery over ${money(s.free)}`, "Free 14-day returns · Cash on delivery"];
   return <div className="ann" aria-live="polite">{msgs.map((m, j) => <div key={j} className={j === i % 3 ? "on" : ""}>{m}</div>)}</div>;
 }
 
@@ -86,7 +86,7 @@ export function TabBar() {
 
 /* ---------- bag drawer ---------- */
 export function BagDrawer() {
-  const s = useStore(), router = useRouter();
+  const s = useStore();
   const left = s.free - s.subtotal;
   const picks = useMemo(() => {
     if (left <= 0 || !s.bag.length) return [];
@@ -121,9 +121,7 @@ export function BagDrawer() {
         {s.bag.length > 0 && <div className="dr-ft">
           {s.disc > 0 && <div className="tot promo"><span>{s.discLabel}</span><span>−{money(s.disc)}</span></div>}
           <div className="tot"><span>Subtotal <span className="mute" style={{ fontSize: 12 }}>incl. VAT</span></span><b>{money(s.subtotal - s.disc)}</b></div>
-          <button type="button" className="apay" onClick={() => { s.open("bag", false); router.push("/checkout/"); }}>Apple Pay</button>
           <Link className="btn block" href="/checkout/" onClick={() => s.open("bag", false)}>Checkout</Link>
-          <span className="mute" style={{ fontSize: 12, textAlign: "center" }}>or 4 payments of {money((s.subtotal - s.disc) / 4)} with <span className="tabby">tabby</span></span>
           <div className="dr-trust"><span>Free 14-day returns</span><span>Secure checkout</span><span>Same-day Dubai</span></div>
         </div>}
       </aside>
@@ -219,7 +217,7 @@ export function Footer() {
           <div className="nl">
             <span className="foot-k">First Serve</span>
             <h3 className="foot-h">Early access to every <em>drop</em></h3>
-            {joined ? <p className="foot-ok">You are on the list. Welcome to LENO WEAR.</p> : <form className="field" onSubmit={(e) => { e.preventDefault(); kissBurst(e.currentTarget.querySelector("button") || e.currentTarget, 8); setJoined(true); s.toast("You are on the list"); }}><input type="email" placeholder="Email address" aria-label="Email address" required /><button className="btn light" type="submit">Join</button></form>}
+            {joined ? <p className="foot-ok">You are on the list. Welcome to LENO WEAR.</p> : <form className="field" onSubmit={(e) => { e.preventDefault(); const email = String(new FormData(e.currentTarget).get("email") || ""); fetch("/api/subscribe/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, source: "footer" }) }).catch(() => {}); kissBurst(e.currentTarget.querySelector("button") || e.currentTarget, 8); setJoined(true); s.toast("You are on the list"); }}><input name="email" type="email" placeholder="Email address" aria-label="Email address" required /><button className="btn light" type="submit">Join</button></form>}
           </div>
         </div>
         <nav className="foot-col" aria-label="Shop"><h4>Shop</h4><ul><li><Link href="/shop/">Shop all</Link></li><li><Link href="/shop/dresses/">Dresses</Link></li><li><Link href="/shop/sets/">Sets</Link></li><li><Link href="/shop/navy-edit/">Navy edit</Link></li><li><Link href="/shop/light-edit/">Light edit</Link></li></ul></nav>

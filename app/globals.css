@@ -1845,3 +1845,27 @@ html.focus-co .hdr .burger{visibility:hidden}
 .trk .btn{justify-self:start}
 .co-fail{margin:0;padding:12px 16px;border-radius:10px;background:#F8E3E1;color:#7A1B1B;font-size:14px}
 .btn[disabled]{opacity:.6;pointer-events:none}
+
+/* v16 display fixes */
+/* sections sit edge to edge: no stray page-colour bands between them */
+.chap,.edition{margin-top:0!important}
+.chap-in{padding-block:clamp(64px,9vw,120px)}
+.chap-media .fr img{will-change:transform}
+/* phone: the three Pleat details read as a numbered list, one image */
+@media (max-width:900px){
+  .chap-media .f2,.chap-media .f3{display:none}
+  .chap-steps{counter-reset:st;gap:0!important}
+  .chap-step{opacity:1!important;transform:none!important;position:static!important;padding:14px 0;border-top:1px solid var(--line);grid-template-columns:28px 1fr;align-items:baseline}
+  .chap-step::before{counter-increment:st;content:"0" counter(st);font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--mute)}
+  .chap-step:last-child{border-bottom:1px solid var(--line)}
+  .chap-step p{margin:0}
+}
+/* product photos fill their frame evenly (source photos carry thin white borders) */
+.cm img{transform:scale(1.06)}
+.cm:hover img{transform:scale(1.1)}
+/* nothing may push the page sideways (story kiss grows while scrolling) */
+html,body{overflow-x:clip}
+.st-hero{overflow:clip}
+/* header text stays readable over light hero photos */
+.hdr.over{background:linear-gradient(rgba(10,10,12,.38),rgba(10,10,12,0))}
+.hdr.over .nl{text-shadow:0 1px 8px rgba(0,0,0,.25)}

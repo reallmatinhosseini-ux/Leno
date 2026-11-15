@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { SIZES, STYLES, Size, byId, partnerOf, siblings, total } from "@/lib/data";
@@ -19,7 +18,7 @@ function cutoff() {
 const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export default function ProductView({ id }: { id: string }) {
-  const s = useStore(); const router = useRouter();
+  const s = useStore();
   const base = byId(id)!;
   const p = s.live(id) || { ...base, price: STYLES[base.style].price, badge: "", hidden: false };
   const st = STYLES[p.style], tot = total(p.stock), sib = siblings(p);
@@ -51,9 +50,13 @@ export default function ProductView({ id }: { id: string }) {
       gsap.from(info.current!.children, { y: 24, opacity: 0, stagger: .04, duration: .9, ease: "expo.out", delay: .1, clearProps: "transform,opacity" });
       gsap.from(".pd-thumbs button", { x: -20, opacity: 0, stagger: .05, duration: .8, ease: "expo.out", delay: .3, clearProps: "transform,opacity" });
     }
-    const io = new IntersectionObserver(([e]) => setSticky(!e.isIntersecting && e.boundingClientRect.top < 0));
+    /* the bottom buy bar shows once the main button scrolls away, and steps aside for the footer */
+    let past = false, foot = false; const upd = () => setSticky(past && !foot);
+    const io = new IntersectionObserver(([e]) => { past = !e.isIntersecting && e.boundingClientRect.top < 0; upd(); });
+    const fo = new IntersectionObserver(([e]) => { foot = e.isIntersecting; upd(); });
     if (addBtn.current) io.observe(addBtn.current);
-    return () => io.disconnect();
+    const f = document.querySelector("footer"); if (f) fo.observe(f);
+    return () => { io.disconnect(); fo.disconnect(); };
   }, []);
   useEffect(() => { if (size && msg.current && !reduce()) gsap.fromTo(msg.current, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: .4 }); }, [size]);
   useEffect(() => { const k = (e: KeyboardEvent) => { if (lb === null) return; if (e.key === "Escape") setLb(null); if (e.key === "ArrowRight") setLb((lb + 1) % p.images.length); if (e.key === "ArrowLeft") setLb((lb - 1 + p.images.length) % p.images.length); }; addEventListener("keydown", k); return () => removeEventListener("keydown", k); }, [lb, p.images.length]);
@@ -75,7 +78,6 @@ export default function ProductView({ id }: { id: string }) {
     return null;
   };
   const addNow = () => { const z = resolve(); if (!z) return; if (s.add(p.id, z, document.querySelector<HTMLElement>(".pd-sl img"))) { setDone(true); setTimeout(() => setDone(false), 1600); } };
-  const buyNow = () => { const z = resolve(); if (z && s.add(p.id, z, null, { silent: true })) router.push("/checkout/"); };
   const full = p.price + partner.price, now = s.cfg.bundleOn ? Math.round(full * (1 - s.cfg.bundlePct / 100)) : full;
   const labels = <>{<span className="lbl">New season</span>}{p.id === "pleat-white" && <span className="lbl dark">Signature</span>}{p.badge && <span className="lbl dark">{p.badge}</span>}{tot === 0 ? <span className="lbl mute">Sold out</span> : tot === 1 ? <span className="lbl red">Last one</span> : tot <= 3 ? <span className="lbl red">Low stock</span> : null}</>;
 
@@ -96,7 +98,6 @@ export default function ProductView({ id }: { id: string }) {
         <div className="pd-labels">{labels}</div>
         <h1 className="pd-name">{st.name} <span className="mute" style={{ fontWeight: 400 }}>· {p.color}</span></h1>
         <div className="pd-price"><b>{money(p.price)}</b><span>incl. VAT</span></div>
-        <p className="pd-bnpl">Or 4 interest-free payments of {money(Math.round(p.price / 4))} with <span className="tabby">tabby</span></p>
         <div className="pd-opt"><div className="pd-row"><span>Colour <b>{p.color}</b></span></div>
           <div className="pd-sw">{sib.map((q) => <Link key={q.id} href={`/products/${q.slug}/`} className={q.id === p.id ? "on" : ""} aria-label={q.color} aria-current={q.id === p.id ? "page" : undefined}><img src={img(q.images[0])} alt="" /><span>{q.color}</span></Link>)}</div></div>
         <div className="pd-opt"><div className="pd-row"><span>Size <b>{size || "Select"}</b></span><button type="button" className="pd-guide" onClick={() => setGuide(true)}><Ruler />Size guide</button></div>
@@ -104,11 +105,10 @@ export default function ProductView({ id }: { id: string }) {
           <p className={"pd-msg" + (low ? " low" : "")} ref={msg} aria-live="polite">{message}</p></div>
         <div className="pd-buy"><button ref={addBtn} type="button" className={"btn red pd-add" + (done ? " done" : "")} onClick={addNow}><span className="a1">{tot ? (size ? `Add to bag · ${size}` : "Add to bag") : "Join the waitlist"}</span><span className="a2">Added to bag ✓</span></button>
           <button type="button" className="pd-wish" aria-pressed={s.wish.includes(p.id)} aria-label="Save to wishlist" onClick={(e) => { if (!s.wish.includes(p.id)) kissBurst(e.currentTarget, 7, .8); s.toggleWish(p.id); }}><Heart /></button></div>
-        {tot > 0 && <button type="button" className="apay" onClick={buyNow}>Buy now with Apple Pay</button>}
         <ul className="pd-trust">
           <li><Truck /><div><b>{ship.t}</b><span>{ship.s} · free over {money(s.free)}</span></div></li>
           <li><Return /><div><b>Free 14-day returns</b><span>We collect from your door</span></div></li>
-          <li><Lock /><div><b>Secure checkout</b><span>Apple Pay, cards, Tabby and Tamara</span></div></li>
+          <li><Lock /><div><b>Secure checkout</b><span>Cash on delivery across the UAE</span></div></li>
         </ul>
         <div className="fit" aria-label="Size and fit">
           <div className="fit-hd"><b>Size &amp; fit</b><button type="button" className="ulink" onClick={() => setGuide(true)}>How to measure</button></div>

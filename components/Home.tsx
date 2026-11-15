@@ -62,7 +62,7 @@ export function Hero() {
       <div className="hx-cols">{COLS.map((c, ci) => <div className="hx-col" key={ci}><div className="sl"><img src={img(c[0])} alt={ci === 0 ? "The Pleat Dress in White" : ""} fetchPriority={ci === 0 ? "high" : "auto"} draggable={false} /></div></div>)}</div>
       <div className="hx-shade" />
       <div className="hx-txt">
-        <div className="hx-l">          <h1 className="H hx-h"><span className="ln">Leave your</span><span className="ln"><em>mark.</em></span></h1>
+        <div className="hx-l">          <h1 className="H hx-h"><span className="ln">Leave your</span> <span className="ln"><em>mark.</em></span></h1>
           <div className="hx-cta"><Link className="btn red" href="/shop/">Shop the collection</Link></div></div>
         <div className="hx-r"><button type="button" className="look-pill" onClick={() => s.quick(LOOK[slide])}><i />Shop this look</button>
           <div className="hx-dots">{[0, 1, 2].map((i) => <button key={i} type="button" className={i === slide ? "on" : ""} aria-label={`Look ${i + 1}`} onClick={() => setSlide(i)}><b /></button>)}</div></div>
@@ -74,7 +74,7 @@ export function Hero() {
 /* ---------- categories ---------- */
 /* ---------- brand promise ribbon ---------- */
 export function Ribbon() {
-  const items = ["Same-day delivery in Dubai", "Free 14-day returns", "Made in small runs", "Pay in 4 with Tabby", "Leave your mark"];
+  const items = ["Same-day delivery in Dubai", "Free 14-day returns", "Made in small runs", "Cash on delivery across the UAE", "Leave your mark"];
   const row = (k: number) => <div className="rb-row" aria-hidden={k > 0}>{items.map((t) => <span key={t + k}><em>{t}</em><img src={asset("/p/kiss-tag.png")} alt="" /></span>)}</div>;
   return <section className="rb" aria-label="Our promises"><div className="rb-track">{row(0)}{row(1)}</div></section>;
 }
@@ -196,12 +196,15 @@ export function Signature() {
   useEffect(() => {
     if (reduce() || !desk()) return;
     const ctx = gsap.context(() => {
-      gsap.set(".chap-media .f2, .chap-media .f3", { clipPath: "inset(100% 0% 0% 0%)" });
-      const tl = gsap.timeline({ scrollTrigger: { trigger: root.current, start: "top top", end: "+=200%", pin: true, scrub: 1 } });
-      tl.to(".chap-media .f2", { clipPath: "inset(0% 0% 0% 0%)", duration: 1, ease: "none" }).from(".chap-media .f2 img", { scale: 1.3, duration: 1, ease: "none" }, "<")
-        .to(".chap-step.s1", { opacity: 0, y: -24, duration: .4 }, "<.1").fromTo(".chap-step.s2", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .4 }, ">-.1").to(".chap-bar i", { scaleX: .66, duration: 1, ease: "none" }, "<-.5")
-        .to(".chap-media .f3", { clipPath: "inset(0% 0% 0% 0%)", duration: 1, ease: "none" }).from(".chap-media .f3 img", { scale: 1.3, duration: 1, ease: "none" }, "<")
-        .to(".chap-step.s2", { opacity: 0, y: -24, duration: .4 }, "<.1").fromTo(".chap-step.s3", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .4 }, ">-.1").to(".chap-bar i", { scaleX: 1, duration: 1, ease: "none" }, "<-.5");
+      /* frames crossfade (no hard wipe edge), the caption swaps, the bar fills */
+      gsap.set(".chap-media .f2, .chap-media .f3", { opacity: 0 });
+      gsap.set(".chap-step.s2, .chap-step.s3", { opacity: 0, y: 20 });
+      const tl = gsap.timeline({ defaults: { ease: "none" }, scrollTrigger: { trigger: root.current, start: "top top", end: "+=180%", pin: true, scrub: .6, anticipatePin: 1 } });
+      tl.to(".chap-media .f2", { opacity: 1, duration: .5 }, .25).fromTo(".chap-media .f2 img", { scale: 1.08 }, { scale: 1, duration: 1 }, .25)
+        .to(".chap-step.s1", { opacity: 0, y: -20, duration: .25 }, .3).to(".chap-step.s2", { opacity: 1, y: 0, duration: .25 }, .5).to(".chap-bar i", { scaleX: .66, duration: .5 }, .25)
+        .to(".chap-media .f3", { opacity: 1, duration: .5 }, 1.25).fromTo(".chap-media .f3 img", { scale: 1.08 }, { scale: 1, duration: 1 }, 1.25)
+        .to(".chap-step.s2", { opacity: 0, y: -20, duration: .25 }, 1.3).to(".chap-step.s3", { opacity: 1, y: 0, duration: .25 }, 1.5).to(".chap-bar i", { scaleX: 1, duration: .5 }, 1.25)
+        .to({}, { duration: .3 });
     }, root);
     return () => ctx.revert();
   }, []);
@@ -254,11 +257,13 @@ export function LastPieces() {
 export function Edition() {
   const s = useStore(); const t = s.live("tulle-ivory");
   if (t?.hidden) return null;
+  const left = t ? SIZES.reduce((a, z) => a + (t.stock[z] || 0), 0) : 0;
+  const stockTxt = !t ? "Small edition" : left === 0 ? "Sold out · waitlist open" : left === 1 ? "1 piece left" : `Small edition · ${left} pieces`;
   return (
     <section className="edition"><div className="g"><div className="w ed-in">
       <Link className="ed-media" href="/products/tulle-dress-ivory/" data-reveal data-cursor="View"><img src={img("tulle-ivory-lips")} alt="The Tulle Dress in Ivory, with the LENO WEAR kiss" loading="lazy" /></Link>
-      <div className="ed-txt"><span className="ed-stock mono"><i />Edition · {t && t.stock.M === 1 ? "1 piece left" : "limited"}</span><h2 className="H" data-rise>The Tulle <em>Dress</em></h2><p>Ivory tulle over a racer-back bodice.</p>
-        <div><Link className="btn red" href="/products/tulle-dress-ivory/">Shop the last one</Link></div></div>
+      <div className="ed-txt"><span className="ed-stock mono"><i />{stockTxt}</span><h2 className="H" data-rise>The Tulle <em>Dress</em></h2><p>Ivory tulle over a racer-back bodice.</p>
+        <div><Link className="btn red" href="/products/tulle-dress-ivory/">{left === 1 ? "Shop the last one" : left === 0 ? "Join the waitlist" : "Shop the Tulle Dress"}</Link></div></div>
     </div></div></section>
   );
 }
