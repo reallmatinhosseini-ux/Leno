@@ -1835,3 +1835,7 @@ html.focus-co .hdr .burger{visibility:hidden}
 .fit-n{margin:0;font-size:12px;line-height:1.55;color:var(--mute)}
 .pd-track{width:100%}
 .pd-sl:not(.zoom) img{transform:scale(1.035)}
+/* help: cards size to their content; red reserved for the kiss and main action */
+.hl-grid{align-items:start}
+.hl-card.red{background:var(--studio);color:var(--ink)}
+.hl-card.red .mono{color:var(--mute)}
