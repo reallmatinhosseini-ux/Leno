@@ -8,6 +8,7 @@ const nextConfig = {
   images: { unoptimized: true },
   reactStrictMode: true, outputFileTracingRoot: fileURLToPath(new URL(".", import.meta.url)),
   serverExternalPackages: ["@electric-sql/pglite", "postgres"],
+  outputFileTracingIncludes: { "/api/**/*": ["./node_modules/@electric-sql/pglite/dist/**/*"] },
   env: { NEXT_PUBLIC_BASE_PATH: "", NEXT_PUBLIC_SITE_URL: siteUrl },
   async headers() {
     return [{ source: "/:path*", headers: [

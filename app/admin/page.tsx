@@ -20,7 +20,8 @@ export default function Overview() {
   const setup = st && [!st.env.db && "Database", !st.env.card && "Card payments", !st.env.email && "Order emails", !st.env.blob && "Photo uploads"].filter(Boolean);
 
   return (<>
-    {setup && setup.length > 0 && <Link href="/admin/settings/" className="ad-note">Still to connect: {setup.join(" · ")}. Open Settings for the steps →</Link>}
+    {st && !st.env.db && <Link href="/admin/settings/" className="ad-note">Test mode: no database connected yet, so orders and changes are temporary and reset when the site redeploys. Connect Neon in Settings to keep them →</Link>}
+    {setup && setup.length > 0 && st?.env.db && <Link href="/admin/settings/" className="ad-note">Still to connect: {setup.join(" · ")}. Open Settings for the steps →</Link>}
     <div className="ad-kpis">
       <div className="ad-kpi"><span>Today</span><b>{aed(sum(sales.filter((o) => day(o.created_at) === today)))}</b><small>{sales.filter((o) => day(o.created_at) === today).length} orders</small></div>
       <div className="ad-kpi"><span>Last 7 days</span><b>{aed(sum(since(7)))}</b><small>{since(7).length} orders</small></div>

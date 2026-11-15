@@ -9,7 +9,9 @@ export type Q = <T = Row>(text: string, params?: unknown[]) => Promise<T[]>;
 type Db = { q: Q; tx: <R>(fn: (q: Q) => Promise<R>) => Promise<R> };
 
 const URL = process.env.DATABASE_URL || process.env.POSTGRES_URL || "";
-export const dbConfigured = () => !!URL || process.env.NODE_ENV !== "production";
+/* Test mode: no DATABASE_URL yet, so data lives in a temporary embedded database
+   (on Vercel it resets when the server restarts or redeploys). */
+export const testMode = () => !URL;
 
 const SCHEMA = `
 create table if not exists settings (key text primary key, value jsonb not null);
@@ -37,13 +39,11 @@ async function open(): Promise<Db> {
     const wrap = (s: typeof sql): Q => async (text, params = []) => (await s.unsafe(text, params as never[])) as never;
     return { q: wrap(sql), tx: (fn) => sql.begin((t) => fn(wrap(t as unknown as typeof sql))) as never };
   }
-  if (process.env.NODE_ENV === "production" && process.env.VERCEL) throw new Error("DATABASE_URL is not set. In Vercel open Storage → Create → Neon Postgres and connect it to this project.");
-  const mod = "@electric-sql/pglite";
-  const { PGlite } = await import(/* webpackIgnore: true */ mod);
+  const { PGlite } = await import("@electric-sql/pglite");
   const g = globalThis as unknown as { __pg?: InstanceType<typeof PGlite> };
-  const pg = g.__pg || (g.__pg = new PGlite(process.cwd() + "/.data/pg"));
+  const pg = g.__pg || (g.__pg = new PGlite(process.env.VERCEL ? "/tmp/leno-pg" : process.cwd() + "/.data/pg"));
   const wrap = (p: { query: (t: string, v?: unknown[]) => Promise<{ rows: unknown[] }> }): Q => async (text, params = []) => (await p.query(text, params)).rows as never;
-  return { q: wrap(pg), tx: (fn) => pg.transaction((t: never) => fn(wrap(t))) as never };
+  return { q: wrap(pg), tx: (fn) => pg.transaction((t) => fn(wrap(t as never))) as never };
 }
 
 async function init(): Promise<Db> {

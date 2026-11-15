@@ -4,11 +4,11 @@ export const COOKIE = "leno_admin";
 const DAYS = 7;
 
 function secret() {
-  const s = process.env.ADMIN_SECRET || process.env.ADMIN_PASSWORD || (process.env.NODE_ENV !== "production" ? "dev-only-secret" : "");
-  return s;
+  return process.env.ADMIN_SECRET || process.env.ADMIN_PASSWORD || "leno-test-secret";
 }
 export function adminPassword() {
-  return process.env.ADMIN_PASSWORD || (process.env.NODE_ENV !== "production" ? "leno-admin" : "");
+  /* TEST password until ADMIN_PASSWORD is set in Vercel. Replace before real launch. */
+  return process.env.ADMIN_PASSWORD || "leno2026";
 }
 const enc = new TextEncoder();
 const hex = (b: ArrayBuffer) => Array.from(new Uint8Array(b)).map((x) => x.toString(16).padStart(2, "0")).join("");
