@@ -6,6 +6,7 @@ import Motion from "@/components/Motion";
 import { Announcement, BagDrawer, Footer, Header, MobileMenu, QuickView, SearchOverlay, TabBar, Toast } from "@/components/Chrome";
 import Welcome from "@/components/Welcome";
 import Cursor from "@/components/Cursor";
+import PageTransition from "@/components/PageTransition";
 import { BRAND, DESCRIPTION, SITE_URL, asset, jpg } from "@/lib/site";
 import JsonLd from "@/components/JsonLd";
 
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Toast />
           <Motion />
           <Cursor />
+          <PageTransition />
         </StoreProvider>
       </body>
     </html>

@@ -110,6 +110,17 @@ export default function ProductView({ id }: { id: string }) {
           <li><Return /><div><b>Free 14-day returns</b><span>We collect from your door</span></div></li>
           <li><Lock /><div><b>Secure checkout</b><span>Apple Pay, cards, Tabby and Tamara</span></div></li>
         </ul>
+        <div className="fit" aria-label="Size and fit">
+          <div className="fit-hd"><b>Size &amp; fit</b><button type="button" className="ulink" onClick={() => setGuide(true)}>How to measure</button></div>
+          <table className="fit-t"><thead><tr><th scope="col">Size</th>{SIZES.map((z) => <th scope="col" key={z} className={size === z ? "on" : ""}>{z}</th>)}</tr></thead>
+            <tbody>
+              <tr><th scope="row">UK</th>{["8", "10", "12", "14"].map((v, i) => <td key={v} className={size === SIZES[i] ? "on" : ""}>{v}</td>)}</tr>
+              <tr><th scope="row">EU</th>{["36", "38", "40", "42"].map((v, i) => <td key={v} className={size === SIZES[i] ? "on" : ""}>{v}</td>)}</tr>
+              <tr><th scope="row">US</th>{["4", "6", "8", "10"].map((v, i) => <td key={v} className={size === SIZES[i] ? "on" : ""}>{v}</td>)}</tr>
+              <tr><th scope="row">In stock</th>{SIZES.map((z) => <td key={z} className={(size === z ? "on " : "") + (p.stock[z] ? "" : "no")}>{p.stock[z] ? (p.stock[z] === 1 ? "Last" : "Yes") : "—"}</td>)}</tr>
+            </tbody></table>
+          <p className="fit-n">Approximate equivalents. Exact garment measurements are added before launch. Between sizes? Our stylists help you choose on WhatsApp, and exchanges are free within 14 days.</p>
+        </div>
         <div className="acc pd-acc">
           <details open><summary>Description<i /></summary><div className="ab"><p>{st.desc}</p></div></details>
           <details><summary>Details<i /></summary><div className="ab"><ul>{st.points.map((x) => <li key={x}>{x}</li>)}</ul><span className="mono mute">Style {st.code}</span></div></details>

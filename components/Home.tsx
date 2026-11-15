@@ -97,17 +97,64 @@ export function ContinueBrowsing() {
 
 /* ---------- shop grid with tabs ---------- */
 const TABS: [string, string][] = [["all", "All"], ["dresses", "Dresses"], ["sets", "Sets"], ["navy", "Navy"], ["light", "Light"]];
+const PICKS = ["pleat-white", "knot-navy", "set-navy", "tulle-ivory"];
 export function ShopGrid() {
-  const [tab, setTab] = useState("all"); const grid = useRef<HTMLDivElement>(null); const state = useRef<Flip.FlipState | null>(null);
-  const show = (id: string) => { const p = byId(id)!; return tab === "all" || (tab === "dresses" && STYLES[p.style].cat === "dresses") || (tab === "sets" && STYLES[p.style].cat === "sets") || p.edit === tab; };
-  const pick = (t: string) => { if (t === tab) return; if (!reduce() && grid.current) state.current = Flip.getState(grid.current.querySelectorAll(".card")); setTab(t); };
-  useEffect(() => { if (state.current) { Flip.from(state.current, { duration: .7, ease: "expo.inOut", absolute: true, scale: true, onEnter: (els) => gsap.fromTo(els, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .6 }), onLeave: (els) => gsap.to(els, { opacity: 0, duration: .3 }) }); state.current = null; } }, [tab]);
   return (
     <section className="g shop-sec"><div className="w">
       <div className="sh-hd"><h2 className="H" data-rise>New <em>season</em><img className="h-kiss" data-stamp src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" /></h2>
-        <div className="tabs" role="tablist">{TABS.map(([k, l]) => <button key={k} type="button" role="tab" aria-selected={tab === k} className={tab === k ? "on" : ""} onClick={() => pick(k)}>{l}</button>)}</div></div>
-      <div className="grid g4" ref={grid}>{PRODUCTS.map((p, i) => <div key={p.id} style={{ display: show(p.id) ? "contents" : "none" }}><ProductCard product={p} priority={i < 4} /></div>)}</div>
-      <div className="shop-more"><Link className="ulink mono" href="/shop/">View all pieces →</Link></div>
+        <Link className="ulink sh-link" href="/shop/">Shop all 7 pieces →</Link></div>
+      <div className="grid g4">{PICKS.map((id, i) => <ProductCard key={id} product={byId(id)!} priority={i < 4} />)}</div>
+    </div></section>
+  );
+}
+
+/* ---------- The Mark: a kiss presses onto the page and the line writes itself ---------- */
+export function Mark() {
+  const root = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (reduce()) return;
+    const ctx = gsap.context(() => {
+      const ch = Array.from(root.current!.querySelectorAll(".mk-h .ln")).flatMap((el) => splitChars(el));
+      const tl = gsap.timeline(desk()
+        ? { scrollTrigger: { trigger: root.current, start: "top top", end: "+=110%", pin: true, scrub: 1 } }
+        : { scrollTrigger: { trigger: root.current, start: "top 70%" } });
+      tl.fromTo(".mk-kiss", { scale: 4.2, opacity: 0, rotate: -28, filter: "blur(14px)" }, { scale: 1, opacity: 1, rotate: -10, filter: "blur(0px)", duration: 1, ease: "power3.in" })
+        .to(".mk-kiss", { scaleX: 1.12, scaleY: .86, duration: .12 })
+        .to(".mk-kiss", { scaleX: 1, scaleY: 1, duration: .4, ease: "elastic.out(1,.4)" })
+        .fromTo(".mk-ring", { scale: .4, opacity: .5 }, { scale: 2.4, opacity: 0, duration: .8, ease: "expo.out" }, "<-.1")
+        .from(ch, { yPercent: 110, duration: .8, stagger: .025, ease: "expo.out" }, "<")
+        .from(".mk-p, .mk-cta", { y: 24, opacity: 0, duration: .6, stagger: .1 }, "-=.3");
+    }, root);
+    return () => ctx.revert();
+  }, []);
+  return (
+    <section className="mk" ref={root} aria-label="Leave your mark"><div className="mk-in">
+      <span className="mk-stage"><img className="mk-kiss" src={asset("/p/kiss-tag.png")} alt="" /><i className="mk-ring" /></span>
+      <h2 className="H mk-h"><span className="ln">Leave your</span> <span className="ln"><em>mark.</em></span></h2>
+      <p className="mk-p">Court-wear from Dubai, made in small runs. Every piece is chosen to move on court and to look right long after the last game.</p>
+      <Link className="ulink mk-cta" href="/story/">Our story →</Link>
+    </div></section>
+  );
+}
+
+/* ---------- Shop by moment ---------- */
+const MOMENTS = [
+  { time: "07:00", t: "Studio", sub: "The warm-up and the coffee after", img: "set-white-3", ids: ["set-white", "set-navy"] },
+  { time: "13:00", t: "Court", sub: "Every rally, every point", img: "pleat-blue-2", ids: ["pleat-white", "pleat-blue", "knot-navy"] },
+  { time: "19:00", t: "City", sub: "From the last game into the evening", img: "tulle-ivory-1", ids: ["tulle-ivory", "knot-sand"] },
+];
+export function Moments() {
+  const s = useStore();
+  return (
+    <section className="g mo"><div className="w">
+      <div className="sh-hd"><h2 className="H" data-rise>Shop by <em>moment</em></h2><span className="mono mute">One day, three looks</span></div>
+      <div className="mo-row">{MOMENTS.map((m) => (
+        <article className="mo-p" key={m.t}>
+          <img className="mo-img" src={img(m.img)} alt={`${m.t}: ${m.sub}`} loading="lazy" />
+          <div className="mo-t"><span className="mo-time">{m.time}</span><h3>{m.t}</h3><p>{m.sub}</p>
+            <ul>{m.ids.map((id) => { const p = s.live(id) || { ...byId(id)!, price: STYLES[byId(id)!.style].price, hidden: false }; return p.hidden ? null : (
+              <li key={id}><Link href={`/products/${p.slug}/`}><img src={img(p.images[0])} alt="" /><span><b>{STYLES[p.style].name}</b>{p.color} · {money(p.price)}</span></Link></li>); })}</ul></div>
+        </article>))}</div>
     </div></section>
   );
 }
