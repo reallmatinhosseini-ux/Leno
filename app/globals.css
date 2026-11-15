@@ -1768,7 +1768,7 @@ html.focus-co .hdr .burger{visibility:hidden}
 .chip.on{background:var(--ink)}
 
 /* vector kiss cursor (desktop, JS-enabled only) */
-.kc{position:fixed;left:0;top:0;z-index:600;width:30px;height:auto;pointer-events:none;opacity:0;transform:rotate(-10deg);filter:drop-shadow(0 2px 3px rgba(120,10,25,.28)) drop-shadow(0 0 1px rgba(255,255,255,.9));will-change:transform}
+.kc{position:fixed;left:0;top:0;z-index:600;width:34px;height:auto;pointer-events:none;opacity:0;transform:rotate(-10deg);filter:drop-shadow(0 2px 3px rgba(120,10,25,.28)) drop-shadow(0 0 1px rgba(255,255,255,.9));will-change:transform}
 .lc{margin:0!important;width:66px;height:66px}
 @media (pointer:fine){
   html.kc-on,html.kc-on *{cursor:none!important}
@@ -1781,7 +1781,7 @@ html.focus-co .hdr .burger{visibility:hidden}
 .pt span{font-family:var(--display);font-weight:800;font-stretch:125%;font-size:12px;letter-spacing:.42em;margin-right:-.42em;color:var(--ink);opacity:.7}
 
 /* ---- The Mark ---- */
-.mk{min-height:100svh;display:grid;place-items:center;background:var(--bg);overflow:hidden;padding:80px var(--gut)}
+.mk{min-height:min(86svh,820px);display:grid;place-items:center;background:var(--bg);overflow:hidden;padding:80px var(--gut)}
 .mk-in{display:grid;justify-items:center;text-align:center;gap:22px;max-width:760px}
 .mk-stage{position:relative;display:grid;place-items:center;width:clamp(120px,16vw,200px)}
 .mk-kiss{width:100%;height:auto;transform:rotate(-10deg);filter:drop-shadow(0 18px 30px rgba(120,10,25,.22))}
@@ -1833,3 +1833,5 @@ html.focus-co .hdr .burger{visibility:hidden}
 .fit-t tr:last-child td.on{border-radius:0 0 8px 8px}
 .fit-t td.no{color:var(--mute)}
 .fit-n{margin:0;font-size:12px;line-height:1.55;color:var(--mute)}
+.pd-track{width:100%}
+.pd-sl:not(.zoom) img{transform:scale(1.035)}

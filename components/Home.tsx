@@ -115,15 +115,14 @@ export function Mark() {
     if (reduce()) return;
     const ctx = gsap.context(() => {
       const ch = Array.from(root.current!.querySelectorAll(".mk-h .ln")).flatMap((el) => splitChars(el));
-      const tl = gsap.timeline(desk()
-        ? { scrollTrigger: { trigger: root.current, start: "top top", end: "+=110%", pin: true, scrub: 1 } }
-        : { scrollTrigger: { trigger: root.current, start: "top 70%" } });
-      tl.fromTo(".mk-kiss", { scale: 4.2, opacity: 0, rotate: -28, filter: "blur(14px)" }, { scale: 1, opacity: 1, rotate: -10, filter: "blur(0px)", duration: 1, ease: "power3.in" })
-        .to(".mk-kiss", { scaleX: 1.12, scaleY: .86, duration: .12 })
-        .to(".mk-kiss", { scaleX: 1, scaleY: 1, duration: .4, ease: "elastic.out(1,.4)" })
-        .fromTo(".mk-ring", { scale: .4, opacity: .5 }, { scale: 2.4, opacity: 0, duration: .8, ease: "expo.out" }, "<-.1")
-        .from(ch, { yPercent: 110, duration: .8, stagger: .025, ease: "expo.out" }, "<")
-        .from(".mk-p, .mk-cta", { y: 24, opacity: 0, duration: .6, stagger: .1 }, "-=.3");
+      /* plays once as soon as it comes into view: never a blank screen */
+      const tl = gsap.timeline({ scrollTrigger: { trigger: root.current, start: "top 72%", once: true } });
+      tl.fromTo(".mk-kiss", { scale: 3.2, opacity: 0, rotate: -28, filter: "blur(10px)" }, { scale: 1, opacity: 1, rotate: -10, filter: "blur(0px)", duration: .6, ease: "power4.in" })
+        .to(".mk-kiss", { scaleX: 1.12, scaleY: .86, duration: .08 })
+        .to(".mk-kiss", { scaleX: 1, scaleY: 1, duration: .7, ease: "elastic.out(1,.4)" })
+        .fromTo(".mk-ring", { scale: .4, opacity: .5 }, { scale: 2.4, opacity: 0, duration: .9, ease: "expo.out" }, "<-.05")
+        .from(ch, { yPercent: 110, duration: 1, stagger: .022, ease: "expo.out" }, "<-.15")
+        .from(".mk-p, .mk-cta", { y: 20, opacity: 0, duration: .8, stagger: .1, ease: "expo.out" }, "-=.6");
     }, root);
     return () => ctx.revert();
   }, []);

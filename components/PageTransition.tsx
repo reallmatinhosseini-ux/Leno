@@ -48,5 +48,5 @@ export default function PageTransition() {
 
   useEffect(() => { if (pending.current) requestAnimationFrame(() => setTimeout(reveal, 60)); }, [path]);
 
-  return <div className="pt" ref={sheet} aria-hidden="true"><img src={asset("/p/lips.svg")} alt="" /><span>LENO WEAR</span></div>;
+  return <div className="pt" ref={sheet} aria-hidden="true"><img src={asset("/p/kiss-tag.png")} alt="" /><span>LENO WEAR</span></div>;
 }

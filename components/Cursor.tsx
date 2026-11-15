@@ -52,7 +52,7 @@ export default function Cursor() {
     };
   }, []);
   return (<>
-    <img ref={kiss} className="kc" src={asset("/p/lips.svg")} alt="" aria-hidden="true" draggable={false} />
+    <img ref={kiss} className="kc" src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" draggable={false} />
     <div className="lc" ref={lab} aria-hidden="true"><span>View</span></div>
   </>);
 }
