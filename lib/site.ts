@@ -6,6 +6,6 @@ export const DESCRIPTION = "LENO WEAR is court-wear from Dubai: the Pleat, Knot 
 
 /** Public asset URL that respects the GitHub Pages base path. */
 export const asset = (path: string) => `${BASE}${path.startsWith("/") ? path : "/" + path}`;
-export const img = (name: string) => asset(`/p/${name}.webp`);
-export const jpg = (name: string) => `${SITE_URL}/p/${name}.jpg`;
+export const img = (name: string) => (/^https?:\/\//.test(name) ? name : asset(`/p/${name}.webp`));
+export const jpg = (name: string) => (/^https?:\/\//.test(name) ? name : `${SITE_URL}/p/${name}.jpg`);
 export const money = (n: number) => "AED " + Math.round(n).toLocaleString("en-US");

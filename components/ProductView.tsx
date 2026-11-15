@@ -35,7 +35,7 @@ export default function ProductView({ id }: { id: string }) {
   const [guide, setGuide] = useState(false);
   const [wait, setWait] = useState<Size | "any" | null>(null); const [waitDone, setWaitDone] = useState(false);
   const joinWait = (email: string) => {
-    try { const k = "leno-waitlist", a = JSON.parse(localStorage.getItem(k) || "[]"); a.unshift({ id: p.id, size: wait, email, date: new Date().toISOString() }); localStorage.setItem(k, JSON.stringify(a)); } catch { /* storage unavailable */ }
+    fetch("/api/waitlist/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: p.id, size: wait, email }) }).catch(() => {});
     setWaitDone(true);
   };
   const [ship, setShip] = useState({ t: "Same-day delivery in Dubai", s: "Order by 2 pm" });

@@ -227,7 +227,7 @@ export function Footer() {
         <nav className="foot-col" aria-label="LENO WEAR"><h4>LENO WEAR</h4><ul><li><Link href="/story/">Our story</Link></li><li><span>Instagram</span></li><li><span>TikTok</span></li></ul></nav>
       </div>
       <div className="foot-sig" aria-hidden="true"><i /><Kiss /><span>Leave your mark</span><i /></div>
-      <div className="foot-bot"><span>© 2026 LENO WEAR · Dubai</span><span>Demo store · prices are placeholders and no orders are processed</span><span>Visa · Mastercard · Apple Pay · Tabby · Tamara</span></div>
+      <div className="foot-bot"><span>© 2026 LENO WEAR · Dubai</span><span>Secure checkout · Cash on delivery across the UAE</span><span>Prices in AED, VAT included</span></div>
     </div></div></footer>
   );
 }

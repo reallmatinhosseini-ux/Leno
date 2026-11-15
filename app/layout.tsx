@@ -1,12 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Instrument_Sans, Instrument_Serif } from "next/font/google";
 import "./globals.css";
-import { StoreProvider } from "@/lib/store";
-import Motion from "@/components/Motion";
-import { Announcement, BagDrawer, Footer, Header, MobileMenu, QuickView, SearchOverlay, TabBar, Toast } from "@/components/Chrome";
-import Welcome from "@/components/Welcome";
-import Cursor from "@/components/Cursor";
-import PageTransition from "@/components/PageTransition";
 import { BRAND, DESCRIPTION, SITE_URL, asset, jpg } from "@/lib/site";
 import JsonLd from "@/components/JsonLd";
 
@@ -41,23 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${archivo.variable} ${sans.variable} ${serif.variable}`}>
       <body style={{ ["--kiss-url" as string]: `url(${asset("/p/kiss-tag.png")})` }}>
         <JsonLd data={org} />
-        <StoreProvider>
-          <a className="sr skip" href="#view">Skip to content</a>
-          <Announcement />
-          <Header />
-          <main id="view">{children}</main>
-          <Footer />
-          <MobileMenu />
-          <SearchOverlay />
-          <BagDrawer />
-          <QuickView />
-          <TabBar />
-          <Welcome />
-          <Toast />
-          <Motion />
-          <Cursor />
-          <PageTransition />
-        </StoreProvider>
+        {children}
       </body>
     </html>
   );

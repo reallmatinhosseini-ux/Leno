@@ -128,6 +128,8 @@ export default function Welcome() {
 
   const claim = (e: React.FormEvent) => {
     e.preventDefault(); s.claim(); setDone(true);
+    const email = String(new FormData(e.currentTarget as HTMLFormElement).get("email") || "");
+    fetch("/api/subscribe/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, source: "welcome" }) }).catch(() => {});
     if (root.current && !reduce()) {
       const q = gsap.utils.selector(root.current);
       gsap.fromTo(q(".we-done > *"), { opacity: 0, y: 12 }, { opacity: 1, y: 0, stagger: .07, duration: .7, ease: "expo.out" });
@@ -162,7 +164,7 @@ export default function Welcome() {
                     <h2 id="we-t">Your welcome <em>gift</em></h2>
                     <p className="we-off"><b>{s.cfg.welcomePct}% off</b> your first order</p>
                     <form className="we-f" onSubmit={claim}>
-                      <input type="email" required placeholder="Your email address" aria-label="Your email address" autoComplete="email" />
+                      <input name="email" type="email" required placeholder="Your email address" aria-label="Your email address" autoComplete="email" />
                       <button className="btn red block" type="submit">Claim my {s.cfg.welcomePct}% off</button>
                     </form>
                     <button type="button" className="we-later" onClick={() => close()}>Maybe later</button>

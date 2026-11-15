@@ -1,17 +1,18 @@
 "use client";
-/* Shopping state (bag, wishlist, offers, orders) shared across the app.
-   Uses the same browser-storage keys as the admin panel, so admin edits and
-   checkout orders flow between the two. */
+/* Shopping state (bag, wishlist, offers) shared across the app. Live stock, prices
+   and offers come from the server (/api/catalog), which the admin panel edits.
+   Orders are placed on the server; the browser never sets a price or stock level. */
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { PRODUCTS, STYLES, SIZES, FREE_DELIVERY, Product, Size, StyleKey, byId, total } from "./data";
 import { img } from "./site";
 import { bump, stampKiss } from "./fx";
 
 export type Line = { id: string; size: Size; qty: number };
-type AdminProduct = { stock?: Partial<Record<Size, number>>; badge?: string; hidden?: boolean };
-type Admin = { products?: Record<string, AdminProduct>; prices?: Partial<Record<StyleKey, number>>; cfg?: { free?: number; welcomeOn?: boolean; welcomePct?: number; bundleOn?: boolean; bundlePct?: number } };
+type AdminProduct = { stock?: Partial<Record<Size, number>>; badge?: string; hidden?: boolean; images?: string[] };
+type Admin = { products?: Record<string, AdminProduct>; prices?: Partial<Record<StyleKey, number>>; cfg?: { free?: number; welcomeOn?: boolean; welcomePct?: number; bundleOn?: boolean; bundlePct?: number; sameDayFee?: number; announcement?: string }; pay?: { card: boolean; cod: boolean } };
 export type LiveProduct = Product & { price: number; badge: string; hidden: boolean };
-export type Order = { no: string; date: string; name: string; method: string; total: number; status: string; items: { id: string; size: Size; qty: number; price: number }[] };
+export type Order = { no: string; created_at: string; name: string; email: string; pay_method: string; pay_status: string; status: string; subtotal: number; discount: number; discount_label: string; delivery: number; total: number; speed: string; items: { id: string; size: Size; qty: number; price: number; name: string; color: string }[] };
+export type Checkout = { email: string; phone: string; name: string; emirate: string; area: string; building: string; landmark: string; speed: string; method: string; gift: boolean; note: string };
 
 const read = <T,>(k: string, d: T): T => { try { const v = localStorage.getItem(k); return v ? (JSON.parse(v) as T) : d; } catch { return d; } };
 const write = (k: string, v: unknown) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage unavailable */ } };
@@ -22,14 +23,14 @@ type Ctx = {
   live: (id: string) => LiveProduct | undefined;
   bag: Line[]; wish: string[]; recent: string[];
   count: number; subtotal: number; disc: number; discLabel: string; free: number; isBundle: boolean;
-  promo: string | null; cfg: { welcomeOn: boolean; welcomePct: number; bundleOn: boolean; bundlePct: number };
+  promo: string | null; cfg: { welcomeOn: boolean; welcomePct: number; bundleOn: boolean; bundlePct: number; sameDayFee: number; announcement: string }; pay: { card: boolean; cod: boolean }; live_ok: boolean;
   add: (id: string, size: Size, from?: HTMLElement | null, opts?: { silent?: boolean }) => boolean;
   setQty: (i: number, q: number) => void;
   toggleWish: (id: string) => void;
   seen: (id: string) => void;
   claim: () => void;
-  placeOrder: (o: { name: string; method: string; delivery: number }) => Order;
-  lastOrder: Order | null;
+  placeOrder: (o: Checkout) => Promise<{ next?: string; error?: string }>;
+  refresh: () => Promise<void>;
   ui: { bag: boolean; search: boolean; menu: boolean; quick: string | null; size: boolean };
   open: (k: "bag" | "search" | "menu" | "size", v?: boolean) => void;
   quick: (id: string | null) => void;
@@ -46,33 +47,38 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [wish, setWish] = useState<string[]>([]);
   const [recent, setRecent] = useState<string[]>([]);
   const [promo, setPromo] = useState<string | null>(null);
-  const [lastOrder, setLastOrder] = useState<Order | null>(null);
+  const [liveOk, setLiveOk] = useState(false);
   const [ui, setUi] = useState({ bag: false, search: false, menu: false, quick: null as string | null, size: false });
   const [toastMsg, setToast] = useState<string | null>(null);
   const tRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
-    setAdmin(read<Admin>("leno-admin", {}));
     setBag(read<Line[]>("leno-bag", []).filter((l) => byId(l.id)));
     setWish(read<string[]>("leno-wish", []).filter((id) => byId(id)));
     setRecent(read<string[]>("leno-recent", []).filter((id) => byId(id)));
     try { setPromo(localStorage.getItem("leno-promo")); } catch { /* ignore */ }
-    try { const o = sessionStorage.getItem("leno-last-order"); if (o) setLastOrder(JSON.parse(o)); } catch { /* ignore */ }
     setReady(true);
-    const sync = (e: StorageEvent) => { if (e.key === "leno-admin") setAdmin(read<Admin>("leno-admin", {})); };
-    window.addEventListener("storage", sync);
-    return () => window.removeEventListener("storage", sync);
+    refresh();
+    const vis = () => { if (document.visibilityState === "visible") refresh(); };
+    document.addEventListener("visibilitychange", vis);
+    return () => document.removeEventListener("visibilitychange", vis);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* live stock, prices and offers from the server */
+  const refresh = useCallback(async () => {
+    try { const r = await fetch("/api/catalog/", { cache: "no-store" }); if (r.ok) { setAdmin(await r.json()); setLiveOk(true); } } catch { /* offline: keep last known */ }
   }, []);
 
   const catalog = useMemo<LiveProduct[]>(() => PRODUCTS.map((p) => {
     const o = admin.products?.[p.id] || {};
     const stock = { ...p.stock } as Record<Size, number>;
     SIZES.forEach((z) => { const v = o.stock?.[z]; if (v != null) stock[z] = Math.max(0, +v || 0); });
-    return { ...p, stock, price: +(admin.prices?.[p.style] || STYLES[p.style].price), badge: o.badge || "", hidden: !!o.hidden };
+    return { ...p, stock, images: o.images?.length ? o.images : p.images, price: +(admin.prices?.[p.style] || STYLES[p.style].price), badge: o.badge || "", hidden: !!o.hidden };
   }), [admin]);
   const live = useCallback((id: string) => catalog.find((p) => p.id === id), [catalog]);
 
-  const cfg = useMemo(() => { const c = admin.cfg || {}; return { welcomeOn: c.welcomeOn !== false, welcomePct: +(c.welcomePct || 10), bundleOn: c.bundleOn !== false, bundlePct: +(c.bundlePct || 10) }; }, [admin]);
+  const cfg = useMemo(() => { const c = admin.cfg || {}; return { welcomeOn: c.welcomeOn !== false, welcomePct: +(c.welcomePct || 10), bundleOn: c.bundleOn !== false, bundlePct: +(c.bundlePct || 10), sameDayFee: c.sameDayFee ?? 25, announcement: c.announcement || "" }; }, [admin]);
+  const pay = admin.pay || { card: false, cod: true };
   const free = +(admin.cfg?.free || FREE_DELIVERY);
   const subtotal = bag.reduce((a, l) => a + (live(l.id)?.price || 0) * l.qty, 0);
   const count = bag.reduce((a, l) => a + l.qty, 0);
@@ -116,17 +122,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const seen = useCallback((id: string) => { setRecent((r) => { const next = [id, ...r.filter((x) => x !== id)].slice(0, 8); write("leno-recent", next); return next; }); }, []);
   const claim = useCallback(() => { setPromo("LENO10"); try { localStorage.setItem("leno-promo", "LENO10"); } catch { /* ignore */ } }, []);
 
-  const placeOrder = useCallback((o: { name: string; method: string; delivery: number }) => {
-    const order: Order = { no: "LW-" + (Math.floor(Math.random() * 90000) + 10000), date: new Date().toISOString(), name: o.name || "Guest", method: o.method,
-      total: subtotal - disc + o.delivery, status: "Confirmed", items: bag.map((l) => ({ ...l, price: live(l.id)?.price || 0 })) };
-    write("leno-orders", [order, ...read<Order[]>("leno-orders", [])]);
-    const a = read<Admin>("leno-admin", {}); a.products = a.products || {};
-    bag.forEach((l) => { const p = live(l.id); if (!p) return; const e = (a.products![l.id] = a.products![l.id] || {}); e.stock = { ...p.stock, ...(e.stock || {}) }; e.stock[l.size] = Math.max(0, (e.stock[l.size] || 0) - l.qty); });
-    write("leno-admin", a); setAdmin(a);
-    setBag([]); write("leno-bag", []);
-    setLastOrder(order); try { sessionStorage.setItem("leno-last-order", JSON.stringify(order)); } catch { /* ignore */ }
-    return order;
-  }, [bag, disc, live, subtotal]);
+  const placeOrder = useCallback(async (o: Checkout) => {
+    try {
+      const r = await fetch("/api/orders/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...o, promo: promo || "", items: bag }) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) { if (r.status === 409) refresh(); return { error: j.error || "We could not place your order. Please try again." }; }
+      setBag([]); write("leno-bag", []);
+      return { next: j.next as string };
+    } catch { return { error: "No connection. Please check your internet and try again." }; }
+  }, [bag, promo, refresh]);
 
   /* overlays: Escape closes them, and the page behind stops scrolling */
   const anyOpen = ui.bag || ui.search || ui.menu || ui.size || !!ui.quick;
@@ -140,7 +144,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (anyOpen) l?.stop(); else l?.start();
   }, [anyOpen]);
 
-  const value: Ctx = { ready, catalog, live, bag, wish, recent, count, subtotal, disc, discLabel, free, isBundle, promo, cfg, add, setQty, toggleWish, seen, claim, placeOrder, lastOrder, ui, open, quick, toast, toastMsg };
+  const value: Ctx = { ready, catalog, live, bag, wish, recent, count, subtotal, disc, discLabel, free, isBundle, promo, cfg, pay, live_ok: liveOk, add, setQty, toggleWish, seen, claim, placeOrder, refresh, ui, open, quick, toast, toastMsg };
   return <C.Provider value={value}>{children}</C.Provider>;
 }
 

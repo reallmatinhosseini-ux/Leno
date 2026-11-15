@@ -1839,3 +1839,9 @@ html.focus-co .hdr .burger{visibility:hidden}
 .hl-grid{align-items:start}
 .hl-card.red{background:var(--studio);color:var(--ink)}
 .hl-card.red .mono{color:var(--mute)}
+
+/* v15 live store */
+.trk{grid-template-columns:1fr}
+.trk .btn{justify-self:start}
+.co-fail{margin:0;padding:12px 16px;border-radius:10px;background:#F8E3E1;color:#7A1B1B;font-size:14px}
+.btn[disabled]{opacity:.6;pointer-events:none}

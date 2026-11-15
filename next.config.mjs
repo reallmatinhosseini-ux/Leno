@@ -1,16 +1,21 @@
 import { fileURLToPath } from "node:url";
-/** Static export: every page is pre-rendered HTML (fast, crawlable, hostable anywhere).
- *  Set PAGES=1 when building for GitHub Pages so links work under /Leno. */
-const pages = process.env.PAGES === "1";
-/* canonical site address: explicit env, else Vercel's production domain, else GitHub Pages */
+/** Server build on Vercel: pages are still pre-rendered for speed and SEO, while
+ *  /api and /admin run on the server (orders, stock, payments). */
 const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || (!pages && vercel ? `https://${vercel}` : "https://reallmatinhosseini-ux.github.io/Leno");
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || (vercel ? `https://${vercel}` : "http://localhost:3000");
 const nextConfig = {
-  output: "export",
-  basePath: pages ? "/Leno" : "",
   trailingSlash: true,
   images: { unoptimized: true },
   reactStrictMode: true, outputFileTracingRoot: fileURLToPath(new URL(".", import.meta.url)),
-  env: { NEXT_PUBLIC_BASE_PATH: pages ? "/Leno" : "", NEXT_PUBLIC_SITE_URL: siteUrl },
+  serverExternalPackages: ["@electric-sql/pglite", "postgres"],
+  env: { NEXT_PUBLIC_BASE_PATH: "", NEXT_PUBLIC_SITE_URL: siteUrl },
+  async headers() {
+    return [{ source: "/:path*", headers: [
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      { key: "X-Frame-Options", value: "SAMEORIGIN" },
+      { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+    ] }];
+  },
 };
 export default nextConfig;

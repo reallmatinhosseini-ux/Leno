@@ -3,3 +3,8 @@ node_modules
 out
 .DS_Store
 *.tsbuildinfo
+.data
+.env*.local
+out
+.next
+node_modules
