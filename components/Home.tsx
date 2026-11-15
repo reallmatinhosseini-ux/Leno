@@ -72,11 +72,18 @@ export function Hero() {
 }
 
 /* ---------- categories ---------- */
+/* ---------- brand promise ribbon ---------- */
+export function Ribbon() {
+  const items = ["Same-day delivery in Dubai", "Free 14-day returns", "Made in small runs", "Pay in 4 with Tabby", "Leave your mark"];
+  const row = (k: number) => <div className="rb-row" aria-hidden={k > 0}>{items.map((t) => <span key={t + k}><em>{t}</em><img src={asset("/p/kiss-tag.png")} alt="" /></span>)}</div>;
+  return <section className="rb" aria-label="Our promises"><div className="rb-track">{row(0)}{row(1)}</div></section>;
+}
+
 export function Categories() {
   const cats: [string, string, string][] = [["/shop/dresses/", "Dresses", "pleat-white-3"], ["/shop/sets/", "Sets", "set-navy-3"], ["/shop/navy-edit/", "The Navy Edit", "knot-navy-2"], ["/shop/light-edit/", "The Light Edit", "tulle-ivory-1"]];
   return (
     <section className="g cat2" aria-label="Shop by category"><div className="w cat2-grid">
-      {cats.map(([h, n, i]) => <Link className="c2" href={h} key={h}><div className="c2-m" data-reveal><img src={img(i)} alt={n} loading="lazy" /></div><div className="c2-t"><span>{n}</span><i>→</i></div></Link>)}
+      {cats.map(([h, n, i]) => <Link className="c2" href={h} key={h} data-cursor="Explore"><div className="c2-m" data-reveal><img src={img(i)} alt={n} loading="lazy" /></div><div className="c2-t"><span>{n}</span><i>→</i></div></Link>)}
     </div></section>
   );
 }
@@ -188,7 +195,7 @@ export function LastPieces() {
     <section className="ag"><div className="g"><div className="w sh-hd"><h2 className="H" data-rise>Last <em>pieces</em><img className="h-kiss" data-stamp src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" /></h2><span className="mono mute">One left in these sizes</span></div></div>
       <div className="ag-track" ref={track}>{last.map(({ p, zs }) => (
         <article className="ag-card" key={p.id}>
-          <Link className="ag-m" href={`/products/${p.slug}/`}><img ref={(el) => { refs.current[p.id] = el; }} src={img(p.images[0])} alt={`${STYLES[p.style].name} in ${p.color}`} loading="lazy" draggable={false} /><span className="ag-badge">Last one · {zs.join(" · ")}</span></Link>
+          <Link className="ag-m" href={`/products/${p.slug}/`} data-cursor="View"><img ref={(el) => { refs.current[p.id] = el; }} src={img(p.images[0])} alt={`${STYLES[p.style].name} in ${p.color}`} loading="lazy" draggable={false} /><span className="ag-badge">Last one · {zs.join(" · ")}</span></Link>
           <div className="ag-i"><div><b>{STYLES[p.style].name}</b><span className="mute">{p.color}</span></div><span>{money(p.price)}</span></div>
           <div className="ag-btns">{zs.map((z) => { const k = p.id + z; return <button key={z} type="button" className="btn ag-add" disabled={added.includes(k)} onClick={() => { if (s.add(p.id, z, refs.current[p.id])) setAdded([...added, k]); }}>{added.includes(k) ? "Added ✓" : `Add ${z}`}</button>; })}</div>
         </article>))}</div>
@@ -202,7 +209,7 @@ export function Edition() {
   if (t?.hidden) return null;
   return (
     <section className="edition"><div className="g"><div className="w ed-in">
-      <Link className="ed-media" href="/products/tulle-dress-ivory/" data-reveal><img src={img("tulle-ivory-lips")} alt="The Tulle Dress in Ivory, with the LENO WEAR kiss" loading="lazy" /></Link>
+      <Link className="ed-media" href="/products/tulle-dress-ivory/" data-reveal data-cursor="View"><img src={img("tulle-ivory-lips")} alt="The Tulle Dress in Ivory, with the LENO WEAR kiss" loading="lazy" /></Link>
       <div className="ed-txt"><span className="ed-stock mono"><i />Edition · {t && t.stock.M === 1 ? "1 piece left" : "limited"}</span><h2 className="H" data-rise>The Tulle <em>Dress</em></h2><p>Ivory tulle over a racer-back bodice.</p>
         <div><Link className="btn red" href="/products/tulle-dress-ivory/">Shop the last one</Link></div></div>
     </div></div></section>

@@ -159,7 +159,7 @@ export default function Welcome() {
                 {!done ? (
                   <div className="we-in">
                     <span className="we-k">A kiss from LENO WEAR</span>
-                    <h2 id="we-t">Your welcome gift</h2>
+                    <h2 id="we-t">Your welcome <em>gift</em></h2>
                     <p className="we-off"><b>{s.cfg.welcomePct}% off</b> your first order</p>
                     <form className="we-f" onSubmit={claim}>
                       <input type="email" required placeholder="Your email address" aria-label="Your email address" autoComplete="email" />

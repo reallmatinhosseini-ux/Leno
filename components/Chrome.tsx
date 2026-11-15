@@ -40,7 +40,7 @@ export function Header() {
   }, [path]);
   const nl = (href: string, label: string) => <Link className={"nl" + (path === href ? " on" : "")} href={href}>{label}</Link>;
   return (
-    <header className={"hdr g" + (solid ? " solid" : "") + (hide && !Object.values(s.ui).some(Boolean) ? " hide" : "")}>
+    <header className={"hdr g" + (solid ? " solid" : "") + (path === "/" && !solid ? " over" : "") + (hide && !Object.values(s.ui).some(Boolean) ? " hide" : "")}>
       <nav className="l" aria-label="Primary">
         <button className="burger" type="button" aria-label="Menu" onClick={() => s.open("menu")}><i /></button>
         {nl("/shop/", "Shop")}{nl("/shop/dresses/", "Dresses")}{nl("/shop/sets/", "Sets")}{nl("/story/", "Story")}
@@ -218,7 +218,7 @@ export function Footer() {
           <p className="foot-tag">Court-wear from Dubai, made in small runs for padel, tennis and everything after.</p>
           <div className="nl">
             <span className="foot-k">First Serve</span>
-            <h3 className="foot-h">Early access to every drop</h3>
+            <h3 className="foot-h">Early access to every <em>drop</em></h3>
             {joined ? <p className="foot-ok">You are on the list. Welcome to LENO WEAR.</p> : <form className="field" onSubmit={(e) => { e.preventDefault(); kissBurst(e.currentTarget.querySelector("button") || e.currentTarget, 8); setJoined(true); s.toast("You are on the list"); }}><input type="email" placeholder="Email address" aria-label="Email address" required /><button className="btn light" type="submit">Join</button></form>}
           </div>
         </div>

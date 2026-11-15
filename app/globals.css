@@ -1707,3 +1707,38 @@ html.focus-co .hdr .burger{visibility:hidden}
   .foot-sig i{max-width:60px}
   .foot-bot{padding-bottom:96px;font-size:11.5px}
 }
+
+/* =====================================================================
+   v13 · Editorial pairing, floating header, ribbon, cursor
+   ===================================================================== */
+:root{--serif:var(--font-serif),"Times New Roman",serif}
+/* accent words in an italic serif: the classic fashion-house pairing */
+.H em,.st-hero .H em,.hd-t em,.st-words .big em,.foot-h em,.we-in h2 em{font-family:var(--serif);font-style:italic;font-weight:400;font-stretch:100%;text-transform:none;letter-spacing:-.01em;font-size:1.08em;line-height:1}
+.hx-h em{font-family:var(--display);font-style:normal;font-weight:800;font-stretch:72%;text-transform:uppercase;letter-spacing:-.015em;font-size:1em;color:var(--red)}
+.st-words .big em{color:var(--red)}
+.sh-hd .H em{padding-right:.04em}
+
+/* hero runs under a transparent header */
+.hx{margin-top:calc(var(--hdr) * -1);height:calc(100svh - 32px);max-height:1100px}
+.hdr{transition:background .45s var(--ease),color .45s var(--ease),box-shadow .45s,transform .5s var(--ease2)}
+.hdr.over{background:transparent;box-shadow:none;color:#fff}
+.hdr.over .logo,.hdr.over .logo span,.hdr.over .logo small,.hdr.over .nl{color:#fff}
+.hdr.over .logo .kiss-m{color:var(--red)}
+.hdr.over .cnt{background:#fff;color:var(--ink)}
+.hx-shade{background:linear-gradient(180deg,rgba(0,0,0,.38) 0,rgba(0,0,0,.08) 16%,rgba(0,0,0,0) 30%,rgba(0,0,0,0) 46%,rgba(0,0,0,.6) 100%),radial-gradient(120% 70% at 0% 100%,rgba(0,0,0,.4) 0,rgba(0,0,0,0) 60%)}
+
+/* brand promise ribbon */
+.rb{border-bottom:1px solid var(--line);overflow:hidden;background:var(--bg);padding-block:18px}
+.rb-track{display:flex;width:max-content;animation:rb 48s linear infinite}
+.rb:hover .rb-track{animation-play-state:paused}
+.rb-row{display:flex;flex:none}
+.rb-row span{display:inline-flex;align-items:center;gap:28px;padding-right:28px;white-space:nowrap}
+.rb-row em{font-family:var(--serif);font-style:italic;font-size:clamp(20px,1.8vw,26px);letter-spacing:-.01em;color:var(--ink)}
+.rb-row img{width:22px;height:auto;opacity:.9}
+@keyframes rb{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.rb-track{animation:none}}
+
+/* cursor label */
+.lc{position:fixed;left:0;top:0;z-index:500;pointer-events:none;width:74px;height:74px;margin:-37px 0 0 -37px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;opacity:0;transform:scale(.3);mix-blend-mode:normal}
+.lc span{font-size:12px;font-weight:500;letter-spacing:.02em}
+@media (pointer:coarse){.lc{display:none}}

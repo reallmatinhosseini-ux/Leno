@@ -168,7 +168,7 @@ export default function ProductView({ id }: { id: string }) {
 function Slide({ src, alt, first, onOpen }: { src: string; alt: string; first: boolean; onOpen: () => void }) {
   const [zoom, setZoom] = useState(false); const [o, setO] = useState("50% 50%");
   return (
-    <div className={"pd-sl" + (zoom ? " zoom" : "")} onClick={onOpen}
+    <div className={"pd-sl" + (zoom ? " zoom" : "")} data-cursor="Zoom" onClick={onOpen}
       onPointerEnter={(e) => e.pointerType === "mouse" && setZoom(true)} onPointerLeave={() => setZoom(false)}
       onPointerMove={(e) => { if (e.pointerType !== "mouse") return; const r = e.currentTarget.getBoundingClientRect(); setO(`${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`); }}>
       <img src={src} alt={alt} loading={first ? "eager" : "lazy"} fetchPriority={first ? "high" : "auto"} draggable={false} style={{ transformOrigin: o }} />

@@ -1,15 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Instrument_Sans } from "next/font/google";
+import { Archivo, Instrument_Sans, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { StoreProvider } from "@/lib/store";
 import Motion from "@/components/Motion";
 import { Announcement, BagDrawer, Footer, Header, MobileMenu, QuickView, SearchOverlay, TabBar, Toast } from "@/components/Chrome";
 import Welcome from "@/components/Welcome";
+import Cursor from "@/components/Cursor";
 import { BRAND, DESCRIPTION, SITE_URL, asset, jpg } from "@/lib/site";
 import JsonLd from "@/components/JsonLd";
 
 const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo", display: "swap" });
 const sans = Instrument_Sans({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
+const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["normal", "italic"], variable: "--font-serif", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL + "/"),
@@ -35,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     ],
   };
   return (
-    <html lang="en" className={`${archivo.variable} ${sans.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${sans.variable} ${serif.variable}`}>
       <body style={{ ["--kiss-url" as string]: `url(${asset("/p/kiss-tag.png")})` }}>
         <JsonLd data={org} />
         <StoreProvider>
@@ -52,6 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Welcome />
           <Toast />
           <Motion />
+          <Cursor />
         </StoreProvider>
       </body>
     </html>

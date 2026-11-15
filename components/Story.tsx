@@ -48,7 +48,7 @@ export default function Story() {
         <div className="st-row"><p className="mute">LENO WEAR is court-wear from Dubai. Four styles in small runs, built for padel, tennis and the studio, and cut to be worn long after.</p><img src={asset("/p/kiss-tag.png")} alt="" className="st-kiss" /></div></div></section>
       <section className="hday"><div className="hday-track">{CH.map((c, i) => (
         <article className="hd" key={c.t} style={{ ["--bg" as string]: c.bg, ["--fg" as string]: c.fg }}><div className="hd-in"><div className="hd-t"><span className="hd-time">{c.time}</span><span className="mono">{c.sub} · 0{i + 1} / 03</span><h2 className="H">{c.t}</h2><p>{c.p}</p><Link className={"btn" + (i === 2 ? " light" : "")} href={`/products/${byId(c.id)!.slug}/`}>Shop the look</Link></div>
-          <Link className="hd-m" href={`/products/${byId(c.id)!.slug}/`}><img src={img(c.im)} alt={`${c.t}: ${c.p}`} loading="lazy" /></Link></div></article>))}</div></section>
+          <Link className="hd-m" href={`/products/${byId(c.id)!.slug}/`} data-cursor="Shop"><img src={img(c.im)} alt={`${c.t}: ${c.p}`} loading="lazy" /></Link></div></article>))}</div></section>
       <section className="g"><div className="w st-words"><p className="big" id="stw">Small runs. When a size is gone, it is gone. Every piece is chosen to move on court and to look right off it. <em>The court is the runway.</em></p></div></section>
       <section className="g"><div className="w st-pr">
         <div data-fade><b>01</b><h3>Small runs</h3><p>Each colourway is made in a few pieces per size, so what you wear stays rare.</p></div>
