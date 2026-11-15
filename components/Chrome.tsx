@@ -213,14 +213,21 @@ export function Footer() {
   return (
     <footer className="foot"><div className="g"><div className="w">
       <div className="foot-top">
-        <div className="nl"><span className="mono" style={{ color: "var(--red)" }}>First Serve</span><span className="H">Early access to every drop.</span>
-          {joined ? <p>You are on the list.</p> : <form className="field" style={{ maxWidth: 460 }} onSubmit={(e) => { e.preventDefault(); kissBurst(e.currentTarget.querySelector("button") || e.currentTarget, 8); setJoined(true); s.toast("You are on the list"); }}><input type="email" placeholder="Email address" aria-label="Email address" required /><button className="btn light" type="submit">Join</button></form>}</div>
-        <div><h4>Shop</h4><ul><li><Link className="ulink" href="/shop/">Shop all</Link></li><li><Link className="ulink" href="/shop/dresses/">Dresses</Link></li><li><Link className="ulink" href="/shop/sets/">Sets</Link></li><li><Link className="ulink" href="/shop/navy-edit/">Navy edit</Link></li><li><Link className="ulink" href="/shop/light-edit/">Light edit</Link></li></ul></div>
-        <div><h4>Help</h4><ul><li><Link className="ulink" href="/help/">Track order</Link></li><li><Link className="ulink" href="/help/">Delivery</Link></li><li><Link className="ulink" href="/help/">Returns</Link></li><li><Link className="ulink" href="/help/">Contact</Link></li></ul></div>
-        <div><h4>LENO WEAR</h4><ul><li><Link className="ulink" href="/story/">Our story</Link></li><li>Instagram</li><li>TikTok</li></ul></div>
+        <div className="foot-brand">
+          <Link href="/" className="foot-logo" aria-label="LENO WEAR home"><Kiss /><span>LENO WEAR</span></Link>
+          <p className="foot-tag">Court-wear from Dubai, made in small runs for padel, tennis and everything after.</p>
+          <div className="nl">
+            <span className="foot-k">First Serve</span>
+            <h3 className="foot-h">Early access to every drop</h3>
+            {joined ? <p className="foot-ok">You are on the list. Welcome to LENO WEAR.</p> : <form className="field" onSubmit={(e) => { e.preventDefault(); kissBurst(e.currentTarget.querySelector("button") || e.currentTarget, 8); setJoined(true); s.toast("You are on the list"); }}><input type="email" placeholder="Email address" aria-label="Email address" required /><button className="btn light" type="submit">Join</button></form>}
+          </div>
+        </div>
+        <nav className="foot-col" aria-label="Shop"><h4>Shop</h4><ul><li><Link href="/shop/">Shop all</Link></li><li><Link href="/shop/dresses/">Dresses</Link></li><li><Link href="/shop/sets/">Sets</Link></li><li><Link href="/shop/navy-edit/">Navy edit</Link></li><li><Link href="/shop/light-edit/">Light edit</Link></li></ul></nav>
+        <nav className="foot-col" aria-label="Help"><h4>Help</h4><ul><li><Link href="/help/">Track order</Link></li><li><Link href="/help/">Delivery</Link></li><li><Link href="/help/">Returns</Link></li><li><Link href="/help/">Contact</Link></li></ul></nav>
+        <nav className="foot-col" aria-label="LENO WEAR"><h4>LENO WEAR</h4><ul><li><Link href="/story/">Our story</Link></li><li><span>Instagram</span></li><li><span>TikTok</span></li></ul></nav>
       </div>
-      <div className="foot-word" aria-label="LENO WEAR"><span>L</span><span>E</span><span>N</span><span>O</span><Kiss /><span>W</span><span>E</span><span>A</span><span>R</span></div>
-      <div className="foot-bot"><span>© 2026 LENO WEAR · Dubai</span><span>Demo store. Prices are placeholders and no orders are processed.</span><span>AED · Visa · Mastercard · Apple Pay · Tabby · Tamara</span></div>
+      <div className="foot-sig" aria-hidden="true"><i /><Kiss /><span>Leave your mark</span><i /></div>
+      <div className="foot-bot"><span>© 2026 LENO WEAR · Dubai</span><span>Demo store · prices are placeholders and no orders are processed</span><span>Visa · Mastercard · Apple Pay · Tabby · Tamara</span></div>
     </div></div></footer>
   );
 }

@@ -1644,3 +1644,66 @@ html.focus-co .hdr .burger{visibility:hidden}
 .chap .btn.line,.chap .btn.line.light{background:transparent!important;color:var(--ink)!important;box-shadow:inset 0 0 0 1px rgba(20,20,20,.3)!important}
 .chap .btn.line::before{background:var(--ink)!important}
 .chap .btn.line:hover{color:#fff!important}
+
+/* =====================================================================
+   v12 · Refined type scale and footer. One scale, used everywhere.
+   ===================================================================== */
+:root{--t-hero:clamp(46px,6.4vw,108px);--t-h1:clamp(32px,3.8vw,54px);--t-h2:clamp(26px,2.5vw,36px);--t-feature:clamp(30px,3.2vw,46px);--t-h3:22px}
+.hx-h{font-size:var(--t-hero);line-height:.92;letter-spacing:-.015em}
+.shop-hd .H,.ph .H,.st-hero .H,.co-l .H{font-size:var(--t-h1)}
+.sh-hd .H,.faq .H,.pd-more .H,.ctl2-t .H,.st-end .H{font-size:var(--t-h2)}
+.chap-txt .H,.ed-txt .H{font-size:var(--t-feature)}
+.hd-t .H{font-size:clamp(36px,4.6vw,68px)}
+.empty .H,.conf .H{font-size:clamp(26px,2.8vw,36px)}
+.conf-after .H{font-size:clamp(28px,3.2vw,42px)}
+.hl-h{font-size:clamp(26px,2.4vw,34px)!important}
+.st-words .big{font-size:clamp(24px,3.2vw,44px)}
+.st-pr h3{font-size:20px}
+.mmenu nav a{font-size:clamp(28px,8vw,40px);line-height:1.2;padding-block:10px}
+.lk-h .H,.qv-i .H,.sg .H{font-size:22px}
+.ed-tile .H{font-size:clamp(26px,2.4vw,36px)}
+.chap-step p,.hd-t p,.ed-txt p{font-size:16px;line-height:1.55}
+.sh-hd{align-items:end}
+
+/* footer: calm, proportioned, quietly branded */
+.foot{padding-top:clamp(56px,7vw,88px);font-size:14px}
+.foot-top{grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,.7fr));gap:clamp(28px,4vw,64px);padding-bottom:clamp(40px,5vw,64px)}
+.foot-brand{display:grid;gap:18px;align-content:start;max-width:420px}
+.foot-logo{display:inline-flex;align-items:center;gap:10px;color:#fff;font-family:var(--display);font-weight:800;font-stretch:125%;font-size:14px;letter-spacing:.3em}
+.foot-logo .kiss-m{height:20px;width:auto;color:var(--red)}
+.foot-tag{margin:0;font-size:14px;line-height:1.6;color:rgba(255,255,255,.55);max-width:34ch}
+.foot-top .nl{display:grid;gap:10px;margin-top:10px}
+.foot-k{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+.foot-h{margin:0;font-family:var(--display);font-weight:600;letter-spacing:-.025em;font-size:var(--t-h3);line-height:1.15;color:#fff}
+.foot-ok{margin:0;font-size:14px;color:rgba(255,255,255,.7)}
+.foot .field{max-width:380px;margin-top:4px}
+.foot .field input{font-size:14px}
+.foot-top h4{margin:0 0 16px;font-family:var(--body);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.foot-top ul{gap:11px}
+.foot-col a,.foot-col span{font-size:14px;color:rgba(255,255,255,.78);transition:color .25s}
+.foot-col a:hover{color:#fff}
+.foot-sig{display:flex;align-items:center;gap:16px;justify-content:center;padding-block:8px 28px;color:rgba(255,255,255,.5);font-size:10.5px;letter-spacing:.42em;text-transform:uppercase}
+.foot-sig i{flex:1;height:1px;background:rgba(255,255,255,.1)}
+.foot-sig .kiss-m{height:18px;width:auto;color:var(--red)}
+.foot-bot{border-top:0;padding-block:0 32px;font-size:12px;color:rgba(255,255,255,.4)}
+.foot-word{display:none}
+@media (max-width:900px){
+  .foot-top{grid-template-columns:1fr 1fr;row-gap:36px}
+  .foot-brand{grid-column:1/-1;max-width:none}
+  .foot-sig{letter-spacing:.3em;font-size:10px}
+  .foot-bot{flex-direction:column;gap:6px;padding-bottom:110px}
+}
+/* welcome kiss now rests on the envelope above the name */
+.we-burst{top:70%}
+.we-ring{position:absolute;left:50%;top:68.5%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;border:1.5px solid var(--red);opacity:0;pointer-events:none;z-index:4;right:auto}
+.we-brand{bottom:6.5%}
+.we-stamp{display:none}
+@media (max-width:900px){
+  .foot-top{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:14px;row-gap:34px}
+  .foot-h{font-size:20px}
+  .foot-top h4{font-size:10.5px;margin-bottom:12px}
+  .foot-top ul{gap:9px}
+  .foot-col a,.foot-col span{font-size:13.5px}
+  .foot-sig i{max-width:60px}
+  .foot-bot{padding-bottom:96px;font-size:11.5px}
+}

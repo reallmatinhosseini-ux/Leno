@@ -41,38 +41,40 @@ export default function Welcome() {
     const q = gsap.utils.selector(root.current);
     const env = q(".we-env")[0] as HTMLElement, card = q(".we-card")[0] as HTMLElement;
     const H = env.offsetHeight;
+    /* where the kiss comes to rest: just above the LENO WEAR name on the envelope front */
+    const drop = H * .065, rest = { y: drop, scale: .8, rotate: -6 };
     if (reduce()) {
-      gsap.set(q(".we-flap"), { rotateX: 180, zIndex: 1 }); gsap.set(card, { y: 0 }); gsap.set(q(".we-seal"), { opacity: 0 });
-      gsap.set(q(".we-stamp"), { opacity: 1, scale: 1 }); gsap.set(q(".we-in > *"), { opacity: 1, y: 0 }); setStage("open"); return;
+      gsap.set(q(".we-flap"), { rotateX: 180, zIndex: 1 }); gsap.set(card, { y: 0 }); gsap.set(q(".we-seal"), rest);
+      gsap.set(q(".we-in > *"), { opacity: 1, y: 0 }); setStage("open"); return;
     }
     const t = gsap.timeline({ defaults: { ease: "expo.out" }, onComplete: () => setStage("open") });
     t.to(q(".we-hint"), { opacity: 0, y: 6, duration: .3 }, 0)
-      /* seal pops off the flap */
-      .to(q(".we-seal"), { scale: 1.35, rotate: -14, duration: .35, ease: "back.out(3)" }, 0)
-      .to(q(".we-seal"), { y: -H * .9, x: 10, rotate: 18, scale: .2, opacity: 0, duration: .7, ease: "power3.in" }, .32)
+      /* the seal lifts softly off the flap and hovers */
+      .to(q(".we-seal"), { y: -H * .07, scale: 1.08, rotate: -9, duration: .6, ease: "power3.out" }, 0)
+      .to(q(".we-seal"), { y: -H * .09, rotate: -4, duration: .7, ease: "sine.inOut" }, .6)
       /* flap swings open and drops behind the letter */
-      .to(q(".we-flap"), { rotateX: 180, duration: .8, ease: "power3.inOut" }, .25)
-      .set(q(".we-flap"), { zIndex: 1 }, .62)
-      /* envelope gives a little bounce */
-      .to(env, { y: 10, duration: .25, ease: "power2.out" }, .55).to(env, { y: 0, duration: .9, ease: "elastic.out(1,.45)" }, .8)
+      .to(q(".we-flap"), { rotateX: 180, duration: .85, ease: "power3.inOut" }, .2)
+      .set(q(".we-flap"), { zIndex: 1 }, .58)
+      /* envelope settles with a small bounce */
+      .to(env, { y: 8, duration: .25, ease: "power2.out" }, .5).to(env, { y: 0, duration: .9, ease: "elastic.out(1,.45)" }, .75)
       /* letter slides up out of the pocket */
-      .to(card, { y: 0, duration: 1.15, ease: "expo.out" }, .78)
-      .fromTo(card, { rotate: -1.5 }, { rotate: 0, duration: 1.2, ease: "elastic.out(1,.5)" }, .78)
-      /* the big kiss stamps onto the letter */
-      .fromTo(q(".we-stamp"), { opacity: 0, scale: 2.8, rotate: -24, filter: "blur(6px)" }, { opacity: 1, scale: 1, rotate: -8, filter: "blur(0px)", duration: .55, ease: "power4.in" }, 1.25)
-      .to(q(".we-stamp"), { scaleX: 1.12, scaleY: .88, duration: .08, ease: "power1.out" }, 1.8)
-      .to(q(".we-stamp"), { scaleX: 1, scaleY: 1, duration: .6, ease: "elastic.out(1,.35)" }, 1.88)
-      .fromTo(q(".we-ring"), { scale: .4, opacity: .5 }, { scale: 2.2, opacity: 0, duration: .9, ease: "expo.out" }, 1.8)
+      .to(card, { y: 0, duration: 1.2, ease: "expo.out" }, .7)
+      .fromTo(card, { rotate: -1.2 }, { rotate: 0, duration: 1.2, ease: "elastic.out(1,.5)" }, .7)
       /* text arrives line by line */
-      .fromTo(q(".we-in > *"), { opacity: 0, y: 14 }, { opacity: 1, y: 0, stagger: .06, duration: .8 }, 1.45);
-    /* small kisses float out of the envelope mouth */
-    q(".we-burst img").forEach((k, i) => {
-      const side = i % 2 ? 1 : -1, spread = 40 + Math.random() * 150;
+      .fromTo(q(".we-in > *"), { opacity: 0, y: 14 }, { opacity: 1, y: 0, stagger: .06, duration: .8 }, 1.3)
+      /* the kiss drifts down and presses onto the envelope, above the name */
+      .to(q(".we-seal"), { y: drop, scale: .8, rotate: -6, duration: .95, ease: "power2.inOut" }, 1.35)
+      .to(q(".we-seal"), { scaleX: .92, scaleY: .66, duration: .08, ease: "power1.out" }, 2.3)
+      .to(q(".we-seal"), { scaleX: .8, scaleY: .8, duration: .7, ease: "elastic.out(1,.4)" }, 2.38)
+      .fromTo(q(".we-ring"), { scale: .5, opacity: .45 }, { scale: 2, opacity: 0, duration: 1, ease: "expo.out" }, 2.3);
+    /* a few tiny kisses rise from where it lands */
+    q(".we-burst img").slice(0, 5).forEach((k, i) => {
+      const side = i % 2 ? 1 : -1;
       t.fromTo(k, { x: 0, y: 0, scale: .2, opacity: 0, rotate: 0 },
         { keyframes: [
-          { opacity: 1, scale: .5 + Math.random() * .5, x: side * spread * .55, y: -H * (.55 + Math.random() * .45), rotate: side * (15 + Math.random() * 30), duration: .7, ease: "power2.out" },
-          { opacity: 0, x: side * spread, y: -H * (1.1 + Math.random() * .6), rotate: side * (40 + Math.random() * 50), duration: 1.1, ease: "power1.in" },
-        ] }, 1.0 + i * .06);
+          { opacity: .9, scale: .35 + Math.random() * .25, x: side * (14 + i * 10), y: -H * (.18 + Math.random() * .1), rotate: side * 18, duration: .6, ease: "power2.out" },
+          { opacity: 0, x: side * (30 + i * 16), y: -H * (.4 + Math.random() * .15), rotate: side * 40, duration: .9, ease: "power1.in" },
+        ] }, 2.32 + i * .05);
     });
     tl.current = t;
   }, []);
@@ -86,7 +88,7 @@ export default function Welcome() {
     const env = q(".we-env")[0] as HTMLElement, card = q(".we-card")[0] as HTMLElement;
     const H = env.offsetHeight;
     gsap.set(card, { y: card.offsetHeight - H * .17 }); gsap.set(q(".we-flap"), { transformPerspective: 900, rotateX: 0, zIndex: 4 });
-    gsap.set(q(".we-in > *"), { opacity: 0 }); gsap.set(q(".we-stamp"), { opacity: 0 });
+    gsap.set(q(".we-in > *"), { opacity: 0 }); gsap.set(q(".we-seal"), { y: 0, x: 0 });
     if (reduce()) { gsap.fromTo(root.current, { opacity: 0 }, { opacity: 1, duration: .3 }); open(); return; }
     const t = gsap.timeline({ defaults: { ease: "expo.out" } });
     t.fromTo(q(".we-bg"), { opacity: 0 }, { opacity: 1, duration: .6, ease: "power2.out" })
@@ -129,8 +131,8 @@ export default function Welcome() {
     if (root.current && !reduce()) {
       const q = gsap.utils.selector(root.current);
       gsap.fromTo(q(".we-done > *"), { opacity: 0, y: 12 }, { opacity: 1, y: 0, stagger: .07, duration: .7, ease: "expo.out" });
-      gsap.fromTo(q(".we-stamp"), { scale: 1 }, { scale: 1.18, rotate: -2, duration: .18, yoyo: true, repeat: 1, ease: "power2.out" });
-      q(".we-burst img").forEach((k, i) => gsap.fromTo(k, { x: 0, y: 0, opacity: 0, scale: .2 }, { opacity: 1, scale: .6, x: (i % 2 ? 1 : -1) * (60 + i * 18), y: -260 - i * 20, rotate: (i % 2 ? 1 : -1) * 50, duration: 1.2, ease: "power2.out", delay: i * .04, onComplete: () => { gsap.to(k, { opacity: 0, duration: .4 }); } }));
+      gsap.fromTo(q(".we-seal"), { scale: .8 }, { scale: .95, duration: .18, yoyo: true, repeat: 1, ease: "power2.out" });
+      q(".we-burst img").forEach((k, i) => gsap.fromTo(k, { x: 0, y: 0, opacity: 0, scale: .2 }, { opacity: .9, scale: .45, x: (i % 2 ? 1 : -1) * (20 + i * 12), y: -90 - i * 14, rotate: (i % 2 ? 1 : -1) * 35, duration: 1.1, ease: "power2.out", delay: i * .04, onComplete: () => { gsap.to(k, { opacity: 0, duration: .4 }); } }));
     }
   };
   const copy = async () => { try { await navigator.clipboard.writeText("LENO10"); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { /* clipboard blocked */ } };
@@ -154,8 +156,6 @@ export default function Welcome() {
             <div className="we-flap"><i className="we-flap-out" /><i className="we-flap-in" /></div>
             <div className="we-slot">
               <div className="we-card">
-                <img className="we-stamp" src={KISS()} alt="" draggable={false} />
-                <span className="we-ring" />
                 {!done ? (
                   <div className="we-in">
                     <span className="we-k">A kiss from LENO WEAR</span>
@@ -180,6 +180,7 @@ export default function Welcome() {
             </div>
             <div className="we-front"><span className="we-brand">LENO WEAR<small>Leave your mark</small></span></div>
             <button type="button" className="we-seal" aria-label="Open your gift" onClick={(e) => { e.stopPropagation(); open(); }}><img src={KISS()} alt="" draggable={false} /></button>
+            <span className="we-ring" aria-hidden="true" />
             <div className="we-burst" aria-hidden="true">{Array.from({ length: 9 }, (_, i) => <img key={i} src={KISS()} alt="" />)}</div>
           </div>
           <span className="we-hint">{stage === "closed" ? "Tap the kiss to open" : ""}</span>
