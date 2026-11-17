@@ -74,14 +74,16 @@ export function MobileMenu() {
       <div className="mx-l">
         <div className="mx-top"><Link className="mx-logo" href="/" onClick={close} aria-label="LENO WEAR home"><Logo /></Link><button type="button" className="mx-x" onClick={close} aria-label="Close menu"><span>Close</span><Close /></button></div>
         <button type="button" className="mx-search" onClick={() => s.open("search")}><Search /><span>Search dresses, sets, colours…</span></button>
+        <span className="mx-k" style={{ ["--i" as string]: 0 }}>Shop</span>
         <nav className="mx-main" aria-label="Shop">
           {MAIN.map((m, i) => <Link key={m.h} href={m.h} onClick={close} onMouseEnter={() => setHov(i)} onFocus={() => setHov(i)} className={"mx-a" + (i === hov ? " on" : "") + (path === m.h ? " here" : "")} style={{ ["--i" as string]: i }}>
-            <b>{m.l}</b><sup>{String(m.c).padStart(2, "0")}</sup><i aria-hidden="true">→</i></Link>)}
+            <b>{m.l}</b><em>{m.c}</em><i aria-hidden="true">→</i></Link>)}
         </nav>
         <div className="mx-cards" style={{ ["--i" as string]: 5 }}>
-          <Link href="/products/pleat-dress-white/" onClick={close} className="mx-card"><img src={img("pleat-white-2")} alt="" /><span><small>The signature</small>The Pleat Dress</span></Link>
-          <Link href="/#looks" onClick={close} className="mx-card"><img src={img("set-navy-2")} alt="" /><span><small>Save {s.cfg.bundlePct}%</small>Shop the look</span></Link>
+          <Link href="/products/pleat-dress-white/" onClick={close} className="mx-card"><span className="mx-ci"><img src={img("pleat-white-2")} alt="" /></span><span className="mx-ct"><small>The signature</small>The Pleat Dress</span></Link>
+          <Link href="/#looks" onClick={close} className="mx-card"><span className="mx-ci"><img src={img("set-navy-2")} alt="" /></span><span className="mx-ct"><small>Save {s.cfg.bundlePct}%</small>Shop the look</span></Link>
         </div>
+        <span className="mx-k" style={{ ["--i" as string]: 6 }}>Help & info</span>
         <nav className="mx-sub" aria-label="More" style={{ ["--i" as string]: 6 }}>
           <Link href="/story/" onClick={close}>Our story</Link><Link href="/help/" onClick={close}>Track order</Link><Link href="/help/" onClick={close}>Delivery & returns</Link><Link href="/wishlist/" onClick={close}>Wishlist{s.wish.length ? ` (${s.wish.length})` : ""}</Link>
         </nav>
