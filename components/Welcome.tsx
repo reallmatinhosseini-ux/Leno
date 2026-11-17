@@ -28,8 +28,18 @@ export default function Welcome() {
     if (/^\/(checkout|order|admin)/.test(path)) return;
     let snooze = 0; try { snooze = +(localStorage.getItem(SNOOZE) || 0); } catch { /* ignore */ }
     if (Date.now() - snooze < 7 * 864e5) return;
-    const t = setTimeout(() => setShow(true), 1400);
-    return () => clearTimeout(t);
+    /* calm timing, never on arrival (the campaign film comes first). The offer waits until the
+       visitor has looked around: a second page, a real scroll after 12 seconds, or 35 seconds on site */
+    const g = window as unknown as { __lenoT0?: number; __lenoSeen?: Set<string>; __lenoShown?: boolean };
+    if (g.__lenoShown) return; /* once per visit */
+    const fire = () => { if (g.__lenoShown) return; g.__lenoShown = true; setShow(true); };
+    const t0 = (g.__lenoT0 ??= Date.now());
+    const seen = (g.__lenoSeen ??= new Set()); seen.add(path);
+    if (seen.size >= 2) { const t = setTimeout(fire, 1600); return () => clearTimeout(t); }
+    const t = setTimeout(fire, Math.max(2000, 35000 - (Date.now() - t0)));
+    const onScroll = () => { if (scrollY > innerHeight * 1.2 && Date.now() - t0 > 12000) fire(); };
+    addEventListener("scroll", onScroll, { passive: true });
+    return () => { clearTimeout(t); removeEventListener("scroll", onScroll); };
   }, [s.ready, s.promo, s.cfg.welcomeOn, path]);
 
   const reduce = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
