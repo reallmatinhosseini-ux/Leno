@@ -18,6 +18,8 @@ const desk = () => typeof window !== "undefined" && window.innerWidth > 900;
 
 /* ---------- hero: full-screen campaign film. Desktop shows both films side by side;
    phones show one at a time, handing over when each ends. ---------- */
+/* each film ships twice: HEVC (sharper at the same size; Safari, Chrome and Edge with hardware support) and H.264 for everything else */
+const FilmSrc = ({ s }: { s: string }) => <><source src={asset(s.replace(/\.mp4$/, "-hevc.mp4"))} type='video/mp4; codecs="hvc1"' /><source src={asset(s)} type="video/mp4" /></>;
 const FILMS = [{ src: "/v/hero-city.mp4", poster: "/v/hero-city.webp", label: "The Knot Dress in Navy, Dubai", pid: "knot-navy", tag: "City" }, { src: "/v/hero-studio.mp4", poster: "/v/hero-studio.webp", label: "The Studio Set in White", pid: "set-white", tag: "Studio" }];
 export function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -47,7 +49,7 @@ export function Hero() {
   return (
     <section className="hv" ref={root} aria-label="LENO WEAR campaign film">
       <div className="hv-films">{FILMS.map((f, i) => <div className={"hv-film" + (i === one ? " on" : "")} key={f.src}>
-        <video ref={(el) => { vids.current[i] = el; }} src={asset(f.src)} poster={asset(f.poster)} muted playsInline autoPlay loop={false} preload="auto" onEnded={() => ended(i)} aria-label={f.label} />
+        <video ref={(el) => { vids.current[i] = el; }} poster={asset(f.poster)} muted playsInline autoPlay loop={false} preload={i ? "metadata" : "auto"} onEnded={() => ended(i)} aria-label={f.label}><FilmSrc s={f.src} /></video>
       </div>)}</div>
       <div className="hv-shade" />
       <div className="hv-txt"><div className="hv-in">
@@ -295,7 +297,7 @@ export function InMotion() {
       <div className="sx-hd"><div><span className="sx-k">Our community</span><h2 className="sx-h">Worn in <em>Dubai</em></h2></div><div className="sx-r"><span className="sx-note">Real days, real courts.</span></div></div>
       <div className="reel-row">{REEL.map((r) => { const p = byId(r.pid)!; return (
         <Link className="reel-c" href={`/products/${p.slug}/`} key={r.pid} data-cursor="Shop">
-          {r.v ? <video src={asset(r.v)} poster={asset(r.im)} muted loop playsInline preload="metadata" /> : <img src={img(r.im)} alt="" loading="lazy" />}
+          {r.v ? <video poster={asset(r.im)} muted loop playsInline preload="metadata"><FilmSrc s={r.v} /></video> : <img src={img(r.im)} alt="" loading="lazy" />}
           <span className="reel-cap mono">{r.cap}</span>
           <span className="reel-p"><img src={img(p.images[0])} alt="" /><span><b>{STYLES[p.style].name}</b>{p.color} · {money(STYLES[p.style].price)}</span></span>
           <span className="reel-go">Shop the fit</span>
