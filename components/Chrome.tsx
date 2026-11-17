@@ -55,20 +55,46 @@ export function Header() {
 
 /* ---------- mobile menu + tab bar ---------- */
 export function MobileMenu() {
-  const s = useStore(); const close = () => s.open("menu", false);
+  const s = useStore(); const close = () => s.open("menu", false); const path = usePathname();
+  const [hov, setHov] = useState(0);
   const vis = s.catalog.filter((p) => !p.hidden);
-  const n = (f: (p: (typeof vis)[number]) => boolean) => String(vis.filter(f).length).padStart(2, "0");
+  const n = (f: (p: (typeof vis)[number]) => boolean) => vis.filter(f).length;
+  /* main destinations, each with a picture for the desktop preview */
+  const MAIN: { h: string; l: string; c: number; im: string; sub: string }[] = [
+    { h: "/shop/", l: "Shop all", c: n(() => true), im: "h-pleat-white", sub: "Every piece from Court 01" },
+    { h: "/shop/dresses/", l: "Dresses", c: n((p) => STYLES[p.style].cat === "dresses"), im: "h-knot-navy", sub: "Pleat, Knot and Tulle" },
+    { h: "/shop/sets/", l: "Sets", c: n((p) => STYLES[p.style].cat === "sets"), im: "h-set-white", sub: "The Studio Set" },
+    { h: "/shop/navy-edit/", l: "Navy edit", c: n((p) => p.edit === "navy"), im: "set-navy-3", sub: "Deep navy and royal blue" },
+    { h: "/shop/light-edit/", l: "Light edit", c: n((p) => p.edit === "light"), im: "h-tulle-ivory", sub: "White, ivory and sand" },
+  ];
+  useEffect(() => { if (s.ui.menu) setHov(Math.max(0, MAIN.findIndex((m) => m.h === path))); }, [s.ui.menu]); // eslint-disable-line react-hooks/exhaustive-deps
   return (<>
-    <div className={"mm-scrim" + (s.ui.menu ? " open" : "")} onClick={close} aria-hidden="true" />
-    <div className={"mmenu" + (s.ui.menu ? " open" : "")} role="dialog" aria-label="Menu" aria-hidden={!s.ui.menu}>
-      <div className="top g"><Link className="logo" href="/" onClick={close}><Logo /></Link><button type="button" onClick={close} aria-label="Close"><Close /></button></div>
-      <button type="button" className="mm-search g" onClick={() => s.open("search")}><Search /><span>Search the collection</span></button>
-      <nav className="g">
-        {[["/shop/", "Shop all", n(() => true)], ["/shop/dresses/", "Dresses", n((p) => STYLES[p.style].cat === "dresses")], ["/shop/sets/", "Sets", n((p) => STYLES[p.style].cat === "sets")], ["/shop/navy-edit/", "Navy edit", n((p) => p.edit === "navy")], ["/shop/light-edit/", "Light edit", n((p) => p.edit === "light")], ["/wishlist/", "Wishlist", ""], ["/story/", "Story", ""], ["/help/", "Help", ""]].map(([h, l, c]) =>
-          <Link key={h} href={h} onClick={close}>{l}{c && <small>{c}</small>}</Link>)}
-      </nav>
-      <div className="mm-foot g"><span className="mono">LENO WEAR · Dubai</span><span className="mono">AED · UAE</span></div>
-    </div>
+    <div className={"mx-scrim" + (s.ui.menu ? " open" : "")} onClick={close} aria-hidden="true" />
+    <aside className={"mx" + (s.ui.menu ? " open" : "")} role="dialog" aria-modal="true" aria-label="Menu" aria-hidden={!s.ui.menu}>
+      <div className="mx-l">
+        <div className="mx-top"><Link className="mx-logo" href="/" onClick={close} aria-label="LENO WEAR home"><Logo /></Link><button type="button" className="mx-x" onClick={close} aria-label="Close menu"><span>Close</span><Close /></button></div>
+        <button type="button" className="mx-search" onClick={() => s.open("search")}><Search /><span>Search dresses, sets, colours…</span></button>
+        <nav className="mx-main" aria-label="Shop">
+          {MAIN.map((m, i) => <Link key={m.h} href={m.h} onClick={close} onMouseEnter={() => setHov(i)} onFocus={() => setHov(i)} className={"mx-a" + (i === hov ? " on" : "") + (path === m.h ? " here" : "")} style={{ ["--i" as string]: i }}>
+            <b>{m.l}</b><sup>{String(m.c).padStart(2, "0")}</sup><i aria-hidden="true">→</i></Link>)}
+        </nav>
+        <div className="mx-cards" style={{ ["--i" as string]: 5 }}>
+          <Link href="/products/pleat-dress-white/" onClick={close} className="mx-card"><img src={img("pleat-white-2")} alt="" /><span><small>The signature</small>The Pleat Dress</span></Link>
+          <Link href="/#looks" onClick={close} className="mx-card"><img src={img("set-navy-2")} alt="" /><span><small>Save {s.cfg.bundlePct}%</small>Shop the look</span></Link>
+        </div>
+        <nav className="mx-sub" aria-label="More" style={{ ["--i" as string]: 6 }}>
+          <Link href="/story/" onClick={close}>Our story</Link><Link href="/help/" onClick={close}>Track order</Link><Link href="/help/" onClick={close}>Delivery & returns</Link><Link href="/wishlist/" onClick={close}>Wishlist{s.wish.length ? ` (${s.wish.length})` : ""}</Link>
+        </nav>
+        <ul className="mx-offers" style={{ ["--i" as string]: 7 }}>
+          {s.cfg.welcomeOn && <li><Kiss />{s.cfg.welcomePct}% off your first order · code LENO10</li>}
+          <li><span className="mx-dot" />Free same-day delivery in Dubai over {money(s.free)}</li>
+          <li><span className="mx-dot" />Pay on delivery · free 14-day returns</li>
+        </ul>
+      </div>
+      <div className="mx-r" aria-hidden="true">
+        {MAIN.map((m, i) => <figure key={m.h} className={i === hov ? "on" : ""}><img src={img(m.im)} alt="" loading="lazy" /><figcaption><small>{String(m.c).padStart(2, "0")} pieces</small><b>{m.l}</b><span>{m.sub}</span></figcaption></figure>)}
+      </div>
+    </aside>
   </>);
 }
 export function TabBar() {
