@@ -2302,3 +2302,41 @@ html,body{overflow-x:clip}
 .mx-card .mx-ci{position:relative!important;left:auto!important;bottom:auto!important;right:auto!important;display:block;width:100%}
 @media (min-width:901px){.mx-card .mx-ci{aspect-ratio:4/3}}
 @media (max-width:900px){.mx-card .mx-ci{aspect-ratio:4/5}}
+
+/* ===================== v23: palette + calmer type scale ===================== */
+:root{
+  --bg:#F6F3EE; --paper:#FFFFFF; --studio:#ECE7DF; --cream:#F6F3EE; --ivory:#F6F3EE;
+  --ink:#141312; --ink2:#3B3835; --mute:#6B665F; --line:rgba(20,19,18,.10);
+  --red:#C9302C; --red2:#A82521; --night:#141312; --night2:#1E1C1A;
+}
+body{background:var(--bg);color:var(--ink)}
+.btn.red,.btn.red::before{background:var(--red)}
+.btn.red:hover{background:var(--red2)}
+.su,.rb,.foot{background:var(--ink)!important}
+/* headings: still bold, about a quarter smaller */
+.hv-h{font-size:clamp(56px,8vw,140px)!important}
+.sx-h{font-size:clamp(36px,4.6vw,72px)!important}
+.edit-t .H{font-size:clamp(48px,5.6vw,100px)!important}
+.chap-txt .H,.ed-txt .H{font-size:clamp(42px,4.4vw,78px)!important}
+.lk-h .H{font-size:clamp(28px,2.6vw,44px)!important}
+.su .sx-h{font-size:clamp(34px,3.8vw,60px)!important}
+#view .ph .H,#view .shop-hd .H,#view h1.H{font-size:clamp(42px,5vw,84px)!important}
+.sh-hd .H{font-size:clamp(34px,4vw,64px)!important}
+.pd-name{font-size:clamp(28px,2.5vw,40px)!important}
+.hd-t .H{font-size:clamp(40px,4.4vw,76px)!important}
+.mx-r figcaption b{font-size:clamp(44px,4.4vw,76px)!important}
+.co-l>h1.H{font-size:clamp(34px,3.2vw,52px)!important}
+.hl-h{font-size:clamp(24px,2vw,34px)!important}
+@media (max-width:900px){
+  .hv-h{font-size:clamp(50px,15vw,80px)!important}
+  .sx-h{font-size:clamp(34px,10vw,52px)!important}
+  .edit-t .H{font-size:clamp(46px,14vw,72px)!important}
+  .chap-txt .H,.ed-txt .H{font-size:clamp(36px,10.5vw,54px)!important}
+  #view h1.H{font-size:clamp(38px,11vw,60px)!important}
+  .mx-a b{font-size:22px}
+}
+/* small text: never below 12px, readable grey */
+.mono,.sx-k,.lk-n,.edit-t .mono,.mx-k{color:var(--mute)}
+.card .cmeta{color:var(--ink2)}
+.edition{background:var(--bg)!important}
+@media (max-width:900px){.su-kiss{display:none}}

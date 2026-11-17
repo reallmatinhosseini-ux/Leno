@@ -55,8 +55,10 @@ export default function ProductView({ id }: { id: string }) {
     const io = new IntersectionObserver(([e]) => { past = !e.isIntersecting && e.boundingClientRect.top < 0; upd(); });
     const fo = new IntersectionObserver(([e]) => { foot = e.isIntersecting; upd(); });
     if (addBtn.current) io.observe(addBtn.current);
-    const f = document.querySelector("footer"); if (f) fo.observe(f);
-    return () => { io.disconnect(); fo.disconnect(); };
+    /* also step aside for the footer, the sign-up block and the look's own add button */
+    const seen = new Set<Element>(); const fo2 = new IntersectionObserver((es) => { es.forEach((e) => (e.isIntersecting ? seen.add(e.target) : seen.delete(e.target))); foot = seen.size > 0; upd(); });
+    document.querySelectorAll("footer, .su, .ctl2-t .btn, .ctl2-l + .btn, .ctl2 .btn.red").forEach((el) => fo2.observe(el));
+    return () => { io.disconnect(); fo.disconnect(); fo2.disconnect(); };
   }, []);
   useEffect(() => { if (size && msg.current && !reduce()) gsap.fromTo(msg.current, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: .4 }); }, [size]);
   useEffect(() => { const k = (e: KeyboardEvent) => { if (lb === null) return; if (e.key === "Escape") setLb(null); if (e.key === "ArrowRight") setLb((lb + 1) % p.images.length); if (e.key === "ArrowLeft") setLb((lb - 1 + p.images.length) % p.images.length); }; addEventListener("keydown", k); return () => removeEventListener("keydown", k); }, [lb, p.images.length]);
