@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
-import { LOOKS, PRODUCTS, SIZES, STYLES, Size, byId } from "@/lib/data";
+import { LOOKS, PRODUCTS, SIZES, STYLES, Size, StyleKey, byId } from "@/lib/data";
 import { asset, img, money } from "@/lib/site";
 import { kissBurst } from "@/lib/fx";
 import { useStore } from "@/lib/store";
@@ -51,9 +51,9 @@ export function Hero() {
       <div className="hv-shade" />
       <div className="hv-txt"><div className="hv-in">
         <span className="hv-k mono">Court 01 · Made in Dubai</span>
-        <h1 className="H hv-h"><span className="ln">Leave your</span> <span className="ln"><em>mark.</em></span></h1>
+        <h1 className="hv-h"><span className="ln">Leave your</span> <span className="ln">mark<i>.</i></span></h1>
         <p className="hv-p">Court-wear from Dubai, made in small runs. Every piece is chosen to move on court and to look right long after the last game.</p>
-        <div className="hv-cta"><Link className="btn red" href="/shop/">Shop the collection</Link><Link className="btn line light" href="/story/">Our story</Link></div>
+        <div className="hv-cta"><Link className="pill white" href="/shop/">Shop the collection</Link><Link className="pill ghost" href="/story/">Our story</Link></div>
       </div></div>
       <div className="hv-wear">{FILMS.map((f, i) => { const p = byId(f.pid)!; return <Link key={f.pid} href={`/products/${p.slug}/`} className={"hv-chip" + (i === one ? " on" : "")}><img src={img(p.images[0])} alt="" /><span><small>{f.tag} · wearing</small>{STYLES[p.style].name} · {p.color}</span></Link>; })}</div>
     </section>
@@ -152,7 +152,7 @@ export function Looks() {
   const s = useStore();
   return (
     <section className="g looks" id="looks"><div className="w">
-      <div className="sh-hd"><h2 className="H" data-rise>Shop the <em>look</em><img className="h-kiss" data-stamp src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" /></h2><span className="mono mute">Buy the outfit together and save {s.cfg.bundlePct}%</span></div>
+      <div className="sx-hd"><div><span className="sx-k">Buy it together · save {s.cfg.bundlePct}%</span><h2 className="sx-h">Shop the <em>look</em></h2></div><div className="sx-r"><Link className="sx-all" href="/shop/">View all</Link></div></div>
       <div className="looks-grid">{LOOKS.map((lk, i) => <LookCard key={lk.id} lk={lk} n={i + 1} />)}</div>
     </div></section>
   );
@@ -291,13 +291,52 @@ export function InMotion() {
   }, []);
   return (
     <section className="g reel" ref={root} aria-label="Worn in Dubai"><div className="w">
-      <div className="sh-hd"><h2 className="H" data-rise>Worn in <em>Dubai</em></h2><span className="mono mute">Real days, real courts. Tap a look to shop it.</span></div>
+      <div className="sx-hd"><div><span className="sx-k">Our community</span><h2 className="sx-h">Worn in <em>Dubai</em></h2></div><div className="sx-r"><span className="sx-note">Real days, real courts.</span></div></div>
       <div className="reel-row">{REEL.map((r) => { const p = byId(r.pid)!; return (
         <Link className="reel-c" href={`/products/${p.slug}/`} key={r.pid} data-cursor="Shop">
           {r.v ? <video src={asset(r.v)} poster={asset(r.im)} muted loop playsInline preload="metadata" /> : <img src={img(r.im)} alt="" loading="lazy" />}
           <span className="reel-cap mono">{r.cap}</span>
           <span className="reel-p"><img src={img(p.images[0])} alt="" /><span><b>{STYLES[p.style].name}</b>{p.color} · {money(STYLES[p.style].price)}</span></span>
+          <span className="reel-go">Shop the fit</span>
         </Link>); })}</div>
     </div></section>
+  );
+}
+
+/* ---------- the collection: tabs switch a swipeable row of pieces (arrows on desktop) ---------- */
+const CTABS: [string, string, (p: { style: StyleKey; edit: string }) => boolean][] = [
+  ["all", "All", () => true], ["dresses", "Dresses", (p) => STYLES[p.style].cat === "dresses"], ["sets", "Sets", (p) => STYLES[p.style].cat === "sets"],
+  ["navy", "Navy edit", (p) => p.edit === "navy"], ["light", "Light edit", (p) => p.edit === "light"],
+];
+export function Collection({ kicker = "Court 01 · New season", title = <>The <em>collection</em></>, start = "all" }: { kicker?: string; title?: React.ReactNode; start?: string }) {
+  const s = useStore(); const [tab, setTab] = useState(start); const track = useRef<HTMLDivElement>(null);
+  const [edge, setEdge] = useState({ l: true, r: false });
+  const list = s.catalog.filter((p) => !p.hidden).filter(CTABS.find((t) => t[0] === tab)![2]);
+  const upd = () => { const t = track.current; if (!t) return; setEdge({ l: t.scrollLeft < 8, r: t.scrollLeft + t.clientWidth > t.scrollWidth - 8 }); };
+  useEffect(() => { const t = track.current; if (!t) return; t.scrollTo({ left: 0 }); upd(); if (!reduce()) gsap.fromTo(t.querySelectorAll(".card"), { opacity: 0, y: 24 }, { opacity: 1, y: 0, stagger: .05, duration: .7, ease: "expo.out", clearProps: "transform,opacity" }); }, [tab]); // eslint-disable-line react-hooks/exhaustive-deps
+  const go = (d: number) => { const t = track.current; if (!t) return; t.scrollBy({ left: d * t.clientWidth * .8, behavior: "smooth" }); };
+  return (
+    <section className="g coll" aria-label="The collection"><div className="w">
+      <div className="sx-hd"><div><span className="sx-k">{kicker}</span><h2 className="sx-h">{title}</h2></div>
+        <div className="sx-r"><Link className="sx-all" href="/shop/">View all</Link>
+          <div className="sx-arr"><button type="button" aria-label="Previous" disabled={edge.l} onClick={() => go(-1)}>←</button><button type="button" aria-label="Next" disabled={edge.r} onClick={() => go(1)}>→</button></div></div></div>
+      <div className="sx-tabs" role="tablist">{CTABS.map(([k, l]) => <button key={k} type="button" role="tab" aria-selected={tab === k} className={tab === k ? "on" : ""} onClick={() => setTab(k)}>{l}</button>)}</div>
+      <div className="sx-track" ref={track} onScroll={upd}>{list.map((p, i) => <ProductCard key={p.id} product={byId(p.id)!} priority={i < 4} />)}</div>
+    </div></section>
+  );
+}
+
+/* ---------- sign up and save: the honest welcome offer, inline ---------- */
+export function SignUp() {
+  const s = useStore(); const [done, setDone] = useState(false);
+  if (!s.cfg.welcomeOn) return null;
+  return (
+    <section className="su" aria-label="Sign up and save"><div className="g"><div className="w su-in">
+      <img className="su-kiss" src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" />
+      <div><span className="sx-k light">First Serve</span><h2 className="sx-h light">Sign up <em>and save</em></h2><p>{s.cfg.welcomePct}% off your first order, early access to every drop, and nothing else in your inbox.</p></div>
+      {done ? <p className="su-ok">Welcome to LENO. Code <b>LENO10</b> is saved to your bag.</p> :
+        <form className="su-f" onSubmit={(e) => { e.preventDefault(); const email = String(new FormData(e.currentTarget).get("email") || ""); fetch("/api/subscribe/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, source: "home" }) }).catch(() => {}); s.claim(); setDone(true); kissBurst(e.currentTarget, 10); }}>
+          <input name="email" type="email" required placeholder="Your email address" aria-label="Your email address" autoComplete="email" /><button className="btn red" type="submit">Get {s.cfg.welcomePct}% off</button></form>}
+    </div></div></section>
   );
 }
