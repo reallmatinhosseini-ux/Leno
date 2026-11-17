@@ -15,58 +15,47 @@ if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger, Flip);
 const reduce = () => typeof window !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const desk = () => typeof window !== "undefined" && window.innerWidth > 900;
 
-/* ---------- hero: three columns of campaign photos that wipe to new looks ---------- */
-const COLS = [["h-pleat-white", "knot-sand-2", "h-set-white"], ["h-knot-navy", "pleat-blue-2", "h-tulle-ivory"], ["set-navy-3", "pleat-white-1", "knot-navy-3"]];
-const LOOK = ["knot-navy", "pleat-blue", "tulle-ivory"];
+/* ---------- hero: full-screen campaign film. Desktop shows both films side by side;
+   phones show one at a time, handing over when each ends. ---------- */
+const FILMS = [{ src: "/v/hero-city.mp4", poster: "/v/hero-city.webp", label: "The Knot Dress in Navy, Dubai" }, { src: "/v/hero-studio.mp4", poster: "/v/hero-studio.webp", label: "The Studio Set in White" }];
 export function Hero() {
-  const s = useStore();
-  const [slide, setSlide] = useState(0);
   const root = useRef<HTMLElement>(null);
-  const bar = useRef<gsap.core.Tween | null>(null);
+  const vids = useRef<(HTMLVideoElement | null)[]>([]);
+  const [one, setOne] = useState(0); /* which film plays on phones */
   useEffect(() => {
-    if (reduce()) return;
     const ctx = gsap.context(() => {
-      const ch = Array.from(root.current!.querySelectorAll(".hx-h .ln")).flatMap((el) => splitChars(el));
-      gsap.fromTo(".hx-col", { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "expo.inOut", stagger: .1 });
-      gsap.fromTo(".hx-col img", { scale: 1.3 }, { scale: 1, duration: 2, ease: "expo.out", stagger: .1 });
-      gsap.from(ch, { yPercent: 115, duration: 1.3, ease: "expo.out", stagger: .03, delay: .4 });
-      gsap.from(".hx-l > *:not(h1), .hx-r > *", { opacity: 0, y: 24, duration: 1, ease: "expo.out", stagger: .07, delay: .85 });
-      gsap.utils.toArray<HTMLElement>(".hx-col").forEach((c, i) => gsap.to(c, { yPercent: [8, 15, 5][i], ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } }));
-      gsap.to(".hx-txt", { yPercent: -25, opacity: 0, ease: "none", scrollTrigger: { trigger: root.current, start: "25% top", end: "80% top", scrub: true } });
+      if (reduce()) return;
+      const ch = Array.from(root.current!.querySelectorAll(".hv-h .ln")).flatMap((el) => splitChars(el));
+      gsap.fromTo(".hv-film", { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "expo.inOut", stagger: .12 });
+      gsap.fromTo(".hv-film video", { scale: 1.25 }, { scale: 1, duration: 2.2, ease: "expo.out", stagger: .12 });
+      gsap.from(ch, { yPercent: 115, duration: 1.3, ease: "expo.out", stagger: .025, delay: .6 });
+      gsap.from(".hv-k, .hv-p, .hv-cta > *, .hv-scroll", { opacity: 0, y: 20, duration: 1, ease: "expo.out", stagger: .08, delay: 1 });
+      /* on scroll the films drift and the copy lifts away */
+      gsap.to(".hv-film video", { yPercent: 8, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } });
+      gsap.to(".hv-txt", { yPercent: -18, opacity: 0, ease: "none", scrollTrigger: { trigger: root.current, start: "30% top", end: "85% top", scrub: true } });
     }, root);
-    COLS.forEach((c) => c.slice(1).forEach((n) => { const i = new Image(); i.src = img(n); }));
     return () => ctx.revert();
   }, []);
+  /* pause films that are off screen (saves battery); phones alternate between the two */
   useEffect(() => {
-    if (reduce()) { const t = setTimeout(() => setSlide((x) => (x + 1) % 3), 6000); return () => clearTimeout(t); }
-    const b = root.current!.querySelectorAll<HTMLElement>(".hx-dots b")[slide];
-    root.current!.querySelectorAll<HTMLElement>(".hx-dots b").forEach((x) => gsap.set(x, { scaleX: 0 }));
-    bar.current?.kill();
-    bar.current = gsap.to(b, { scaleX: 1, duration: 6, ease: "none", delay: slide === 0 ? 1.4 : 0, onComplete: () => setSlide((x) => (x + 1) % 3) });
-    return () => { bar.current?.kill(); };
-  }, [slide]);
-  const prev = useRef(0);
-  useEffect(() => {
-    if (prev.current === slide) return; prev.current = slide;
-    root.current!.querySelectorAll<HTMLElement>(".hx-col").forEach((col, ci) => {
-      const cur = col.querySelector(".sl"), nx = document.createElement("div"); nx.className = "sl";
-      nx.innerHTML = `<img src="${img(COLS[ci][slide])}" alt="" draggable="false">`; col.appendChild(nx);
-      if (reduce()) { cur?.remove(); return; }
-      gsap.fromTo(nx, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: "expo.inOut", delay: ci * .1 });
-      gsap.fromTo(nx.querySelector("img"), { scale: 1.25 }, { scale: 1, duration: 1.9, ease: "expo.out", delay: ci * .1 });
-      if (cur) gsap.to(cur.querySelector("img"), { scale: .94, yPercent: -5, duration: 1.3, ease: "expo.inOut", delay: ci * .1, onComplete: () => cur.remove() });
-    });
-  }, [slide]);
+    const io = new IntersectionObserver(([e]) => vids.current.forEach((v, i) => { if (!v) return; const show = desk() || i === one; if (e.isIntersecting && show) v.play().catch(() => {}); else v.pause(); }), { threshold: .05 });
+    if (root.current) io.observe(root.current);
+    return () => io.disconnect();
+  }, [one]);
+  const ended = (i: number) => { if (desk()) { const v = vids.current[i]; if (v) { v.currentTime = 0; v.play().catch(() => {}); } return; } const n = (i + 1) % FILMS.length; const v = vids.current[n]; if (v) { v.currentTime = 0; v.play().catch(() => {}); } setOne(n); };
   return (
-    <section className="hx" ref={root} aria-label="Court 01 campaign">
-      <div className="hx-cols">{COLS.map((c, ci) => <div className="hx-col" key={ci}><div className="sl"><img src={img(c[0])} alt={ci === 0 ? "The Pleat Dress in White" : ""} fetchPriority={ci === 0 ? "high" : "auto"} draggable={false} /></div></div>)}</div>
-      <div className="hx-shade" />
-      <div className="hx-txt">
-        <div className="hx-l">          <h1 className="H hx-h"><span className="ln">Leave your</span> <span className="ln"><em>mark.</em></span></h1>
-          <div className="hx-cta"><Link className="btn red" href="/shop/">Shop the collection</Link></div></div>
-        <div className="hx-r"><button type="button" className="look-pill" onClick={() => s.quick(LOOK[slide])}><i />Shop this look</button>
-          <div className="hx-dots">{[0, 1, 2].map((i) => <button key={i} type="button" className={i === slide ? "on" : ""} aria-label={`Look ${i + 1}`} onClick={() => setSlide(i)}><b /></button>)}</div></div>
-      </div>
+    <section className="hv" ref={root} aria-label="LENO WEAR campaign film">
+      <div className="hv-films">{FILMS.map((f, i) => <div className={"hv-film" + (i === one ? " on" : "")} key={f.src}>
+        <video ref={(el) => { vids.current[i] = el; }} src={asset(f.src)} poster={asset(f.poster)} muted playsInline autoPlay loop={false} preload="auto" onEnded={() => ended(i)} aria-label={f.label} />
+      </div>)}</div>
+      <div className="hv-shade" />
+      <div className="hv-txt"><div className="hv-in">
+        <span className="hv-k mono">Court 01 · Dubai</span>
+        <h1 className="H hv-h"><span className="ln">Leave your</span> <span className="ln"><em>mark.</em></span></h1>
+        <p className="hv-p">Court-wear from Dubai, made in small runs. Every piece is chosen to move on court and to look right long after the last game.</p>
+        <div className="hv-cta"><Link className="btn red" href="/shop/">Shop the collection</Link><Link className="btn line light" href="/story/">Our story</Link></div>
+      </div></div>
+      <span className="hv-scroll mono" aria-hidden="true">Scroll</span>
     </section>
   );
 }

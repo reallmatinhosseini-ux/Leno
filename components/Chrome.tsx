@@ -38,16 +38,13 @@ export function Header() {
     const on = () => { const y = window.scrollY; setSolid(y > 30 || path !== "/"); setHide(y > last && y > 400); last = y; };
     on(); window.addEventListener("scroll", on, { passive: true }); return () => window.removeEventListener("scroll", on);
   }, [path]);
-  const nl = (href: string, label: string) => <Link className={"nl" + (path === href ? " on" : "")} href={href}>{label}</Link>;
   return (
     <header className={"hdr g" + (solid ? " solid" : "") + (path === "/" && !solid ? " over" : "") + (hide && !Object.values(s.ui).some(Boolean) ? " hide" : "")}>
       <nav className="l" aria-label="Primary">
-        <button className="burger" type="button" aria-label="Menu" onClick={() => s.open("menu")}><i /></button>
-        {nl("/shop/", "Shop")}{nl("/shop/dresses/", "Dresses")}{nl("/shop/sets/", "Sets")}{nl("/story/", "Story")}
+        <button className="burger3" type="button" aria-label="Open menu" aria-expanded={s.ui.menu} onClick={() => s.open("menu")}><i /><i /><i /><span>Menu</span></button>
       </nav>
       <Link className="logo" href="/" aria-label="LENO WEAR home"><Logo /></Link>
       <nav className="r" aria-label="Utility">
-        <button className="nl ic hide-m" type="button" onClick={() => s.open("search")}><Search /><span>Search</span></button>
         <Link className="nl ic hide-m" href="/wishlist/" aria-label="Wishlist"><Heart />{s.wish.length > 0 && <span className="cnt">{s.wish.length}</span>}</Link>
         <button className="nl ic" type="button" data-bag-target onClick={() => s.open("bag")} aria-label={`Bag, ${s.count} items`}><Bag /><span>Bag</span>{s.count > 0 && <span className="cnt" key={s.count} style={{ animation: "pop .6s" }}>{s.count}</span>}</button>
       </nav>
@@ -60,16 +57,18 @@ export function MobileMenu() {
   const s = useStore(); const close = () => s.open("menu", false);
   const vis = s.catalog.filter((p) => !p.hidden);
   const n = (f: (p: (typeof vis)[number]) => boolean) => String(vis.filter(f).length).padStart(2, "0");
-  return (
+  return (<>
+    <div className={"mm-scrim" + (s.ui.menu ? " open" : "")} onClick={close} aria-hidden="true" />
     <div className={"mmenu" + (s.ui.menu ? " open" : "")} role="dialog" aria-label="Menu" aria-hidden={!s.ui.menu}>
       <div className="top g"><Link className="logo" href="/" onClick={close}><Logo /></Link><button type="button" onClick={close} aria-label="Close"><Close /></button></div>
+      <button type="button" className="mm-search g" onClick={() => s.open("search")}><Search /><span>Search the collection</span></button>
       <nav className="g">
         {[["/shop/", "Shop all", n(() => true)], ["/shop/dresses/", "Dresses", n((p) => STYLES[p.style].cat === "dresses")], ["/shop/sets/", "Sets", n((p) => STYLES[p.style].cat === "sets")], ["/shop/navy-edit/", "Navy edit", n((p) => p.edit === "navy")], ["/shop/light-edit/", "Light edit", n((p) => p.edit === "light")], ["/wishlist/", "Wishlist", ""], ["/story/", "Story", ""], ["/help/", "Help", ""]].map(([h, l, c]) =>
           <Link key={h} href={h} onClick={close}>{l}{c && <small>{c}</small>}</Link>)}
       </nav>
       <div className="mm-foot g"><span className="mono">LENO WEAR · Dubai</span><span className="mono">AED · UAE</span></div>
     </div>
-  );
+  </>);
 }
 export function TabBar() {
   const s = useStore(), path = usePathname();
@@ -77,7 +76,7 @@ export function TabBar() {
   return (
     <nav className="tabbar" aria-label="Quick">
       <Link href="/shop/" className={path.startsWith("/shop") ? "on" : ""}><Grid /><span>Shop</span></Link>
-      <button type="button" onClick={() => s.open("search")}><Search /><span>Search</span></button>
+      <button type="button" onClick={() => s.open("menu")}><span className="tb-menu"><i /><i /><i /></span><span>Menu</span></button>
       <Link href="/wishlist/" className={path === "/wishlist/" ? "on" : ""}><Heart /><span>Wishlist</span></Link>
       <button type="button" data-bag-target onClick={() => s.open("bag")}><Bag /><span>Bag {s.count > 0 && <b className="cnt">{s.count}</b>}</span></button>
     </nav>
@@ -212,7 +211,7 @@ export function Footer() {
     <footer className="foot"><div className="g"><div className="w">
       <div className="foot-top">
         <div className="foot-brand">
-          <Link href="/" className="foot-logo" aria-label="LENO WEAR home"><Kiss /><span>LENO WEAR</span></Link>
+          <Link href="/" className="foot-logo-l" aria-label="LENO WEAR home"><img className="foot-logo" src="/p/leno-logo.png" alt="" width={307} height={320} /></Link>
           <p className="foot-tag">Court-wear from Dubai, made in small runs for padel, tennis and everything after.</p>
           <div className="nl">
             <span className="foot-k">First Serve</span>

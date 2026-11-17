@@ -23,5 +23,6 @@ export function Kiss({ className = "" }: { className?: string }) {
   return <span className={"kiss-m " + className} aria-hidden="true" />;
 }
 export function Logo() {
-  return (<><Kiss /><span className="lw"><b>LENO WEAR</b><small>LEAVE YOUR MARK</small></span></>);
+  /* the brand mark from the client's logo file: kiss over the script "leno" */
+  return (<><img className="lg" src={(process.env.NEXT_PUBLIC_BASE_PATH || "") + "/p/leno-logo.png"} alt="" width={307} height={320} /><span className="sr">LENO WEAR</span></>);
 }
