@@ -2,8 +2,9 @@
 import { useEffect, useState } from "react";
 import { AProduct, ASettings, PRODUCTS, SIZES, STYLES, aed, api } from "@/components/admin/lib";
 import type { Size } from "@/lib/data";
+import { img } from "@/lib/site";
 
-const src = (im: string) => (/^https?:/.test(im) ? im : `/p/${im}.webp`);
+const src = img;
 
 export default function Products() {
   const [ps, setPs] = useState<AProduct[] | null>(null); const [st, setSt] = useState<ASettings | null>(null); const [err, setErr] = useState("");

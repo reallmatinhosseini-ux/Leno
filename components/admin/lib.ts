@@ -1,5 +1,6 @@
 "use client";
 import { PRODUCTS, STYLES, SIZES, type Size } from "@/lib/data";
+import { img } from "@/lib/site";
 
 export type AOrder = {
   no: string; created_at: string; status: string; pay_status: string; pay_method: string; pay_ref: string | null;
@@ -25,7 +26,7 @@ export async function api<T>(path: string, init?: RequestInit & { json?: unknown
 export const aed = (n: number) => "AED " + Math.round(n).toLocaleString("en-US");
 export const when = (iso: string) => new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Dubai" });
 export const day = (iso: string) => new Date(iso).toLocaleDateString("en-CA", { timeZone: "Asia/Dubai" });
-export const thumb = (p: { id: string; images?: string[] | null }) => { const im = p.images?.[0] || PRODUCTS.find((x) => x.id === p.id)?.images[0] || ""; return /^https?:/.test(im) ? im : `/p/${im}.webp`; };
+export const thumb = (p: { id: string; images?: string[] | null }) => { const im = p.images?.[0] || PRODUCTS.find((x) => x.id === p.id)?.images[0] || ""; return img(im); };
 export const pname = (id: string) => { const p = PRODUCTS.find((x) => x.id === id); return p ? `${STYLES[p.style].name} · ${p.color}` : id; };
 export { PRODUCTS, STYLES, SIZES };
 
