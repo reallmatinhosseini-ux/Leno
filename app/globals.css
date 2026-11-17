@@ -2348,3 +2348,10 @@ body{background:var(--bg);color:var(--ink)}
 .hv-pp:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .hv-pp svg{width:12px;height:12px}
 @media (max-width:900px){.hv-pp{right:var(--gut,16px);top:calc(var(--hdr,64px) + 14px);width:34px;height:34px}}
+
+/* ===== v25: normal system cursor; small label pill beside it over imagery ===== */
+.kc{display:none!important}
+html.kc-on,html.kc-on *{cursor:auto}
+.lc{width:auto!important;height:auto!important;margin:0!important;border-radius:999px;padding:8px 13px 8px 14px;display:flex;align-items:center;gap:8px;background:rgba(20,19,18,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;opacity:0;transform:scale(.8);transform-origin:0 0;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.lc span{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;line-height:1}
+.lc i{font-style:normal;font-size:12px;line-height:1;opacity:.8}
