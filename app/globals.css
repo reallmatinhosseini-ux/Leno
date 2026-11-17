@@ -1956,3 +1956,140 @@ html,body{overflow-x:clip}
 .mm-scrim{position:fixed;inset:0;z-index:119;background:rgba(18,14,12,.35);opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility .5s}
 .mm-scrim.open{opacity:1;visibility:visible}
 @media (max-width:900px){.mm-scrim{display:none}}
+
+/* ===================== v18: design pass ===================== */
+/* --- hero: films edge to edge, copy bottom-left (never over faces), what she wears bottom-right --- */
+.hv-films{gap:0}
+.hv-shade{background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,0) 18%,rgba(0,0,0,0) 48%,rgba(0,0,0,.72) 100%),linear-gradient(90deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,0) 55%)}
+.hv-txt{padding-bottom:clamp(36px,6vh,72px)}
+.hv-in{justify-items:start;text-align:left;gap:16px;max-width:none}
+.hv-k{display:inline-flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.22em}
+.hv-k::before{content:"";width:28px;height:1px;background:currentColor;opacity:.7}
+.hv-h{font-size:clamp(64px,9.2vw,168px);line-height:.88;letter-spacing:-.05em;max-width:9.5ch}
+.hv-h .ln{display:block}
+.hv-p{max-width:40ch;font-size:clamp(15px,1.1vw,17px);color:rgba(255,255,255,.84)}
+.hv-cta{justify-content:flex-start;margin-top:8px}
+.hv-cta .btn{height:52px;padding-inline:26px;font-size:14px}
+.hv-wear{position:absolute;right:var(--gutr,32px);bottom:clamp(36px,6vh,72px);display:grid;gap:8px;z-index:3}
+.hv-chip{display:grid;grid-template-columns:44px auto;gap:12px;align-items:center;padding:6px 16px 6px 6px;border-radius:14px;background:rgba(255,255,255,.12);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);color:#fff;font-size:13px;font-weight:500;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);transition:background .4s var(--ease),transform .4s var(--ease)}
+.hv-chip:hover{background:rgba(255,255,255,.24);transform:translateX(-4px)}
+.hv-chip img{width:44px;height:54px;object-fit:cover;border-radius:9px}
+.hv-chip small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-bottom:2px}
+.hv-scroll{display:none}
+/* header over the film: white mark, red once the page scrolls */
+.hdr.over .lg{filter:brightness(0) invert(1) drop-shadow(0 2px 12px rgba(0,0,0,.3))}
+.hdr .logo .lg{height:68px;transition:filter .5s var(--ease),height .4s var(--ease)}
+.hdr.solid .logo .lg{height:56px}
+.hdr.over{background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,0))}
+@media (max-width:900px){
+  .hdr .logo .lg{height:52px}.hdr.solid .logo .lg{height:46px}
+  .hv-shade{background:linear-gradient(180deg,rgba(0,0,0,.4) 0%,rgba(0,0,0,0) 20%,rgba(0,0,0,0) 40%,rgba(0,0,0,.78) 100%)}
+  .hv-h{font-size:clamp(58px,17vw,92px)}
+  .hv-wear{left:var(--gut,16px);right:auto;top:calc(var(--hdr) + 14px);bottom:auto}
+  .hv-chip{display:none}.hv-chip.on{display:grid}
+  .hv-cta{width:100%}.hv-cta .btn{flex:1}
+}
+/* --- shop the look: editorial rows, image and panel alternate --- */
+.looks-grid{gap:clamp(20px,3vw,40px)}
+.lk{border-radius:18px;overflow:hidden;background:var(--paper);box-shadow:0 0 0 1px var(--line)}
+.lk-n{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+.lk-h{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.lk-h .H{font-size:clamp(36px,3.6vw,60px);letter-spacing:-.04em;line-height:1}
+.lk-save{font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--ink);color:#fff;white-space:nowrap}
+.lk-line{margin:0;color:var(--ink2);font-size:16px;line-height:1.55;max-width:42ch}
+.lk-i{display:grid;grid-template-columns:76px 1fr auto;gap:16px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.lk-i:last-of-type{border-bottom:1px solid var(--line)}
+.lk-i img{width:76px;height:96px;object-fit:cover;border-radius:10px}
+.lk-i b{display:block;font-size:15px;font-weight:600}
+.lk-i span{font-size:14px;color:var(--mute)}
+.lk-i select{height:40px;min-width:92px;font-size:14px}
+.lk-add{height:58px!important;font-size:15px!important;margin-top:6px}
+.lk-add s{opacity:.55;margin-left:8px;font-weight:400}
+@media (min-width:901px){
+  .lk{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);min-height:640px}
+  .lk-m{aspect-ratio:auto;min-height:100%;height:100%}
+  .lk-m img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .lk-t{justify-content:center;gap:18px;padding:clamp(36px,4.5vw,80px)}
+  .looks-grid .lk:nth-child(even) .lk-m{order:2}
+}
+@media (max-width:900px){.lk-t{padding:22px 18px 24px;gap:14px}.lk-m{aspect-ratio:4/5}.lk-i{grid-template-columns:64px 1fr;}.lk-i img{width:64px;height:80px}.lk-i select{grid-column:2;justify-self:start}}
+/* --- product cards: readable type, calmer spacing --- */
+.card .ci{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:14px}
+.card .nm{font-size:15px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.card .nm small{display:block;font-size:13px;font-weight:400;color:var(--mute);margin-top:2px}
+.card .pr{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
+.card .cmeta{font-size:12.5px;margin-top:6px}
+.card .sws{margin-top:10px}
+.card .sws a{width:14px;height:14px}
+.grid{gap:44px 14px}
+.cm{border-radius:12px}
+.sh-hd{margin-bottom:clamp(24px,3vw,40px);align-items:end}
+.sh-hd .H{font-size:clamp(40px,4.6vw,72px);letter-spacing:-.045em;line-height:1}
+.sh-hd .mono,.sh-link{font-size:13px!important;letter-spacing:.02em!important;text-transform:none!important}
+.shop-sec,.looks{padding-block:clamp(72px,9vw,128px) 0}
+
+/* --- the Pleat Dress: a big image and a calm column --- */
+@media (min-width:901px){
+  .chap-in{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(40px,6vw,110px)}
+  .chap-media{max-width:none;width:100%;aspect-ratio:auto;height:min(84svh,880px);max-height:none;border-radius:18px}
+  .chap-txt .H{font-size:clamp(56px,6vw,108px);letter-spacing:-.05em;line-height:.95}
+  .chap-step p{font-size:19px;line-height:1.5;max-width:30ch}
+  .chap-steps{min-height:90px}
+}
+.chap-media .hs span{font-size:13px}
+
+/* --- the tulle edition --- */
+.ed-media{border-radius:18px}
+.ed-txt .H{font-size:clamp(52px,6vw,104px);letter-spacing:-.05em;line-height:.95}
+.ed-txt p{font-size:17px}
+.ed-stock{font-size:12px;letter-spacing:.14em}
+
+/* --- trust row: bigger, clearer --- */
+.trust-in{gap:clamp(18px,3vw,48px)!important}
+.trust-in b{font-size:16px!important}
+.trust-in span{font-size:14px!important}
+.trust-in svg{width:24px;height:24px}
+
+/* --- ribbon --- */
+.rib .t,.ribbon .t{font-size:clamp(18px,1.6vw,24px)}
+@media (min-width:901px){
+  .lk{grid-template-columns:minmax(0,.9fr) minmax(0,1fr);min-height:0}
+  .lk-m{aspect-ratio:4/5;height:auto;min-height:0}
+  .lk-m img{object-position:50% 25%}
+  .chap-txt .mono{font-size:12px!important;letter-spacing:.18em}
+  .chap-bar{max-width:420px}
+}
+@media (max-width:900px){.hv-txt{padding-bottom:calc(104px + env(safe-area-inset-bottom,0px))}}
+/* --- the two edits: edge-to-edge spread --- */
+.edits{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding-top:4px}
+.edit{position:relative;display:block;height:min(92svh,980px);overflow:hidden;color:#fff;background:var(--studio)}
+.edit-m{position:absolute;inset:0}
+.edit-m img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;transition:transform 1.6s var(--ease)}
+.edit:hover .edit-m img{transform:scale(1.04)}
+.edit::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.55) 100%);pointer-events:none}
+.edit-t{position:absolute;left:clamp(20px,3vw,48px);bottom:clamp(24px,4vw,56px);z-index:2;display:grid;gap:8px}
+.edit-t .mono{font-size:11px;letter-spacing:.2em;opacity:.85}
+.edit-t .H{font-size:clamp(56px,7vw,124px);letter-spacing:-.05em;line-height:.9;color:#fff;margin:0}
+.edit-sub{font-size:16px;opacity:.85}
+.edit-go{margin-top:10px;font-size:14px;font-weight:600;display:inline-flex;gap:8px;align-items:center;border-bottom:1px solid rgba(255,255,255,.6);padding-bottom:4px;justify-self:start}
+.edit-go i{font-style:normal;transition:transform .4s var(--ease)}
+.edit:hover .edit-go i{transform:translateX(5px)}
+@media (max-width:900px){.edits{grid-template-columns:1fr}.edit{height:76svh}}
+
+/* --- worn in Dubai: vertical reels --- */
+.reel{padding-block:clamp(72px,9vw,128px) 0}
+.reel-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.reel-c{position:relative;aspect-ratio:9/16;border-radius:16px;overflow:hidden;background:#111;color:#fff;display:block}
+.reel-c>video,.reel-c>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.reel-c:hover>video,.reel-c:hover>img{transform:scale(1.04)}
+.reel-c::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.3) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 60%,rgba(0,0,0,.55) 100%);pointer-events:none}
+.reel-cap{position:absolute;top:14px;left:14px;z-index:2;font-size:10px;letter-spacing:.18em;text-transform:uppercase}
+.reel-p{position:absolute;left:10px;right:10px;bottom:10px;z-index:2;display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:center;padding:6px;border-radius:12px;background:rgba(255,255,255,.14);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);font-size:12.5px}
+.reel-p img{width:40px;height:50px;object-fit:cover;border-radius:8px}
+.reel-p b{display:block;font-weight:600;font-size:13px}
+@media (max-width:900px){.reel-row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:calc(var(--gut) * -1);padding-inline:var(--gut);gap:10px;scrollbar-width:none}.reel-row::-webkit-scrollbar{display:none}.reel-c{flex:0 0 68vw;scroll-snap-align:start}}
+/* --- product page: confident title and price --- */
+.pd-name{font-size:clamp(30px,2.8vw,44px)!important;letter-spacing:-.04em!important;line-height:1.05!important;font-weight:600!important}
+.pd-price b{font-size:22px!important;font-weight:600}
+.pd-price span{font-size:13px}
+.pd-add{height:58px!important;font-size:15px!important}

@@ -17,7 +17,7 @@ const desk = () => typeof window !== "undefined" && window.innerWidth > 900;
 
 /* ---------- hero: full-screen campaign film. Desktop shows both films side by side;
    phones show one at a time, handing over when each ends. ---------- */
-const FILMS = [{ src: "/v/hero-city.mp4", poster: "/v/hero-city.webp", label: "The Knot Dress in Navy, Dubai" }, { src: "/v/hero-studio.mp4", poster: "/v/hero-studio.webp", label: "The Studio Set in White" }];
+const FILMS = [{ src: "/v/hero-city.mp4", poster: "/v/hero-city.webp", label: "The Knot Dress in Navy, Dubai", pid: "knot-navy", tag: "City" }, { src: "/v/hero-studio.mp4", poster: "/v/hero-studio.webp", label: "The Studio Set in White", pid: "set-white", tag: "Studio" }];
 export function Hero() {
   const root = useRef<HTMLElement>(null);
   const vids = useRef<(HTMLVideoElement | null)[]>([]);
@@ -29,7 +29,7 @@ export function Hero() {
       gsap.fromTo(".hv-film", { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "expo.inOut", stagger: .12 });
       gsap.fromTo(".hv-film video", { scale: 1.25 }, { scale: 1, duration: 2.2, ease: "expo.out", stagger: .12 });
       gsap.from(ch, { yPercent: 115, duration: 1.3, ease: "expo.out", stagger: .025, delay: .6 });
-      gsap.from(".hv-k, .hv-p, .hv-cta > *, .hv-scroll", { opacity: 0, y: 20, duration: 1, ease: "expo.out", stagger: .08, delay: 1 });
+      gsap.from(".hv-k, .hv-p, .hv-cta > *, .hv-chip", { opacity: 0, y: 20, duration: 1, ease: "expo.out", stagger: .08, delay: 1 });
       /* on scroll the films drift and the copy lifts away */
       gsap.to(".hv-film video", { yPercent: 8, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } });
       gsap.to(".hv-txt", { yPercent: -18, opacity: 0, ease: "none", scrollTrigger: { trigger: root.current, start: "30% top", end: "85% top", scrub: true } });
@@ -50,12 +50,12 @@ export function Hero() {
       </div>)}</div>
       <div className="hv-shade" />
       <div className="hv-txt"><div className="hv-in">
-        <span className="hv-k mono">Court 01 · Dubai</span>
+        <span className="hv-k mono">Court 01 · Made in Dubai</span>
         <h1 className="H hv-h"><span className="ln">Leave your</span> <span className="ln"><em>mark.</em></span></h1>
         <p className="hv-p">Court-wear from Dubai, made in small runs. Every piece is chosen to move on court and to look right long after the last game.</p>
         <div className="hv-cta"><Link className="btn red" href="/shop/">Shop the collection</Link><Link className="btn line light" href="/story/">Our story</Link></div>
       </div></div>
-      <span className="hv-scroll mono" aria-hidden="true">Scroll</span>
+      <div className="hv-wear">{FILMS.map((f, i) => { const p = byId(f.pid)!; return <Link key={f.pid} href={`/products/${p.slug}/`} className={"hv-chip" + (i === one ? " on" : "")}><img src={img(p.images[0])} alt="" /><span><small>{f.tag} · wearing</small>{STYLES[p.style].name} · {p.color}</span></Link>; })}</div>
     </section>
   );
 }
@@ -153,11 +153,12 @@ export function Looks() {
   return (
     <section className="g looks" id="looks"><div className="w">
       <div className="sh-hd"><h2 className="H" data-rise>Shop the <em>look</em><img className="h-kiss" data-stamp src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" /></h2><span className="mono mute">Buy the outfit together and save {s.cfg.bundlePct}%</span></div>
-      <div className="looks-grid">{LOOKS.map((lk) => <LookCard key={lk.id} lk={lk} />)}</div>
+      <div className="looks-grid">{LOOKS.map((lk, i) => <LookCard key={lk.id} lk={lk} n={i + 1} />)}</div>
     </div></section>
   );
 }
-function LookCard({ lk }: { lk: (typeof LOOKS)[number] }) {
+const LOOK_LINE: Record<string, string> = { navy: "The Knot Dress for the match, the Studio Set for the warm-up and the drive home.", light: "The Pleat Dress and the White Studio Set: one colour from the first serve to dinner." };
+function LookCard({ lk, n }: { lk: (typeof LOOKS)[number]; n: number }) {
   const s = useStore(); const ps = lk.items.map((id) => s.live(id) || { ...byId(id)!, price: STYLES[byId(id)!.style].price, badge: "", hidden: false });
   const [sz, setSz] = useState<Size[]>(ps.map((p) => SIZES.find((z) => p.stock[z]) || "M"));
   const [ok, setOk] = useState(false); const refs = useRef<(HTMLImageElement | null)[]>([]);
@@ -167,7 +168,9 @@ function LookCard({ lk }: { lk: (typeof LOOKS)[number] }) {
       <div className="lk-m" data-reveal><img src={img(lk.img)} alt={lk.name} loading="lazy" />
         {ps.filter((p) => STYLES[p.style].cat === "sets").map((p) => <button key={p.id} type="button" className="hs" style={{ left: "50%", top: "55%" }} aria-label={`Quick view ${STYLES[p.style].name}`} onClick={() => s.quick(p.id)}><span>{STYLES[p.style].name} · {p.color}</span></button>)}</div>
       <div className="lk-t">
-        <div className="lk-h"><h3 className="H">{lk.name}</h3><span className="lk-save">Save {money(full - now)}</span></div>
+        <span className="lk-n mono">Look 0{n} · {ps.length} pieces</span>
+        <div className="lk-h"><h3 className="H">{lk.name.replace("The ", "")}</h3><span className="lk-save">Save {money(full - now)}</span></div>
+        <p className="lk-line">{LOOK_LINE[lk.id] || ""}</p>
         {ps.map((p, i) => (
           <div className="lk-i" key={p.id}><Link href={`/products/${p.slug}/`}><img ref={(el) => { refs.current[i] = el; }} src={img(p.images[0])} alt="" /></Link><div><b>{STYLES[p.style].name}</b><span>{p.color} · {money(p.price)}</span></div>
             <select aria-label={`Size for ${STYLES[p.style].name}`} value={sz[i]} onChange={(e) => setSz(sz.map((x, j) => (j === i ? (e.target.value as Size) : x)))}>
@@ -189,9 +192,9 @@ export function Signature() {
       gsap.set(".chap-media .f2, .chap-media .f3", { opacity: 0 });
       gsap.set(".chap-step.s2, .chap-step.s3", { opacity: 0, y: 20 });
       const tl = gsap.timeline({ defaults: { ease: "none" }, scrollTrigger: { trigger: root.current, start: "top top", end: "+=180%", pin: true, scrub: .6, anticipatePin: 1 } });
-      tl.to(".chap-media .f2", { opacity: 1, duration: .5 }, .25).fromTo(".chap-media .f2 img", { scale: 1.08 }, { scale: 1, duration: 1 }, .25)
+      tl.to(".chap-media .f2", { opacity: 1, duration: .14 }, .45).fromTo(".chap-media .f2 img", { scale: 1.08 }, { scale: 1, duration: 1 }, .45)
         .to(".chap-step.s1", { opacity: 0, y: -20, duration: .25 }, .3).to(".chap-step.s2", { opacity: 1, y: 0, duration: .25 }, .5).to(".chap-bar i", { scaleX: .66, duration: .5 }, .25)
-        .to(".chap-media .f3", { opacity: 1, duration: .5 }, 1.25).fromTo(".chap-media .f3 img", { scale: 1.08 }, { scale: 1, duration: 1 }, 1.25)
+        .to(".chap-media .f3", { opacity: 1, duration: .14 }, 1.45).fromTo(".chap-media .f3 img", { scale: 1.08 }, { scale: 1, duration: 1 }, 1.45)
         .to(".chap-step.s2", { opacity: 0, y: -20, duration: .25 }, 1.3).to(".chap-step.s3", { opacity: 1, y: 0, duration: .25 }, 1.5).to(".chap-bar i", { scaleX: 1, duration: .5 }, 1.25)
         .to({}, { duration: .3 });
     }, root);
@@ -254,5 +257,47 @@ export function Edition() {
       <div className="ed-txt"><span className="ed-stock mono"><i />{stockTxt}</span><h2 className="H" data-rise>The Tulle <em>Dress</em></h2><p>Ivory tulle over a racer-back bodice.</p>
         <div><Link className="btn red" href="/products/tulle-dress-ivory/">{left === 1 ? "Shop the last one" : left === 0 ? "Join the waitlist" : "Shop the Tulle Dress"}</Link></div></div>
     </div></div></section>
+  );
+}
+
+/* ---------- the two edits: big edge-to-edge tiles, like a campaign spread ---------- */
+export function Edits() {
+  const s = useStore(); const vis = s.catalog.filter((p) => !p.hidden);
+  const n = (cat: string) => vis.filter((p) => STYLES[p.style].cat === cat).length;
+  const tiles: [string, string, string, string, number][] = [["/shop/dresses/", "Dresses", "Pleat, Knot and Tulle", "h-knot-navy", n("dresses")], ["/shop/sets/", "Sets", "The Studio Set", "h-set-white", n("sets")]];
+  return (
+    <section className="edits" aria-label="Shop by edit">{tiles.map(([h, t, sub, im, c]) => (
+      <Link className="edit" href={h} key={h} data-cursor="Shop">
+        <div className="edit-m" data-reveal><img src={img(im)} alt={`${t}: ${sub}`} loading="lazy" /></div>
+        <div className="edit-t"><span className="mono">{String(c).padStart(2, "0")} pieces</span><h2 className="H">{t}</h2><span className="edit-sub">{sub}</span><span className="edit-go">Shop {t.toLowerCase()} <i>→</i></span></div>
+      </Link>))}
+    </section>
+  );
+}
+
+/* ---------- worn in Dubai: short films and stills, each tagged with what she wears ---------- */
+const REEL: { v?: string; im: string; pid: string; cap: string }[] = [
+  { v: "/v/hero-city.mp4", im: "/v/hero-city.webp", pid: "knot-navy", cap: "Dubai Design District" },
+  { im: "tulle-ivory-lips", pid: "tulle-ivory", cap: "After the last game" },
+  { v: "/v/hero-studio.mp4", im: "/v/hero-studio.webp", pid: "set-white", cap: "Morning studio" },
+  { im: "pleat-blue-2", pid: "pleat-blue", cap: "Match day" },
+];
+export function InMotion() {
+  const root = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const vs = Array.from(root.current?.querySelectorAll("video") || []);
+    const io = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target as HTMLVideoElement; if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }), { threshold: .35 });
+    vs.forEach((v) => io.observe(v)); return () => io.disconnect();
+  }, []);
+  return (
+    <section className="g reel" ref={root} aria-label="Worn in Dubai"><div className="w">
+      <div className="sh-hd"><h2 className="H" data-rise>Worn in <em>Dubai</em></h2><span className="mono mute">Real days, real courts. Tap a look to shop it.</span></div>
+      <div className="reel-row">{REEL.map((r) => { const p = byId(r.pid)!; return (
+        <Link className="reel-c" href={`/products/${p.slug}/`} key={r.pid} data-cursor="Shop">
+          {r.v ? <video src={asset(r.v)} poster={asset(r.im)} muted loop playsInline preload="metadata" /> : <img src={img(r.im)} alt="" loading="lazy" />}
+          <span className="reel-cap mono">{r.cap}</span>
+          <span className="reel-p"><img src={img(p.images[0])} alt="" /><span><b>{STYLES[p.style].name}</b>{p.color} · {money(STYLES[p.style].price)}</span></span>
+        </Link>); })}</div>
+    </div></section>
   );
 }
