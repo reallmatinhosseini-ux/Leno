@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { preload } from "react-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Flip } from "gsap/Flip";
@@ -25,6 +26,8 @@ export function Hero() {
   const root = useRef<HTMLElement>(null);
   const vids = useRef<(HTMLVideoElement | null)[]>([]);
   const [one, setOne] = useState(0); /* which film plays on phones */
+  const [paused, setPaused] = useState(false);
+  FILMS.forEach((f) => preload(asset(f.poster), { as: "image", fetchPriority: "high" })); /* first paint: posters before anything else */
   useEffect(() => {
     const ctx = gsap.context(() => {
       if (reduce()) return;
@@ -41,10 +44,11 @@ export function Hero() {
   }, []);
   /* pause films that are off screen (saves battery); phones alternate between the two */
   useEffect(() => {
-    const io = new IntersectionObserver(([e]) => vids.current.forEach((v, i) => { if (!v) return; const show = desk() || i === one; if (e.isIntersecting && show) v.play().catch(() => {}); else v.pause(); }), { threshold: .05 });
+    const io = new IntersectionObserver(([e]) => vids.current.forEach((v, i) => { if (!v) return; const show = desk() || i === one; if (e.isIntersecting && show && !paused) v.play().catch(() => {}); else v.pause(); }), { threshold: .05 });
     if (root.current) io.observe(root.current);
     return () => io.disconnect();
-  }, [one]);
+  }, [one, paused]);
+  const toggle = () => { const p = !paused; setPaused(p); vids.current.forEach((v, i) => { if (!v) return; if (p) v.pause(); else if (desk() || i === one) v.play().catch(() => {}); }); };
   const ended = (i: number) => { if (desk()) { const v = vids.current[i]; if (v) { v.currentTime = 0; v.play().catch(() => {}); } return; } const n = (i + 1) % FILMS.length; const v = vids.current[n]; if (v) { v.currentTime = 0; v.play().catch(() => {}); } setOne(n); };
   return (
     <section className="hv" ref={root} aria-label="LENO WEAR campaign film">
@@ -52,6 +56,7 @@ export function Hero() {
         <video ref={(el) => { vids.current[i] = el; }} poster={asset(f.poster)} muted playsInline autoPlay loop={false} preload={i ? "metadata" : "auto"} onEnded={() => ended(i)} aria-label={f.label}><FilmSrc s={f.src} /></video>
       </div>)}</div>
       <div className="hv-shade" />
+      <button type="button" className="hv-pp" onClick={toggle} aria-label={paused ? "Play the films" : "Pause the films"} aria-pressed={paused}>{paused ? <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="currentColor" /></svg> : <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5h2v9H3zM7 1.5h2v9H7z" fill="currentColor" /></svg>}</button>
       <div className="hv-txt"><div className="hv-in">
         <span className="hv-k mono">Court 01 · Made in Dubai</span>
         <h1 className="hv-h"><span className="ln">Leave your</span> <span className="ln">mark<i>.</i></span></h1>

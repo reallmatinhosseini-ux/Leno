@@ -16,7 +16,10 @@ const nextConfig = {
       { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
       { key: "X-Frame-Options", value: "SAMEORIGIN" },
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
-    ] }];
+    ] },
+    /* films and photos: browsers keep them for a day and refresh quietly in the background for a week,
+       so returning visitors get the hero instantly while replaced files still show up within a day */
+    ...["/v/:file*", "/p/:file*"].map((source) => ({ source, headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }] }))];
   },
 };
 export default nextConfig;
