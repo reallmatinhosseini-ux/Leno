@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -328,8 +329,8 @@ export function Collection({ kicker = "Court 01 · New season", title = <>The <e
 
 /* ---------- sign up and save: the honest welcome offer, inline ---------- */
 export function SignUp() {
-  const s = useStore(); const [done, setDone] = useState(false);
-  if (!s.cfg.welcomeOn) return null;
+  const s = useStore(); const [done, setDone] = useState(false); const path = usePathname();
+  if (!s.cfg.welcomeOn || /^\/(checkout|order)/.test(path)) return null;
   return (
     <section className="su" aria-label="Sign up and save"><div className="g"><div className="w su-in">
       <img className="su-kiss" src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" />

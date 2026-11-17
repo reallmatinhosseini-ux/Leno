@@ -25,8 +25,9 @@ export function Announcement() {
   const left = s.free - s.subtotal;
   if (focused(path)) return null;
   if (s.ready && s.count) return <div className="ann"><button type="button" className={"nudge" + (left <= 0 ? " ok" : "")} onClick={() => s.open("bag")}>{left > 0 ? `You are ${money(left)} away from free same-day delivery` : "Free same-day delivery unlocked ✓"}</button></div>;
-  const msgs = [cut, `Free same-day delivery over ${money(s.free)}`, "Free 14-day returns · Cash on delivery"];
-  return <div className="ann" aria-live="polite">{msgs.map((m, j) => <div key={j} className={j === i % 3 ? "on" : ""}>{m}</div>)}</div>;
+  /* real offers only: the cut-off clock, free delivery, the welcome code, the look bundle, returns */
+  const msgs = [cut, `Free same-day delivery over ${money(s.free)}`, ...(s.cfg.welcomeOn && !s.promo ? [`${s.cfg.welcomePct}% off your first order · code LENO10`] : []), ...(s.cfg.bundleOn ? [`Buy a dress and a set together, save ${s.cfg.bundlePct}%`] : []), "Free 14-day returns · Pay on delivery"];
+  return <div className="ann" aria-live="polite">{msgs.map((m, j) => <div key={j} className={j === i % msgs.length ? "on" : ""}>{m}</div>)}</div>;
 }
 
 /* ---------- header ---------- */
@@ -205,7 +206,7 @@ export function OfferCard() {
 
 /* ---------- footer ---------- */
 export function Footer() {
-  const s = useStore(); const path = usePathname(); const [joined, setJoined] = useState(false);
+  const path = usePathname();
   if (focused(path)) return <footer className="co-foot g"><div className="w"><span>Secure checkout · LENO WEAR, Dubai</span><Link className="ulink" href="/help/">Need help?</Link></div></footer>;
   return (
     <footer className="foot"><div className="g"><div className="w">
@@ -213,15 +214,10 @@ export function Footer() {
         <div className="foot-brand">
           <Link href="/" className="foot-logo-l" aria-label="LENO WEAR home"><img className="foot-logo" src="/p/leno-logo.png" alt="" width={307} height={320} /></Link>
           <p className="foot-tag">Court-wear from Dubai, made in small runs for padel, tennis and everything after.</p>
-          <div className="nl">
-            <span className="foot-k">First Serve</span>
-            <h3 className="foot-h">Early access to every <em>drop</em></h3>
-            {joined ? <p className="foot-ok">You are on the list. Welcome to LENO WEAR.</p> : <form className="field" onSubmit={(e) => { e.preventDefault(); const email = String(new FormData(e.currentTarget).get("email") || ""); fetch("/api/subscribe/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, source: "footer" }) }).catch(() => {}); kissBurst(e.currentTarget.querySelector("button") || e.currentTarget, 8); setJoined(true); s.toast("You are on the list"); }}><input name="email" type="email" placeholder="Email address" aria-label="Email address" required /><button className="btn light" type="submit">Join</button></form>}
-          </div>
         </div>
         <nav className="foot-col" aria-label="Shop"><h4>Shop</h4><ul><li><Link href="/shop/">Shop all</Link></li><li><Link href="/shop/dresses/">Dresses</Link></li><li><Link href="/shop/sets/">Sets</Link></li><li><Link href="/shop/navy-edit/">Navy edit</Link></li><li><Link href="/shop/light-edit/">Light edit</Link></li></ul></nav>
         <nav className="foot-col" aria-label="Help"><h4>Help</h4><ul><li><Link href="/help/">Track order</Link></li><li><Link href="/help/">Delivery</Link></li><li><Link href="/help/">Returns</Link></li><li><Link href="/help/">Contact</Link></li></ul></nav>
-        <nav className="foot-col" aria-label="LENO WEAR"><h4>LENO WEAR</h4><ul><li><Link href="/story/">Our story</Link></li><li><span>Instagram</span></li><li><span>TikTok</span></li></ul></nav>
+        <nav className="foot-col" aria-label="LENO WEAR"><h4>LENO WEAR</h4><ul><li><Link href="/story/">Our story</Link></li><li><Link href="/wishlist/">Wishlist</Link></li><li><Link href="/help/">FAQ</Link></li></ul></nav>
       </div>
       <div className="foot-sig" aria-hidden="true"><i /><Kiss /><span>Leave your mark</span><i /></div>
       <div className="foot-bot"><span>© 2026 LENO WEAR · Dubai</span><span>Secure checkout · Cash on delivery across the UAE</span><span>Prices in AED, VAT included</span></div>
