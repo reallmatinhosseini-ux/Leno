@@ -42,18 +42,18 @@ export function Hero() {
     }, root);
     return () => ctx.revert();
   }, []);
-  /* pause films that are off screen (saves battery); phones alternate between the two */
+  /* playback is driven here, not by autoplay: films play only while the hero is on screen (saves battery and data); phones play one at a time, alternating */
   useEffect(() => {
     const io = new IntersectionObserver(([e]) => vids.current.forEach((v, i) => { if (!v) return; const show = desk() || i === one; if (e.isIntersecting && show && !paused) v.play().catch(() => {}); else v.pause(); }), { threshold: .05 });
     if (root.current) io.observe(root.current);
     return () => io.disconnect();
   }, [one, paused]);
   const toggle = () => { const p = !paused; setPaused(p); vids.current.forEach((v, i) => { if (!v) return; if (p) v.pause(); else if (desk() || i === one) v.play().catch(() => {}); }); };
-  const ended = (i: number) => { if (desk()) { const v = vids.current[i]; if (v) { v.currentTime = 0; v.play().catch(() => {}); } return; } const n = (i + 1) % FILMS.length; const v = vids.current[n]; if (v) { v.currentTime = 0; v.play().catch(() => {}); } setOne(n); };
+  const ended = (i: number) => { if (!desk() && i !== one) return; /* a hidden film finishing must not interrupt the one on screen */ if (desk()) { const v = vids.current[i]; if (v) { v.currentTime = 0; v.play().catch(() => {}); } return; } const n = (i + 1) % FILMS.length; const v = vids.current[n]; if (v) { v.currentTime = 0; v.play().catch(() => {}); } setOne(n); };
   return (
     <section className="hv" ref={root} aria-label="LENO WEAR campaign film">
       <div className="hv-films">{FILMS.map((f, i) => <div className={"hv-film" + (i === one ? " on" : "")} key={f.src}>
-        <video ref={(el) => { vids.current[i] = el; }} poster={asset(f.poster)} muted playsInline autoPlay loop={false} preload={i ? "metadata" : "auto"} onEnded={() => ended(i)} aria-label={f.label}><FilmSrc s={f.src} /></video>
+        <video ref={(el) => { vids.current[i] = el; }} poster={asset(f.poster)} muted playsInline loop={false} preload={i ? "metadata" : "auto"} onEnded={() => ended(i)} aria-label={f.label}><FilmSrc s={f.src} /></video>
       </div>)}</div>
       <div className="hv-shade" />
       <button type="button" className="hv-pp" onClick={toggle} aria-label={paused ? "Play the films" : "Pause the films"} aria-pressed={paused}>{paused ? <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="currentColor" /></svg> : <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5h2v9H3zM7 1.5h2v9H7z" fill="currentColor" /></svg>}</button>
