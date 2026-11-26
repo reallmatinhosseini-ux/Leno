@@ -2590,3 +2590,23 @@ html.kc-on,html.kc-on *{cursor:auto}
   .ed-in{grid-template-columns:1fr!important}
   .ed-media,.ed-media img{max-height:420px}
 }
+.su-kiss{display:none!important}.su-in{grid-template-columns:1fr auto!important}
+
+/* ===== v35: Worn in Dubai, all films ===== */
+.reel .reel-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.rl{display:grid;gap:12px;color:var(--ink)}
+.rl-m{position:relative;display:block;aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:#111}
+.rl-m video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
+.rl:hover .rl-m video{transform:scale(1.04)}
+.rl-cap{position:absolute;left:12px;top:12px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.9);color:var(--ink);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.rl-p{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center}
+.rl-p img{width:44px;height:54px;object-fit:cover;border-radius:6px;background:var(--studio)}
+.rl-p b{display:block;font-size:14px;font-weight:600}
+.rl-p small{display:block;font-size:12.5px;color:var(--mute);margin-top:2px}
+.rl-p i{font-style:normal;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--line);transition:background .3s,color .3s}
+.rl:hover .rl-p i{background:var(--ink);color:#fff}
+@media (max-width:900px){
+  .reel .reel-row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:calc(var(--gut,16px) * -1);padding-inline:var(--gut,16px);scrollbar-width:none}
+  .reel .reel-row::-webkit-scrollbar{display:none}
+  .rl{flex:0 0 68%;scroll-snap-align:start}
+}

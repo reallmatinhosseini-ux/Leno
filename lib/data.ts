@@ -40,7 +40,7 @@ export const STYLES: Record<StyleKey, Style> = {
     points: ["Self-tie wrap skirt", "Inner shorts", "Low scoop back"],
   },
   tulle: {
-    key: "tulle", code: "YY9091", name: "The Tulle Dress", verb: "floats", price: 395, cat: "dresses",
+    key: "tulle", code: "YY9091", name: "The Padel Dress", verb: "floats", price: 395, cat: "dresses",
     desc: "A racer-back bodice with a square neckline over a layered tulle skirt with a piped hem. Inner shorts underneath.",
     points: ["Layered tulle skirt", "Racer back", "Inner shorts"],
   },
@@ -62,10 +62,10 @@ export const PRODUCTS: Product[] = [
 ];
 
 export const CATEGORIES = [
-  { slug: "dresses", name: "Dresses", title: "Court dresses", desc: "Pleat, Knot and Tulle court dresses with inner shorts, made for padel, tennis and everything after.", filter: (p: Product) => STYLES[p.style].cat === "dresses" },
+  { slug: "dresses", name: "Dresses", title: "Court dresses", desc: "Pleat, Knot and Padel court dresses with inner shorts, made for padel, tennis and everything after.", filter: (p: Product) => STYLES[p.style].cat === "dresses" },
   { slug: "sets", name: "Sets", title: "Studio sets", desc: "The Studio Set: cropped zip jacket, square-neck bra, shorts and leggings in Navy and White.", filter: (p: Product) => STYLES[p.style].cat === "sets" },
   { slug: "navy-edit", name: "The Navy Edit", title: "The Navy Edit", desc: "Navy and blue court-wear: the Knot Dress, the Pleat Dress in Blue and the Navy Studio Set.", filter: (p: Product) => p.edit === "navy" },
-  { slug: "light-edit", name: "The Light Edit", title: "The Light Edit", desc: "White, ivory and sand court-wear: the Pleat Dress, the Tulle Dress, the Knot Dress in Sand and the White Studio Set.", filter: (p: Product) => p.edit === "light" },
+  { slug: "light-edit", name: "The Light Edit", title: "The Light Edit", desc: "White, ivory and sand court-wear: the Pleat Dress, the Padel Dress, the Knot Dress in Sand and the White Studio Set.", filter: (p: Product) => p.edit === "light" },
 ] as const;
 
 export const FREE_DELIVERY = 600;

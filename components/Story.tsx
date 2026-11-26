@@ -11,7 +11,7 @@ if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 const CH = [
   { time: "07:00", t: "Studio", sub: "Morning hours", p: "The Studio Set zips up for the warm-up and stays on for the coffee after.", im: "set-white-3", id: "set-white", bg: "#F2EEE6", fg: "#0D0D10" },
   { time: "13:00", t: "Court", sub: "Midday hours", p: "The Pleat Dress swings through every rally. The Knot Dress ties at the hip and moves with you.", im: "pleat-blue-2", id: "pleat-blue", bg: "#E3E3E0", fg: "#0D0D10" },
-  { time: "19:00", t: "City", sub: "Evening hours", p: "The Tulle Dress floats from the last game into the evening.", im: "tulle-ivory-1", id: "tulle-ivory", bg: "#0B0E1E", fg: "#F2EEE6" },
+  { time: "19:00", t: "City", sub: "Evening hours", p: "The Padel Dress floats from the last game into the evening.", im: "tulle-ivory-1", id: "tulle-ivory", bg: "#0B0E1E", fg: "#F2EEE6" },
 ];
 
 export default function Story() {

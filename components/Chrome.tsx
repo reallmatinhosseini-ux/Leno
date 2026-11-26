@@ -72,7 +72,7 @@ export function MobileMenu() {
   /* main destinations, each with a picture for the desktop preview */
   const MAIN: { h: string; l: string; c: number; im: string; sub: string }[] = [
     { h: "/shop/", l: "Shop all", c: n(() => true), im: "h-pleat-white", sub: "Every piece from Court 01" },
-    { h: "/shop/dresses/", l: "Dresses", c: n((p) => STYLES[p.style].cat === "dresses"), im: "h-knot-navy", sub: "Pleat, Knot and Tulle" },
+    { h: "/shop/dresses/", l: "Dresses", c: n((p) => STYLES[p.style].cat === "dresses"), im: "h-knot-navy", sub: "Pleat, Knot and Padel" },
     { h: "/shop/sets/", l: "Sets", c: n((p) => STYLES[p.style].cat === "sets"), im: "h-set-white", sub: "The Studio Set" },
     { h: "/shop/navy-edit/", l: "Navy edit", c: n((p) => p.edit === "navy"), im: "set-navy-3", sub: "Deep navy and royal blue" },
     { h: "/shop/light-edit/", l: "Light edit", c: n((p) => p.edit === "light"), im: "h-tulle-ivory", sub: "White, ivory and sand" },
@@ -178,7 +178,7 @@ export function SearchOverlay() {
       <div className="top"><Link className="logo" href="/" onClick={() => s.open("search", false)}><Logo /></Link><button type="button" aria-label="Close" onClick={() => s.open("search", false)}><Close /></button></div>
       <label htmlFor="sq" className="sr">Search</label>
       <input id="sq" ref={ref} type="search" placeholder="Search" value={q} onChange={(e) => setQ(e.target.value)} autoComplete="off" />
-      <div className="pop"><span className="mono mute" style={{ alignSelf: "center", marginRight: 6 }}>Popular</span>{["White", "Navy", "Dress", "Set", "Tulle"].map((w) => <button key={w} type="button" className="chip" onClick={() => setQ(w)}>{w}</button>)}</div>
+      <div className="pop"><span className="mono mute" style={{ alignSelf: "center", marginRight: 6 }}>Popular</span>{["White", "Navy", "Dress", "Set", "Padel"].map((w) => <button key={w} type="button" className="chip" onClick={() => setQ(w)}>{w}</button>)}</div>
       <div className="res" onClick={(e) => { if ((e.target as HTMLElement).closest("a")) s.open("search", false); }}>
         {list.length ? <div className="grid g4">{list.map((p) => <ProductCard key={p.id} product={p} />)}</div> : <p className="mute" style={{ fontSize: 18, paddingTop: 20 }}>Nothing found. Try “white” or “dress”.</p>}
       </div>

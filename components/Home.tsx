@@ -232,7 +232,7 @@ export function LastPieces() {
   );
 }
 
-/* ---------- Tulle edition ---------- */
+/* ---------- Padel Dress edition ---------- */
 export function Edition() {
   const s = useStore(); const t = s.live("tulle-ivory");
   if (t?.hidden) return null;
@@ -240,9 +240,9 @@ export function Edition() {
   const stockTxt = !t ? "Small edition" : left === 0 ? "Sold out · waitlist open" : left === 1 ? "1 piece left" : `Small edition · ${left} pieces`;
   return (
     <section className="edition"><div className="g"><div className="w ed-in">
-      <Link className="ed-media" href="/products/tulle-dress-ivory/" data-reveal data-cursor="View"><img src={img("tulle-ivory-lips")} alt="The Tulle Dress in Ivory, with the LENO WEAR kiss" loading="lazy" /></Link>
-      <div className="ed-txt"><span className="ed-stock mono"><i />{stockTxt}</span><h2 className="H" data-rise>The Tulle <em>Dress</em></h2><p>Ivory tulle over a racer-back bodice.</p>
-        <div><Link className="btn red" href="/products/tulle-dress-ivory/">{left === 1 ? "Shop the last one" : left === 0 ? "Join the waitlist" : "Shop the Tulle Dress"}</Link></div></div>
+      <Link className="ed-media" href="/products/tulle-dress-ivory/" data-reveal data-cursor="View"><img src={img("tulle-ivory-lips")} alt="The Padel Dress in Ivory, with the LENO WEAR kiss" loading="lazy" /></Link>
+      <div className="ed-txt"><span className="ed-stock mono"><i />{stockTxt}</span><h2 className="H" data-rise>The Padel <em>Dress</em></h2><p>Ivory tulle over a racer-back bodice.</p>
+        <div><Link className="btn red" href="/products/tulle-dress-ivory/">{left === 1 ? "Shop the last one" : left === 0 ? "Join the waitlist" : "Shop the Padel Dress"}</Link></div></div>
     </div></div></section>
   );
 }
@@ -251,7 +251,7 @@ export function Edition() {
 export function Edits() {
   const s = useStore(); const vis = s.catalog.filter((p) => !p.hidden);
   const n = (cat: string) => vis.filter((p) => STYLES[p.style].cat === cat).length;
-  const tiles: [string, string, string, string, number][] = [["/shop/dresses/", "Dresses", "Pleat, Knot and Tulle", "h-knot-navy", n("dresses")], ["/shop/sets/", "Sets", "The Studio Set", "h-set-white", n("sets")]];
+  const tiles: [string, string, string, string, number][] = [["/shop/dresses/", "Dresses", "Pleat, Knot and Padel", "h-knot-navy", n("dresses")], ["/shop/sets/", "Sets", "The Studio Set", "h-set-white", n("sets")]];
   return (
     <section className="edits" id="after-hero" aria-label="Shop by edit">{tiles.map(([h, t, sub, im, c]) => (
       <Link className="edit" href={h} key={h} data-cursor="Shop">
@@ -262,12 +262,12 @@ export function Edits() {
   );
 }
 
-/* ---------- worn in Dubai: short films and stills, each tagged with what she wears ---------- */
-const REEL: { v?: string; im: string; pid: string; cap: string }[] = [
-  { v: "/v/court-duo.mp4", im: "/v/court-duo.webp", pid: "knot-sand", cap: "Downtown Dubai" },
-  { im: "tulle-ivory-lips", pid: "tulle-ivory", cap: "After the last game" },
+/* ---------- worn in Dubai: every campaign film, each tagged with the piece she wears ---------- */
+const REEL: { v: string; im: string; pid: string; cap: string }[] = [
+  { v: "/v/court-duo.mp4", im: "/v/court-duo.webp", pid: "knot-sand", cap: "Downtown court" },
   { v: "/v/court-pleat.mp4", im: "/v/court-pleat.webp", pid: "pleat-white", cap: "Morning rally" },
-  { im: "pleat-blue-2", pid: "pleat-blue", cap: "Match day" },
+  { v: "/v/hero-city.mp4", im: "/v/hero-city.webp", pid: "knot-navy", cap: "Dubai Design District" },
+  { v: "/v/hero-studio.mp4", im: "/v/hero-studio.webp", pid: "set-white", cap: "Studio session" },
 ];
 export function InMotion() {
   const root = useRef<HTMLElement>(null);
@@ -278,13 +278,11 @@ export function InMotion() {
   }, []);
   return (
     <section className="g reel" ref={root} aria-label="Worn in Dubai"><div className="w">
-      <div className="sx-hd"><div><span className="sx-k">Our community</span><h2 className="sx-h">Worn in <em>Dubai</em></h2></div><div className="sx-r"><span className="sx-note">Real days, real courts.</span></div></div>
+      <div className="sx-hd"><div><span className="sx-k">Our community</span><h2 className="sx-h">Worn in <em>Dubai</em></h2></div><div className="sx-r"><span className="sx-note">Real days, real courts. Tap a film to shop the piece.</span></div></div>
       <div className="reel-row">{REEL.map((r) => { const p = byId(r.pid)!; return (
-        <Link className="reel-c" href={`/products/${p.slug}/`} key={r.pid} data-cursor="Shop">
-          {r.v ? <video poster={asset(r.im)} muted loop playsInline preload="metadata"><FilmSrc s={r.v} /></video> : <img src={img(r.im)} alt="" loading="lazy" />}
-          <span className="reel-cap mono">{r.cap}</span>
-          <span className="reel-p"><img src={img(p.images[0])} alt="" /><span><b>{STYLES[p.style].name}</b>{p.color} · {money(STYLES[p.style].price)}</span></span>
-          <span className="reel-go">Shop the fit</span>
+        <Link className="rl" href={`/products/${p.slug}/`} key={r.v} data-cursor="Shop">
+          <span className="rl-m"><video poster={asset(r.im)} muted loop playsInline preload="metadata" aria-label={`${STYLES[p.style].name} in ${p.color}, ${r.cap}`}><FilmSrc s={r.v} /></video><span className="rl-cap">{r.cap}</span></span>
+          <span className="rl-p"><img src={img(p.images[0])} alt="" /><span><b>{STYLES[p.style].name}</b><small>{p.color} · {money(STYLES[p.style].price)}</small></span><i aria-hidden="true">→</i></span>
         </Link>); })}</div>
     </div></section>
   );
@@ -319,7 +317,7 @@ export function SignUp() {
   if (!s.cfg.welcomeOn || /^\/(checkout|order)/.test(path)) return null;
   return (
     <section className="su" aria-label="Sign up and save"><div className="g"><div className="w su-in">
-      <img className="su-kiss" src={asset("/p/kiss-tag.png")} alt="" aria-hidden="true" />
+
       <div><span className="sx-k light">First Serve</span><h2 className="sx-h light">Sign up <em>and save</em></h2><p>{s.cfg.welcomePct}% off your first order, early access to every drop, and nothing else in your inbox.</p></div>
       {done ? <p className="su-ok">Welcome to LENO. Code <b>LENO10</b> is saved to your bag.</p> :
         <form className="su-f" onSubmit={(e) => { e.preventDefault(); const email = String(new FormData(e.currentTarget).get("email") || ""); fetch("/api/subscribe/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, source: "home" }) }).catch(() => {}); s.claim(); setDone(true); kissBurst(e.currentTarget, 10); }}>
