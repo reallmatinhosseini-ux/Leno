@@ -247,19 +247,16 @@ export function Footer() {
   const path = usePathname();
   if (focused(path)) return <footer className="co-foot g"><div className="w"><span>Secure checkout · LENO WEAR, Dubai</span><Link className="ulink" href="/help/">Need help?</Link></div></footer>;
   return (
-    <footer className="foot"><div className="g"><div className="w">
-      <div className="foot-top">
-        <div className="foot-brand">
-          <Link href="/" className="foot-logo-l" aria-label="LENO WEAR home"><img className="foot-logo" src="/p/leno-logo.png" alt="" width={307} height={320} /></Link>
-          <p className="foot-tag">Court-wear from Dubai, made in small runs for padel, tennis and everything after.</p>
-        </div>
-        <nav className="foot-col" aria-label="Shop"><h4>Shop</h4><ul><li><Link href="/shop/">Shop all</Link></li><li><Link href="/shop/dresses/">Dresses</Link></li><li><Link href="/shop/sets/">Sets</Link></li><li><Link href="/shop/navy-edit/">Navy edit</Link></li><li><Link href="/shop/light-edit/">Light edit</Link></li></ul></nav>
-        <nav className="foot-col" aria-label="Help"><h4>Help</h4><ul><li><Link href="/help/">Track order</Link></li><li><Link href="/help/">Delivery</Link></li><li><Link href="/help/">Returns</Link></li><li><Link href="/help/">Contact</Link></li></ul></nav>
-        <nav className="foot-col" aria-label="LENO WEAR"><h4>LENO WEAR</h4><ul><li><Link href="/story/">Our story</Link></li><li><Link href="/wishlist/">Wishlist</Link></li><li><Link href="/help/">FAQ</Link></li></ul></nav>
+    <footer className="ft">
+      <Link href="/" className="ft-logo" aria-label="LENO WEAR home"><img src="/p/leno-logo.png" alt="" width={307} height={320} /><span>LENO WEAR</span></Link>
+      <div className="ft-cols">
+        <nav aria-label="Shop"><h4>Shop</h4><ul><li><Link href="/shop/">Shop all</Link></li><li><Link href="/shop/dresses/">Dresses</Link></li><li><Link href="/shop/sets/">Sets</Link></li><li><Link href="/wishlist/">Wishlist</Link></li></ul></nav>
+        <nav aria-label="About"><h4>About</h4><ul><li><Link href="/story/">Our story</Link></li><li><Link href="/shop/navy-edit/">The Navy Edit</Link></li><li><Link href="/shop/light-edit/">The Light Edit</Link></li><li><Link href="/help/#faq">FAQ</Link></li></ul></nav>
+        <nav aria-label="Contact"><h4>Contact</h4><ul><li><Link href="/help/">Client care</Link></li><li><Link href="/help/#contact">WhatsApp a stylist</Link></li><li><Link href="/help/#faq">Questions</Link></li></ul></nav>
+        <nav aria-label="Delivery and returns"><h4>Delivery and returns</h4><ul><li><Link href="/help/#delivery">Delivery</Link></li><li><Link href="/help/#returns">Returns</Link></li><li><Link href="/help/#track">Track my order</Link></li><li><Link href="/help/#delivery">Cash on delivery</Link></li></ul></nav>
       </div>
-      <div className="foot-sig" aria-hidden="true"><i /><Kiss /><span>Leave your mark</span><i /></div>
-      <div className="foot-bot"><span>© 2026 LENO WEAR · Dubai</span><span>Secure checkout · Cash on delivery across the UAE</span><span>Prices in AED, VAT included</span></div>
-    </div></div></footer>
+      <div className="ft-bot"><span className="ft-reg"><i aria-hidden="true">🇦🇪</i>UAE · AED</span><span>© 2026 LENO WEAR · Dubai</span></div>
+    </footer>
   );
 }
 export { byId };

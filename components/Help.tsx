@@ -24,11 +24,11 @@ export default function Help() {
           {off && <p style={{ marginTop: 16, color: "rgba(242,238,230,.8)" }}>This order was {(res as { status: string }).status}.</p>}
           {res && res !== "none" && !off && <div className="tl" style={{ marginTop: 22, color: "var(--ivory)" }}>{steps.map((x, i) => <div key={x} className={i <= at ? "on" : ""}><i />{x}</div>)}</div>}
         </div>
-        <div className="hl-card"><span className="mono">Delivery</span><div className="dtable"><div><b>Dubai</b><span>Same day, order by 2 pm</span><span>Free over AED {s.free}</span></div><div><b>Abu Dhabi · Sharjah · Ajman</b><span>Next day</span><span>Free</span></div><div><b>Umm Al Quwain · Ras Al Khaimah · Fujairah</b><span>Next day</span><span>Free</span></div></div></div>
-        <div className="hl-card"><span className="mono">Returns</span><h3 className="H hl-h">14 days, free</h3><p className="mute">Unworn, tags on. We collect from your door. Refunds go back to your original payment method.</p></div>
-        <div className="hl-card red"><span className="mono">Talk to a stylist</span><h3 className="H hl-h">WhatsApp</h3><p>Real people, 10 am to 10 pm, every day.{process.env.NEXT_PUBLIC_WHATSAPP ? <> <a href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP.replace(/\D/g, "")}`} target="_blank" rel="noopener">Message us</a></> : " Number coming at launch."}</p></div>
+        <div className="hl-card" id="delivery"><span className="mono">Delivery</span><div className="dtable"><div><b>Dubai</b><span>Same day, order by 2 pm</span><span>Free over AED {s.free}</span></div><div><b>Abu Dhabi · Sharjah · Ajman</b><span>Next day</span><span>Free</span></div><div><b>Umm Al Quwain · Ras Al Khaimah · Fujairah</b><span>Next day</span><span>Free</span></div></div></div>
+        <div className="hl-card" id="returns"><span className="mono">Returns</span><h3 className="H hl-h">14 days, free</h3><p className="mute">Unworn, tags on. We collect from your door. Refunds go back to your original payment method.</p></div>
+        <div className="hl-card red" id="contact"><span className="mono">Talk to a stylist</span><h3 className="H hl-h">WhatsApp</h3><p>Real people, 10 am to 10 pm, every day.{process.env.NEXT_PUBLIC_WHATSAPP ? <> <a href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP.replace(/\D/g, "")}`} target="_blank" rel="noopener">Message us</a></> : " Number coming at launch."}</p></div>
       </div>
-      <div className="faq"><h2 className="H" data-rise>Questions</h2><div className="acc">{FAQ.map(([q, a], i) => <details key={q} open={i === 0}><summary>{q}<i /></summary><div className="ab"><p>{a}</p></div></details>)}</div></div>
+      <div className="faq" id="faq"><h2 className="H" data-rise>Questions</h2><div className="acc">{FAQ.map(([q, a], i) => <details key={q} open={i === 0}><summary>{q}<i /></summary><div className="ab"><p>{a}</p></div></details>)}</div></div>
       <div style={{ paddingBottom: 120 }} />
     </div></section>
   );
