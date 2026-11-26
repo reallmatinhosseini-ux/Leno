@@ -40,7 +40,7 @@ export function Header() {
     on(); window.addEventListener("scroll", on, { passive: true }); return () => window.removeEventListener("scroll", on);
   }, [path]);
   return (
-    <header className={"hdr g" + (solid ? " solid" : "") + (path === "/" && !solid ? " over" : "") + (hide && !Object.values(s.ui).some(Boolean) ? " hide" : "")}>
+    <header className={"hdr g solid" + /* always a plain solid bar, never see-through over the hero */ (hide && !Object.values(s.ui).some(Boolean) ? " hide" : "")}>
       <nav className="l" aria-label="Primary">
         <button className="burger3" type="button" aria-label="Open menu" aria-expanded={s.ui.menu} onClick={() => s.open("menu")}><i /><i /><i /><span>Menu</span></button>
       </nav>

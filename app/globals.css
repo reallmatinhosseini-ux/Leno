@@ -2430,3 +2430,7 @@ html.kc-on,html.kc-on *{cursor:auto}
 .hv-ph .hv-h{justify-content:flex-start}
 .hv-ph .hv-cta{justify-content:flex-start}
 .hv-ph .hv-shade{background:linear-gradient(0deg,rgba(10,9,8,.7) 0%,rgba(10,9,8,.34) 26%,rgba(10,9,8,0) 52%),linear-gradient(90deg,rgba(10,9,8,.3) 0%,rgba(10,9,8,0) 50%)!important}
+/* v29: solid header everywhere, so the hero starts below it */
+.hdr.solid{background:var(--bg)!important;box-shadow:0 1px 0 var(--line)}
+.hv-ph{margin-top:0!important;height:calc(100svh - var(--hdr,72px) - 32px)}
+@media (max-width:900px){.hv-ph{height:calc(100svh - var(--hdr,62px) - 32px)}}
