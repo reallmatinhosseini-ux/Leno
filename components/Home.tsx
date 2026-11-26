@@ -20,33 +20,29 @@ const desk = () => typeof window !== "undefined" && window.innerWidth > 900;
 /* each film ships twice: HEVC (sharper at the same size; Safari, Chrome and Edge with hardware support) and H.264 for everything else */
 const FilmSrc = ({ s }: { s: string }) => <><source src={asset(s.replace(/\.mp4$/, "-hevc.mp4"))} type='video/mp4; codecs="hvc1"' /><source src={asset(s)} type="video/mp4" /></>;
 
-/* ---------- hero: one full-screen campaign photo. The title sits on a soft fade into the page,
-   with the red LENO kiss where the full stop would be. ---------- */
+/* ---------- hero: a wide campaign banner. Ink panel on the left with a big two-line title,
+   the photo on the right melting into it, two small rounded buttons. ---------- */
 export function Hero() {
   const root = useRef<HTMLElement>(null);
-  preload(img("hero-1200"), { as: "image", fetchPriority: "high", imageSrcSet: `${img("hero-1200")} 1200w, ${img("hero-2400")} 2400w`, imageSizes: "100vw" });
+  preload(img("hero-1200"), { as: "image", fetchPriority: "high", imageSrcSet: `${img("hero-1200")} 1200w, ${img("hero-2400")} 2400w`, imageSizes: "(max-width: 900px) 100vw, 65vw" });
   useEffect(() => {
     const ctx = gsap.context(() => {
       if (reduce()) return;
-      const ch = Array.from(root.current!.querySelectorAll(".hv-h .ln")).flatMap((el) => splitChars(el));
-      gsap.fromTo(".hv-img", { scale: 1.12 }, { scale: 1, duration: 2.4, ease: "expo.out" });
-      gsap.from(ch, { yPercent: 115, duration: 1.2, ease: "expo.out", stagger: .022, delay: .35 });
-      gsap.from(".hv-cta > *", { opacity: 0, y: 18, duration: 1, ease: "expo.out", stagger: .08, delay: .8 });
-      /* on scroll the photo drifts and the title lifts away */
-      gsap.to(".hv-img", { yPercent: 6, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } });
-      gsap.to(".hv-txt", { yPercent: -16, opacity: 0, ease: "none", scrollTrigger: { trigger: root.current, start: "35% top", end: "85% top", scrub: true } });
+      gsap.fromTo(".df-img", { scale: 1.1, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.8, ease: "expo.out" });
+      gsap.from(".df-h .df-ln", { yPercent: 105, duration: 1.1, ease: "expo.out", stagger: .1, delay: .2 });
+      gsap.from(".df-k, .df-cta > *", { opacity: 0, y: 14, duration: .9, ease: "expo.out", stagger: .07, delay: .55 });
+      gsap.to(".df-img", { yPercent: 8, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } });
     }, root);
     return () => ctx.revert();
   }, []);
   return (
-    <section className="hv hv-ph" ref={root} aria-label="LENO WEAR, Court 01">
-      <div className="hv-pic"><img className="hv-img" src={img("hero-1200")} srcSet={`${img("hero-1200")} 1200w, ${img("hero-2400")} 2400w`} sizes="100vw" alt="Wearing the Studio Set in White on a reformer in a Dubai studio" fetchPriority="high" /></div>
-      <div className="hv-shade" />
-      <div className="hv-txt"><div className="hv-in">
-        <h1 className="hv-h"><span className="ln">Leave your mark</span></h1>
-        <div className="hv-cta"><Link className="pill white" href="/shop/">Shop now</Link><Link className="pill ghost" href="/shop/dresses/">Dresses</Link><Link className="pill ghost" href="/shop/sets/">Sets</Link></div>
-      </div></div>
-      <a className="hv-scroll" href="#after-hero" aria-label="Scroll to the collection"><span>Scroll</span><i /></a>
+    <section className="df" ref={root} aria-label="LENO WEAR, new season">
+      <div className="df-pic"><img className="df-img" src={img("hero-1200")} srcSet={`${img("hero-1200")} 1200w, ${img("hero-2400")} 2400w`} sizes="(max-width: 900px) 100vw, 65vw" alt="Wearing the Studio Set in White on a reformer in a Dubai studio" fetchPriority="high" /></div>
+      <div className="df-txt">
+        <span className="df-k">New season. Made in Dubai.</span>
+        <h1 className="df-h"><span className="df-row"><span className="df-ln">Leave your</span></span><span className="df-row"><span className="df-ln df-o">mark</span></span></h1>
+        <div className="df-cta"><Link className="df-pill" href="/shop/dresses/">Shop dresses</Link><Link className="df-pill" href="/shop/sets/">Shop sets</Link></div>
+      </div>
     </section>
   );
 }

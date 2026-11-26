@@ -18,7 +18,7 @@ export default function Help() {
   return (
     <section className="g"><div className="w"><div className="ph"><div className="kick mono">Client care</div><h1 className="H" data-rise>How can we help?</h1></div>
       <div className="hl-grid">
-        <div className="hl-card dark"><span className="mono">Track your order</span><h2 className="H hl-h">Where is my order?</h2>
+        <div className="hl-card dark" id="track"><span className="mono">Track your order</span><h2 className="H hl-h">Where is my order?</h2>
           <form className="trk" onSubmit={track}><div className="inp"><input id="t-no" placeholder=" " required value={no} onChange={(e) => setNo(e.target.value)} /><label htmlFor="t-no">Order number, e.g. LW-10001</label></div><div className="inp"><input id="t-em" type="email" placeholder=" " required autoComplete="email" value={em} onChange={(e) => setEm(e.target.value)} /><label htmlFor="t-em">Email used at checkout</label></div><button className="btn light" type="submit" disabled={busy}>{busy ? "Checking…" : "Track"}</button></form>
           {res === "none" && <p style={{ marginTop: 16, color: "rgba(242,238,230,.7)" }}>We could not find {no.toUpperCase() || "that order"} with that email. Check the number in your confirmation email.</p>}
           {off && <p style={{ marginTop: 16, color: "rgba(242,238,230,.8)" }}>This order was {(res as { status: string }).status}.</p>}

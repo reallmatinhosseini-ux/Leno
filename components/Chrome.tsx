@@ -27,7 +27,13 @@ export function Announcement() {
   if (s.ready && s.count) return <div className="ann"><button type="button" className={"nudge" + (left <= 0 ? " ok" : "")} onClick={() => s.open("bag")}>{left > 0 ? `You are ${money(left)} away from free same-day delivery` : "Free same-day delivery unlocked ✓"}</button></div>;
   /* real offers only: the cut-off clock, free delivery, the welcome code, the look bundle, returns */
   const msgs = [cut, `Free same-day delivery over ${money(s.free)}`, ...(s.cfg.welcomeOn && !s.promo ? [`${s.cfg.welcomePct}% off your first order · code LENO10`] : []), ...(s.cfg.bundleOn ? [`Buy a dress and a set together, save ${s.cfg.bundlePct}%`] : []), "Free 14-day returns · Pay on delivery"];
-  return <div className="ann" aria-live="polite">{msgs.map((m, j) => <div key={j} className={j === i % msgs.length ? "on" : ""}>{m}</div>)}</div>;
+  return (
+    <div className="ann ut">
+      <nav className="ut-l" aria-label="Help"><Link href="/help/">Help</Link><Link href="/help/#track">Track my order</Link><Link href="/story/">Our story</Link></nav>
+      <div className="ut-c" aria-live="polite">{msgs.map((m, j) => <div key={j} className={j === i % msgs.length ? "on" : ""}>{m}</div>)}</div>
+      <span className="ut-r">UAE · AED</span>
+    </div>
+  );
 }
 
 /* ---------- header ---------- */
@@ -40,14 +46,18 @@ export function Header() {
     on(); window.addEventListener("scroll", on, { passive: true }); return () => window.removeEventListener("scroll", on);
   }, [path]);
   return (
-    <header className={"hdr g solid" + /* always a plain solid bar, never see-through over the hero */ (hide && !Object.values(s.ui).some(Boolean) ? " hide" : "")}>
+    <header className={"hdr g solid" + (solid && path === "/" ? " shrunk" : "") + /* always a plain solid bar; it slims down once you scroll */ (hide && !Object.values(s.ui).some(Boolean) ? " hide" : "")}>
       <nav className="l" aria-label="Primary">
         <button className="burger3" type="button" aria-label="Open menu" aria-expanded={s.ui.menu} onClick={() => s.open("menu")}><i /><i /><i /><span>Menu</span></button>
+        <Link className={"hx-l" + (path === "/shop/" ? " on" : "")} href="/shop/">Shop all</Link>
+        <Link className={"hx-l" + (path === "/shop/dresses/" ? " on" : "")} href="/shop/dresses/">Dresses</Link>
+        <Link className={"hx-l" + (path === "/shop/sets/" ? " on" : "")} href="/shop/sets/">Sets</Link>
       </nav>
       <Link className="logo" href="/" aria-label="LENO WEAR home"><Logo /></Link>
       <nav className="r" aria-label="Utility">
+        <button className="hx-search" type="button" onClick={() => s.open("search")} aria-label="Search"><Search /><span>Search dresses, sets…</span></button>
         <Link className="nl ic hide-m" href="/wishlist/" aria-label="Wishlist"><Heart />{s.wish.length > 0 && <span className="cnt">{s.wish.length}</span>}</Link>
-        <button className="nl ic" type="button" data-bag-target onClick={() => s.open("bag")} aria-label={`Bag, ${s.count} items`}><Bag /><span>Bag</span>{s.count > 0 && <span className="cnt" key={s.count} style={{ animation: "pop .6s" }}>{s.count}</span>}</button>
+        <button className="nl ic" type="button" data-bag-target onClick={() => s.open("bag")} aria-label={`Bag, ${s.count} items`}><Bag />{s.count > 0 && <span className="cnt" key={s.count} style={{ animation: "pop .6s" }}>{s.count}</span>}</button>
       </nav>
     </header>
   );

@@ -8,9 +8,9 @@ export default function HomePage() {
     <>
       <JsonLd data={itemListLd()} />
       <Hero />
+      <Collection kicker="Just landed" title={<>New <em>releases</em></>} />
       <Edits />
       <ContinueBrowsing />
-      <Collection />
       <InMotion />
       <Looks />
       <Signature />
