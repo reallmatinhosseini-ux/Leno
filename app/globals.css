@@ -2625,3 +2625,48 @@ html.kc-on,html.kc-on *{cursor:auto}
 .ft-reg{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(20,19,18,.15);color:var(--ink);font-weight:600;letter-spacing:.08em}
 .ft-reg i{font-style:normal}
 @media (max-width:900px){.ft-cols{grid-template-columns:1fr 1fr;gap:36px 20px}.ft h4{margin-bottom:18px;letter-spacing:.22em}.ft ul{gap:12px}.ft ul a{font-size:14px}.ft{padding-bottom:110px}.ft-bot{flex-direction:column;align-items:flex-start}}
+
+/* ===== v37: continue browsing matches the product row ===== */
+.cont{padding-block:clamp(48px,6vw,88px) 0!important}
+.cont-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+@media (max-width:900px){.cont-row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin-inline:calc(var(--gut,16px) * -1);padding-inline:var(--gut,16px);scrollbar-width:none}.cont-row>*{flex:0 0 46%;scroll-snap-align:start}}
+
+/* ===== v38: build your bundle ===== */
+.bd{padding-block:clamp(24px,4vw,56px) clamp(56px,7vw,96px)}
+.bd-card{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,4vw,64px);align-items:center;background:var(--night);color:#fff;border-radius:14px;padding:clamp(16px,2.4vw,32px)}
+.bd-vis{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bd-pic{position:relative;display:block;aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:var(--studio)}
+.bd-pic img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.bd-pic:hover img{transform:scale(1.04)}
+.bd-pic span{position:absolute;left:10px;right:10px;bottom:10px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.92);color:var(--ink);font-size:12.5px;line-height:1.35}
+.bd-pic b{display:block;font-size:13.5px}
+.bd-plus{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--red);color:#fff;font-size:24px;font-weight:300;box-shadow:0 0 0 6px var(--night)}
+.bd-txt{display:grid;gap:18px;padding-right:clamp(0px,2vw,24px)}
+.bd-k{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.bd-h{margin:0;font-family:var(--display);font-weight:800;font-stretch:72%;text-transform:uppercase;font-size:clamp(40px,4.4vw,72px);line-height:.9}
+.bd-p{margin:0;color:rgba(255,255,255,.72);font-size:15px;max-width:40ch}
+.bd-step{display:grid;gap:10px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)}
+.bd-step>span{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.bd-step>span i{font-style:normal;font-weight:500;letter-spacing:.02em;text-transform:none;color:rgba(255,255,255,.6);margin-left:6px;font-size:12.5px}
+.bd-sw{display:flex;gap:8px;flex-wrap:wrap}
+.bd-sw button{width:46px;height:56px;padding:0;border-radius:8px;overflow:hidden;border:0;background:#2a2724;cursor:pointer;box-shadow:0 0 0 1px rgba(255,255,255,.12);transition:box-shadow .2s,transform .2s}
+.bd-sw button img{width:100%;height:100%;object-fit:cover}
+.bd-sw button:hover{transform:translateY(-2px)}
+.bd-sw button.on{box-shadow:0 0 0 2px #fff}
+.bd-sz{display:flex;gap:6px}
+.bd-sz button{min-width:44px;height:36px;border-radius:999px;border:0;background:rgba(255,255,255,.08);color:#fff;font-size:12.5px;font-weight:600;cursor:pointer;transition:background .2s,color .2s}
+.bd-sz button:hover:not(:disabled){background:rgba(255,255,255,.18)}
+.bd-sz button.on{background:#fff;color:var(--ink)}
+.bd-sz button:disabled{opacity:.3;text-decoration:line-through;cursor:not-allowed}
+.bd-tot{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)}
+.bd-tot b{font-size:28px;font-weight:700;margin-right:10px}
+.bd-tot s{color:rgba(255,255,255,.5);font-size:15px}
+.bd-tot>span{font-size:12px;font-weight:700;letter-spacing:.06em;padding:6px 10px;border-radius:999px;background:rgba(201,48,44,.18);color:#FF8A86}
+.bd-add{height:56px;border:0;border-radius:999px;background:var(--red);color:#fff;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background .25s,transform .2s}
+.bd-add:hover:not(:disabled){background:var(--red2);transform:translateY(-1px)}
+.bd-add:disabled{background:rgba(255,255,255,.14);cursor:not-allowed}
+.bd-add.ok{background:#2E7D4F}
+@media (max-width:900px){.bd-card{grid-template-columns:1fr;padding:12px 12px 20px}.bd-txt{padding:4px 6px 0}.bd-h{font-size:clamp(36px,11vw,52px)}.bd-sz button{flex:1}}
+/* Padel Dress section: cleaner frame */
+.ed-media{border-radius:10px}
+.ed-txt p{color:var(--ink2);font-size:16px;max-width:36ch}

@@ -66,9 +66,9 @@ export function Categories() {
 
 /* ---------- continue browsing (returning visitors) ---------- */
 export function ContinueBrowsing() {
-  const s = useStore(); const rec = s.recent.map((id) => byId(id)!).filter(Boolean).slice(0, 4);
+  const s = useStore(); const rec = s.recent.map((id) => byId(id)!).filter(Boolean).slice(0, 5);
   if (!s.ready || rec.length < 2) return null;
-  return <section className="g cont"><div className="w"><div className="sh-hd"><h2 className="H">Continue <em>browsing</em></h2><span className="mono mute">Picked up from your last visit</span></div><div className="grid g4">{rec.map((p) => <ProductCard key={p.id} product={p} />)}</div></div></section>;
+  return <section className="g cont"><div className="w"><div className="sx-hd"><div><span className="sx-k">Picked up from your last visit</span><h2 className="sx-h">Continue <em>browsing</em></h2></div></div><div className="cont-row">{rec.map((p) => <ProductCard key={p.id} product={p} />)}</div></div></section>;
 }
 
 /* ---------- shop grid with tabs ---------- */
@@ -243,6 +243,44 @@ export function Edition() {
       <Link className="ed-media" href="/products/tulle-dress-ivory/" data-reveal data-cursor="View"><img src={img("tulle-ivory-lips")} alt="The Padel Dress in Ivory, with the LENO WEAR kiss" loading="lazy" /></Link>
       <div className="ed-txt"><span className="ed-stock mono"><i />{stockTxt}</span><h2 className="H" data-rise>The Padel <em>Dress</em></h2><p>Ivory tulle over a racer-back bodice.</p>
         <div><Link className="btn red" href="/products/tulle-dress-ivory/">{left === 1 ? "Shop the last one" : left === 0 ? "Join the waitlist" : "Shop the Padel Dress"}</Link></div></div>
+    </div></div></section>
+  );
+}
+
+/* ---------- build your bundle: any dress + any set, the real bundle discount from the admin settings ---------- */
+export function Bundle() {
+  const s = useStore();
+  const vis = s.catalog.filter((p) => !p.hidden);
+  const dresses = vis.filter((p) => STYLES[p.style].cat === "dresses"), sets = vis.filter((p) => STYLES[p.style].cat === "sets");
+  const first = (p?: { stock: Partial<Record<Size, number>> }) => (p && SIZES.find((z) => (p.stock[z] || 0) > 0)) || "M";
+  const [di, setDi] = useState(0), [si, setSi] = useState(0);
+  const d = dresses[di] || dresses[0], st = sets[si] || sets[0];
+  const [dz, setDz] = useState<Size>("M"), [sz, setSz] = useState<Size>("M");
+  const [ok, setOk] = useState(false);
+  const refs = useRef<(HTMLImageElement | null)[]>([]);
+  useEffect(() => { setDz(first(d)); }, [d?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { setSz(first(st)); }, [st?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  if (!s.ready || !s.cfg.bundleOn || !d || !st) return null;
+  const full = d.price + st.price, now = Math.round(full * (1 - s.cfg.bundlePct / 100));
+  const can = (d.stock[dz] || 0) > 0 && (st.stock[sz] || 0) > 0;
+  const add = () => { if (!can) return; s.add(d.id, dz, refs.current[0], { silent: true }); setTimeout(() => s.add(st.id, sz, refs.current[1]), 280); setOk(true); setTimeout(() => setOk(false), 2400); };
+  const Pick = ({ list, cur, set }: { list: typeof vis; cur: number; set: (n: number) => void }) => <div className="bd-sw">{list.map((p, i) => <button key={p.id} type="button" className={i === cur ? "on" : ""} onClick={() => set(i)} aria-label={`${STYLES[p.style].name} in ${p.color}`} aria-pressed={i === cur}><img src={img(p.images[0])} alt="" /></button>)}</div>;
+  const Sizes = ({ p, cur, set }: { p: typeof d; cur: Size; set: (z: Size) => void }) => <div className="bd-sz">{SIZES.map((z) => <button key={z} type="button" disabled={!p.stock[z]} className={z === cur ? "on" : ""} onClick={() => set(z)} aria-pressed={z === cur}>{z}</button>)}</div>;
+  return (
+    <section className="g bd" aria-label="Build your bundle"><div className="w"><div className="bd-card">
+      <div className="bd-vis">
+        {[d, st].map((p, i) => <Link key={p.id} href={`/products/${p.slug}/`} className="bd-pic" data-cursor="View"><img ref={(el) => { refs.current[i] = el; }} src={img(p.images[0])} alt={`${STYLES[p.style].name} in ${p.color}`} loading="lazy" /><span><b>{STYLES[p.style].name}</b>{p.color} · {money(p.price)}</span></Link>)}
+        <span className="bd-plus" aria-hidden="true">+</span>
+      </div>
+      <div className="bd-txt">
+        <span className="bd-k">The court bundle · save {s.cfg.bundlePct}%</span>
+        <h2 className="bd-h">Dress + set</h2>
+        <p className="bd-p">Pick any dress and any set. The {s.cfg.bundlePct}% comes off automatically in your bag.</p>
+        <div className="bd-step"><span>1 · Dress <i>{STYLES[d.style].name}, {d.color}</i></span><Pick list={dresses} cur={di} set={setDi} /><Sizes p={d} cur={dz} set={setDz} /></div>
+        <div className="bd-step"><span>2 · Set <i>{STYLES[st.style].name}, {st.color}</i></span><Pick list={sets} cur={si} set={setSi} /><Sizes p={st} cur={sz} set={setSz} /></div>
+        <div className="bd-tot"><div><b>{money(now)}</b><s>{money(full)}</s></div><span>You save {money(full - now)}</span></div>
+        <button type="button" className={"bd-add" + (ok ? " ok" : "")} disabled={!can} onClick={add}>{ok ? "Bundle added ✓" : can ? `Add the bundle · ${money(now)}` : "Pick sizes in stock"}</button>
+      </div>
     </div></div></section>
   );
 }

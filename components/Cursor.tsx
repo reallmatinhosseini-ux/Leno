@@ -24,7 +24,8 @@ export default function Cursor() {
       lx(e.clientX + 18); ly(e.clientY + 20);
       const t = e.target as Element;
       const v = t.closest?.("[data-cursor]");
-      show(v ? v.getAttribute("data-cursor") || "View" : null);
+      /* no label over buttons (quick view, quick add, sizes), so it never covers them */
+      show(v && !t.closest?.("button, select, input, .quick") ? v.getAttribute("data-cursor") || "View" : null);
       const m = t.closest?.(".btn.red, .hx-cta .btn") as HTMLElement | null;
       if (m !== mag) { if (mag) gsap.to(mag, { x: 0, y: 0, duration: .7, ease: "elastic.out(1,.4)" }); mag = m; }
       if (mag) { const r = mag.getBoundingClientRect(); gsap.to(mag, { x: (e.clientX - r.left - r.width / 2) * .12, y: (e.clientY - r.top - r.height / 2) * .2, duration: .4, ease: "power3" }); }

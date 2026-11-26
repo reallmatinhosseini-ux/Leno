@@ -44,6 +44,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
   const [admin, setAdmin] = useState<Admin>({});
   const [bag, setBag] = useState<Line[]>([]);
+  /* latest bag, so several adds in a row (a bundle) build on each other instead of overwriting */
+  const bagRef = useRef<Line[]>(bag); bagRef.current = bag;
   const [wish, setWish] = useState<string[]>([]);
   const [recent, setRecent] = useState<string[]>([]);
   const [promo, setPromo] = useState<string | null>(null);
@@ -93,10 +95,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const add = useCallback((id: string, size: Size, from?: HTMLElement | null, opts?: { silent?: boolean }) => {
     const p = live(id); if (!p) return false;
-    const have = bag.find((l) => l.id === id && l.size === size)?.qty || 0;
+    const cur = bagRef.current;
+    const have = cur.find((l) => l.id === id && l.size === size)?.qty || 0;
     if ((p.stock[size] || 0) <= have) { toast(p.stock[size] ? "No more stock in this size" : "This size is sold out"); return false; }
-    const next = have ? bag.map((l) => (l.id === id && l.size === size ? { ...l, qty: l.qty + 1 } : l)) : [...bag, { id, size, qty: 1 }];
-    setBag(next); write("leno-bag", next);
+    const next = have ? cur.map((l) => (l.id === id && l.size === size ? { ...l, qty: l.qty + 1 } : l)) : [...cur, { id, size, qty: 1 }];
+    bagRef.current = next; setBag(next); write("leno-bag", next);
     const target = Array.from(document.querySelectorAll<HTMLElement>("[data-bag-target]")).find((el) => el.offsetParent !== null);
     const done = () => { if (target) { bump(target); stampKiss(target, { size: 30, rotate: -14 }); } if (!opts?.silent) setTimeout(() => setUi((u) => ({ ...u, bag: true, quick: null })), 380); };
     if (from && target && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
