@@ -68,7 +68,17 @@ export function Categories() {
 export function ContinueBrowsing() {
   const s = useStore(); const rec = s.recent.map((id) => byId(id)!).filter(Boolean).slice(0, 5);
   if (!s.ready || rec.length < 2) return null;
-  return <section className="g cont"><div className="w"><div className="sx-hd"><div><span className="sx-k">Picked up from your last visit</span><h2 className="sx-h">Continue <em>browsing</em></h2></div></div><div className="cont-row">{rec.map((p) => <ProductCard key={p.id} product={p} />)}</div></div></section>;
+  return (
+    <section className="g cont" aria-label="Continue browsing"><div className="w">
+      <div className="cb-hd"><h2>Continue browsing</h2><span>Picked up from your last visit</span></div>
+      <div className="cb-row">{rec.map((p) => { const L = s.live(p.id); const price = L?.price ?? STYLES[p.style].price; return (
+        <Link key={p.id} className="cb" href={`/products/${p.slug}/`}>
+          <img src={img(p.images[0])} alt="" loading="lazy" />
+          <span className="cb-t"><b>{STYLES[p.style].name}</b><small>{p.color}</small><em>{money(price)}</em></span>
+          <i aria-hidden="true">→</i>
+        </Link>); })}</div>
+    </div></section>
+  );
 }
 
 /* ---------- shop grid with tabs ---------- */
