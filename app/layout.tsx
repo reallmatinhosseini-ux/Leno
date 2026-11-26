@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
   return (
     <html lang="en" className={`${archivo.variable} ${sans.variable} ${serif.variable}`}>
-      <body style={{ ["--kiss-url" as string]: `url(${asset("/p/kiss-tag.png")})` }}>
+      <body>
         <JsonLd data={org} />
         {children}
       </body>

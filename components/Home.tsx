@@ -17,53 +17,38 @@ if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger, Flip);
 const reduce = () => typeof window !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const desk = () => typeof window !== "undefined" && window.innerWidth > 900;
 
-/* ---------- hero: full-screen campaign film. Desktop shows both films side by side;
-   phones show one at a time, handing over when each ends. ---------- */
 /* each film ships twice: HEVC (sharper at the same size; Safari, Chrome and Edge with hardware support) and H.264 for everything else */
 const FilmSrc = ({ s }: { s: string }) => <><source src={asset(s.replace(/\.mp4$/, "-hevc.mp4"))} type='video/mp4; codecs="hvc1"' /><source src={asset(s)} type="video/mp4" /></>;
-const FILMS = [{ src: "/v/hero-city.mp4", poster: "/v/hero-city.webp", label: "The Knot Dress in Navy, Dubai", pid: "knot-navy", tag: "City" }, { src: "/v/hero-studio.mp4", poster: "/v/hero-studio.webp", label: "The Studio Set in White", pid: "set-white", tag: "Studio" }];
+
+/* ---------- hero: one full-screen campaign photo. The title sits on a soft fade into the page,
+   with the red LENO kiss where the full stop would be. ---------- */
 export function Hero() {
   const root = useRef<HTMLElement>(null);
-  const vids = useRef<(HTMLVideoElement | null)[]>([]);
-  const [one, setOne] = useState(0); /* which film plays on phones */
-  const [paused, setPaused] = useState(false);
-  FILMS.forEach((f) => preload(asset(f.poster), { as: "image", fetchPriority: "high" })); /* first paint: posters before anything else */
+  preload(img("hero-1200"), { as: "image", fetchPriority: "high", imageSrcSet: `${img("hero-1200")} 1200w, ${img("hero-2400")} 2400w`, imageSizes: "100vw" });
   useEffect(() => {
     const ctx = gsap.context(() => {
       if (reduce()) return;
       const ch = Array.from(root.current!.querySelectorAll(".hv-h .ln")).flatMap((el) => splitChars(el));
-      gsap.fromTo(".hv-film", { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "expo.inOut", stagger: .12 });
-      gsap.fromTo(".hv-film video", { scale: 1.25 }, { scale: 1, duration: 2.2, ease: "expo.out", stagger: .12 });
-      gsap.from(ch, { yPercent: 115, duration: 1.3, ease: "expo.out", stagger: .025, delay: .6 });
-      gsap.from(".hv-k, .hv-p, .hv-cta > *, .hv-chip", { opacity: 0, y: 20, duration: 1, ease: "expo.out", stagger: .08, delay: 1 });
-      /* on scroll the films drift and the copy lifts away */
-      gsap.to(".hv-film video", { yPercent: 8, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } });
-      gsap.to(".hv-txt", { yPercent: -18, opacity: 0, ease: "none", scrollTrigger: { trigger: root.current, start: "30% top", end: "85% top", scrub: true } });
+      gsap.fromTo(".hv-img", { scale: 1.12 }, { scale: 1, duration: 2.4, ease: "expo.out" });
+      gsap.from(ch, { yPercent: 115, duration: 1.2, ease: "expo.out", stagger: .022, delay: .35 });
+      /* the kiss stamps onto the line after the words land */
+      gsap.from(".hv-mark", { scale: 0, rotate: -25, opacity: 0, duration: .9, ease: "back.out(2.2)", delay: .95 });
+      gsap.from(".hv-k, .hv-cta > *", { opacity: 0, y: 18, duration: 1, ease: "expo.out", stagger: .08, delay: .8 });
+      /* on scroll the photo drifts and the title lifts away */
+      gsap.to(".hv-img", { yPercent: 6, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } });
+      gsap.to(".hv-txt", { yPercent: -16, opacity: 0, ease: "none", scrollTrigger: { trigger: root.current, start: "35% top", end: "85% top", scrub: true } });
     }, root);
     return () => ctx.revert();
   }, []);
-  /* playback is driven here, not by autoplay: films play only while the hero is on screen (saves battery and data); phones play one at a time, alternating */
-  useEffect(() => {
-    const io = new IntersectionObserver(([e]) => vids.current.forEach((v, i) => { if (!v) return; const show = desk() || i === one; if (e.isIntersecting && show && !paused) v.play().catch(() => {}); else v.pause(); }), { threshold: .05 });
-    if (root.current) io.observe(root.current);
-    return () => io.disconnect();
-  }, [one, paused]);
-  const toggle = () => { const p = !paused; setPaused(p); vids.current.forEach((v, i) => { if (!v) return; if (p) v.pause(); else if (desk() || i === one) v.play().catch(() => {}); }); };
-  const ended = (i: number) => { if (!desk() && i !== one) return; /* a hidden film finishing must not interrupt the one on screen */ if (desk()) { const v = vids.current[i]; if (v) { v.currentTime = 0; v.play().catch(() => {}); } return; } const n = (i + 1) % FILMS.length; const v = vids.current[n]; if (v) { v.currentTime = 0; v.play().catch(() => {}); } setOne(n); };
   return (
-    <section className="hv" ref={root} aria-label="LENO WEAR campaign film">
-      <div className="hv-films">{FILMS.map((f, i) => <div className={"hv-film" + (i === one ? " on" : "")} key={f.src}>
-        <video ref={(el) => { vids.current[i] = el; }} poster={asset(f.poster)} muted playsInline loop={false} preload={i ? "metadata" : "auto"} onEnded={() => ended(i)} aria-label={f.label}><FilmSrc s={f.src} /></video>
-      </div>)}</div>
+    <section className="hv hv-ph" ref={root} aria-label="LENO WEAR, Court 01">
+      <div className="hv-pic"><img className="hv-img" src={img("hero-1200")} srcSet={`${img("hero-1200")} 1200w, ${img("hero-2400")} 2400w`} sizes="100vw" alt="Wearing the Studio Set in White on a reformer in a Dubai studio" fetchPriority="high" /></div>
       <div className="hv-shade" />
-      <button type="button" className="hv-pp" onClick={toggle} aria-label={paused ? "Play the films" : "Pause the films"} aria-pressed={paused}>{paused ? <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="currentColor" /></svg> : <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5h2v9H3zM7 1.5h2v9H7z" fill="currentColor" /></svg>}</button>
       <div className="hv-txt"><div className="hv-in">
         <span className="hv-k mono">Court 01 · Made in Dubai</span>
-        <h1 className="hv-h"><span className="ln">Leave your</span> <span className="ln">mark<i>.</i></span></h1>
-        <p className="hv-p">Court-wear from Dubai, made in small runs. Every piece is chosen to move on court and to look right long after the last game.</p>
-        <div className="hv-cta"><Link className="pill white" href="/shop/">Shop the collection</Link><Link className="pill ghost" href="/story/">Our story</Link></div>
+        <h1 className="hv-h"><span className="ln">Leave your mark</span><img className="hv-mark" src={asset("/p/leno-logo.png")} alt="" width={307} height={320} /></h1>
+        <div className="hv-cta"><Link className="pill dark" href="/shop/">Shop the collection</Link><Link className="pill line" href="/story/">Our story</Link></div>
       </div></div>
-      <div className="hv-wear">{FILMS.map((f, i) => { const p = byId(f.pid)!; return <Link key={f.pid} href={`/products/${p.slug}/`} className={"hv-chip" + (i === one ? " on" : "")}><img src={img(p.images[0])} alt="" /><span><small>{f.tag} · wearing</small>{STYLES[p.style].name} · {p.color}</span></Link>; })}</div>
     </section>
   );
 }

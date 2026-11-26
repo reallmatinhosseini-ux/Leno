@@ -2355,3 +2355,35 @@ html.kc-on,html.kc-on *{cursor:auto}
 .lc{width:auto!important;height:auto!important;margin:0!important;border-radius:999px;padding:8px 13px 8px 14px;display:flex;align-items:center;gap:8px;background:rgba(20,19,18,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;opacity:0;transform:scale(.8);transform-origin:0 0;box-shadow:0 6px 18px rgba(0,0,0,.18)}
 .lc span{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;line-height:1}
 .lc i{font-style:normal;font-size:12px;line-height:1;opacity:.8}
+
+/* ===== v26: photo hero on a light fade, red LENO kiss in the title; header icons grouped on the right ===== */
+.hdr{grid-template-columns:1fr auto}
+.hdr .logo,.hdr .logo-gap{justify-self:start}
+@media (max-width:900px){.hdr .logo{justify-content:flex-start}}
+.hdr nav.r{gap:22px;align-items:center}
+.hdr nav.r .burger3{margin-left:6px}
+.hdr.over{background:transparent!important;color:var(--ink)}
+.hdr.over .nl,.hdr.over .burger3{color:var(--ink)!important;text-shadow:none!important}
+.hdr.over .cnt{background:var(--ink);color:#fff}
+.hv-ph{background:var(--bg);color:var(--ink)}
+.hv-pic{position:absolute;inset:0;overflow:hidden}
+.hv-img{position:absolute;inset:-4% 0 0 0;width:100%;height:108%;object-fit:cover;object-position:50% 42%;display:block}
+.hv-ph .hv-shade{background:linear-gradient(0deg,var(--bg) 0%,rgba(246,243,238,.8) 15%,rgba(246,243,238,0) 42%)!important}
+.hv-ph .hv-k{color:var(--ink2)}
+.hv-ph .hv-h{color:var(--ink);font-size:clamp(40px,5.2vw,88px)!important;white-space:nowrap;display:flex;align-items:flex-end;gap:.14em;line-height:.9}
+.hv-ph .hv-h .ln{display:inline-block}
+.hv-mark{height:1.08em;width:auto;flex:none;transform-origin:50% 80%;margin-bottom:-.02em}
+.pill.dark{background:var(--ink);color:#fff}
+.pill.dark:hover{background:var(--red);color:#fff;transform:translateY(-2px)}
+.pill.line{color:var(--ink);box-shadow:inset 0 0 0 1.5px rgba(20,19,18,.45)}
+.pill.line:hover{background:var(--ink);color:#fff}
+@media (max-width:900px){
+  .hv-img{object-position:50% 38%}
+  .hv-ph .hv-h{font-size:9.4vw!important}
+  .hv-cta .pill.dark{flex:1.4}.hv-cta .pill.line{flex:1}
+}
+:root{--kiss-url:url(/p/kiss-tag.png)}
+/* title legibility: a soft light wash on the left, where the title and buttons sit */
+.hv-ph .hv-shade{background:linear-gradient(0deg,var(--bg) 0%,rgba(246,243,238,.82) 16%,rgba(246,243,238,0) 44%),linear-gradient(90deg,rgba(246,243,238,.72) 0%,rgba(246,243,238,.35) 30%,rgba(246,243,238,0) 52%)!important}
+.hv-ph .hv-k{color:var(--ink);opacity:.75}
+@media (max-width:900px){.hv-ph .hv-shade{background:linear-gradient(0deg,var(--bg) 0%,rgba(246,243,238,.9) 20%,rgba(246,243,238,0) 48%)!important}}

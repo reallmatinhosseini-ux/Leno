@@ -149,14 +149,8 @@ export default function Welcome() {
   };
   const copy = async () => { try { await navigator.clipboard.writeText("LENO10"); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { /* clipboard blocked */ } };
 
-  const reopen = () => { opened.current = false; setDone(!!s.promo); setStage("closed"); setShow(true); };
-  const hidden = !s.ready || !s.cfg.welcomeOn || /^\/(checkout|order|admin)/.test(path);
-  const tab = !hidden && !show && (
-    <button type="button" className={"we-tab" + (s.promo ? " got" : "")} onClick={reopen} aria-label={s.promo ? "Your 10% welcome code" : `Get ${s.cfg.welcomePct}% off`}>
-      <img src={KISS()} alt="" /><span className="full">{s.promo ? "Your code: LENO10" : `Get ${s.cfg.welcomePct}% off`}</span><span className="short">{s.promo ? "LENO10" : `${s.cfg.welcomePct}%`}</span>
-    </button>
-  );
-  if (!show) return tab || null;
+  /* no side tab: the offer appears once per visit, at a calm moment */
+  if (!show) return null;
   return (
     <div className="we" ref={root} role="dialog" aria-modal="true" aria-labelledby="we-t">
       <div className="we-bg" onClick={() => close()} />
