@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "lenis";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -38,20 +37,11 @@ export function splitChars(el: Element): HTMLElement[] {
 export default function Motion() {
   const path = usePathname();
 
-  useEffect(() => {
-    const fine = matchMedia("(pointer: fine)").matches, reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!fine || reduce) return;
-    const lenis = new Lenis({ lerp: .09, smoothWheel: true });
-    lenis.on("scroll", ScrollTrigger.update);
-    const tick = (t: number) => lenis.raf(t * 1000);
-    gsap.ticker.add(tick); gsap.ticker.lagSmoothing(0);
-    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
-    return () => { gsap.ticker.remove(tick); lenis.destroy(); };
-  }, []);
+  /* native scrolling everywhere: no smooth-scroll layer, so the page moves as fast as the visitor scrolls */
 
   useEffect(() => {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const lenis = (window as unknown as { __lenis?: Lenis }).__lenis;
+    const lenis = (window as unknown as { __lenis?: { scrollTo: (y: number, o: object) => void } }).__lenis;
     if (lenis) lenis.scrollTo(0, { immediate: true, force: true }); else window.scrollTo(0, 0);
     document.documentElement.classList.toggle("focus-co", path.startsWith("/checkout"));
     if (reduce) return;

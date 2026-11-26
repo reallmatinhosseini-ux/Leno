@@ -2564,3 +2564,29 @@ html.kc-on,html.kc-on *{cursor:auto}
 .df-pp:hover{background:rgba(255,255,255,.28)}
 .df-pp svg{width:11px;height:11px}
 @media (max-width:900px){.df-v{object-position:50% 30%}.df-pp{top:14px;bottom:auto;right:14px}}
+
+/* ===== v34: calmer sizes: smaller logo, hero and lower-section photos ===== */
+.hdr .logo .lg,.hdr.solid .logo .lg{height:38px!important}
+.hdr.shrunk .logo .lg{height:32px!important}
+.df{height:clamp(460px,64vh,600px)}
+/* Dresses / Sets tiles: a banner pair, not two full screens */
+.edits{gap:12px;padding:12px clamp(16px,2.4vw,32px) 0}
+.edit{height:clamp(340px,34vw,500px)!important;border-radius:6px}
+.edit-t .H{font-size:clamp(36px,3.6vw,60px)!important}
+/* product row: five across, like a proper shop grid */
+@media (min-width:901px){.sx-track{grid-auto-columns:calc((100% - 4 * 14px) / 5)!important}}
+/* worn in Dubai: shorter cards */
+.reel-c{aspect-ratio:4/5!important;border-radius:8px}
+/* edition: photo capped */
+.ed-in{padding-block:clamp(56px,7vw,90px)!important;grid-template-columns:1fr 1fr!important}
+.ed-media{max-height:520px;overflow:hidden;border-radius:6px}
+.ed-media img{width:100%;height:100%;max-height:520px;object-fit:cover}
+@media (max-width:900px){
+  .hdr .logo .lg,.hdr.solid .logo .lg{height:32px!important}.hdr.shrunk .logo .lg{height:28px!important}
+  .edits{grid-template-columns:1fr 1fr;gap:8px;padding:8px 12px 0}
+  .edit{height:62vw!important;min-height:240px}
+  .edit-t .H{font-size:clamp(26px,8vw,40px)!important}
+  .reel-c{flex:0 0 62%!important}
+  .ed-in{grid-template-columns:1fr!important}
+  .ed-media,.ed-media img{max-height:420px}
+}

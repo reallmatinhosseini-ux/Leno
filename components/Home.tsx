@@ -22,24 +22,8 @@ const FilmSrc = ({ s }: { s: string }) => <><source src={asset(s.replace(/\.mp4$
 
 /* ---------- hero: a wide campaign banner. Ink panel on the left with a big two-line title,
    the photo on the right melting into it, two small rounded buttons. ---------- */
-/* the two court films play one after the other on the right of the banner; the studio photo shows while they load */
-const COURT = [
-  { s: "/v/court-duo.mp4", p: "/v/court-duo.webp", l: "The Knot Dress in Sand and Navy on a Downtown Dubai court" },
-  { s: "/v/court-pleat.mp4", p: "/v/court-pleat.webp", l: "The Pleat Dress in White on a Downtown Dubai court" },
-];
 export function Hero() {
   const root = useRef<HTMLElement>(null);
-  const vids = useRef<(HTMLVideoElement | null)[]>([]);
-  const [cur, setCur] = useState(0), [live, setLive] = useState(false), [paused, setPaused] = useState(false);
-  /* films play only while the banner is on screen, and never for people who ask for reduced motion */
-  useEffect(() => {
-    if (reduce()) return;
-    const io = new IntersectionObserver(([e]) => { const v = vids.current[cur]; if (!v) return; if (e.isIntersecting && !paused) v.play().catch(() => {}); else v.pause(); }, { threshold: .1 });
-    if (root.current) io.observe(root.current);
-    return () => io.disconnect();
-  }, [cur, paused]);
-  const next = (i: number) => { if (i !== cur) return; const n = (i + 1) % COURT.length, v = vids.current[n]; if (v) { v.currentTime = 0; v.play().catch(() => {}); } setCur(n); };
-  const toggle = () => { const p = !paused; setPaused(p); const v = vids.current[cur]; if (v) { if (p) v.pause(); else v.play().catch(() => {}); } };
   preload(img("hero-1200"), { as: "image", fetchPriority: "high", imageSrcSet: `${img("hero-1200")} 1200w, ${img("hero-2400")} 2400w`, imageSizes: "(max-width: 900px) 100vw, 65vw" });
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -53,10 +37,7 @@ export function Hero() {
   }, []);
   return (
     <section className="df" ref={root} aria-label="LENO WEAR, new season">
-      <div className="df-pic"><img className="df-img" src={img("hero-1200")} srcSet={`${img("hero-1200")} 1200w, ${img("hero-2400")} 2400w`} sizes="(max-width: 900px) 100vw, 65vw" alt="Wearing the Studio Set in White on a reformer in a Dubai studio" fetchPriority="high" />
-        {COURT.map((f, i) => <video key={f.s} ref={(el) => { vids.current[i] = el; }} className={"df-v" + (live && i === cur ? " on" : "")} muted playsInline preload={i ? "metadata" : "auto"} onPlaying={() => setLive(true)} onEnded={() => next(i)} aria-label={f.l}><FilmSrc s={f.s} /></video>)}
-      </div>
-      <button type="button" className="df-pp" onClick={toggle} aria-label={paused ? "Play the films" : "Pause the films"} aria-pressed={paused}>{paused ? <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="currentColor" /></svg> : <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5h2v9H3zM7 1.5h2v9H7z" fill="currentColor" /></svg>}</button>
+      <div className="df-pic"><img className="df-img" src={img("hero-1200")} srcSet={`${img("hero-1200")} 1200w, ${img("hero-2400")} 2400w`} sizes="(max-width: 900px) 100vw, 65vw" alt="Wearing the Studio Set in White on a reformer in a Dubai studio" fetchPriority="high" /></div>
       <div className="df-txt">
         <span className="df-k">New season. Made in Dubai.</span>
         <h1 className="df-h"><span className="df-row"><span className="df-ln">Leave your</span></span><span className="df-row"><span className="df-ln df-o">mark</span></span></h1>
