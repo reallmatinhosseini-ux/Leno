@@ -31,9 +31,7 @@ export function Hero() {
       const ch = Array.from(root.current!.querySelectorAll(".hv-h .ln")).flatMap((el) => splitChars(el));
       gsap.fromTo(".hv-img", { scale: 1.12 }, { scale: 1, duration: 2.4, ease: "expo.out" });
       gsap.from(ch, { yPercent: 115, duration: 1.2, ease: "expo.out", stagger: .022, delay: .35 });
-      /* the kiss stamps onto the line after the words land */
-      gsap.from(".hv-mark", { scale: 0, rotate: -25, opacity: 0, duration: .9, ease: "back.out(2.2)", delay: .95 });
-      gsap.from(".hv-k, .hv-cta > *", { opacity: 0, y: 18, duration: 1, ease: "expo.out", stagger: .08, delay: .8 });
+      gsap.from(".hv-cta > *", { opacity: 0, y: 18, duration: 1, ease: "expo.out", stagger: .08, delay: .8 });
       /* on scroll the photo drifts and the title lifts away */
       gsap.to(".hv-img", { yPercent: 6, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } });
       gsap.to(".hv-txt", { yPercent: -16, opacity: 0, ease: "none", scrollTrigger: { trigger: root.current, start: "35% top", end: "85% top", scrub: true } });
@@ -45,8 +43,7 @@ export function Hero() {
       <div className="hv-pic"><img className="hv-img" src={img("hero-1200")} srcSet={`${img("hero-1200")} 1200w, ${img("hero-2400")} 2400w`} sizes="100vw" alt="Wearing the Studio Set in White on a reformer in a Dubai studio" fetchPriority="high" /></div>
       <div className="hv-shade" />
       <div className="hv-txt"><div className="hv-in">
-        <span className="hv-k mono">Court 01 · Made in Dubai</span>
-        <h1 className="hv-h"><span className="ln">Leave your mark</span><img className="hv-mark" src={asset("/p/leno-logo.png")} alt="" width={307} height={320} /></h1>
+        <h1 className="hv-h"><span className="ln">Leave your mark</span></h1>
         <div className="hv-cta"><Link className="pill white" href="/shop/">Shop now</Link><Link className="pill ghost" href="/shop/dresses/">Dresses</Link><Link className="pill ghost" href="/shop/sets/">Sets</Link></div>
       </div></div>
       <a className="hv-scroll" href="#after-hero" aria-label="Scroll to the collection"><span>Scroll</span><i /></a>

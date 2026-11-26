@@ -2425,3 +2425,8 @@ html.kc-on,html.kc-on *{cursor:auto}
   .hv-scroll{display:none}
 }
 @media (prefers-reduced-motion:reduce){.hv-scroll i{animation:none}}
+/* v28: hero text on the left */
+.hv-ph .hv-in{justify-items:start;text-align:left;padding-inline:var(--gut,32px) var(--gutr,32px)}
+.hv-ph .hv-h{justify-content:flex-start}
+.hv-ph .hv-cta{justify-content:flex-start}
+.hv-ph .hv-shade{background:linear-gradient(0deg,rgba(10,9,8,.7) 0%,rgba(10,9,8,.34) 26%,rgba(10,9,8,0) 52%),linear-gradient(90deg,rgba(10,9,8,.3) 0%,rgba(10,9,8,0) 50%)!important}
