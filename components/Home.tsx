@@ -265,9 +265,9 @@ export function Edits() {
 /* ---------- worn in Dubai: every campaign film, each tagged with the piece she wears ---------- */
 const REEL: { v: string; im: string; pid: string; cap: string }[] = [
   { v: "/v/court-duo.mp4", im: "/v/court-duo.webp", pid: "knot-sand", cap: "Downtown court" },
-  { v: "/v/court-pleat.mp4", im: "/v/court-pleat.webp", pid: "pleat-white", cap: "Morning rally" },
   { v: "/v/hero-city.mp4", im: "/v/hero-city.webp", pid: "knot-navy", cap: "Dubai Design District" },
   { v: "/v/hero-studio.mp4", im: "/v/hero-studio.webp", pid: "set-white", cap: "Studio session" },
+  { v: "/v/court-pleat.mp4", im: "/v/court-pleat.webp", pid: "pleat-white", cap: "Morning rally" },
 ];
 export function InMotion() {
   const root = useRef<HTMLElement>(null);
