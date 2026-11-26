@@ -47,8 +47,9 @@ export function Hero() {
       <div className="hv-txt"><div className="hv-in">
         <span className="hv-k mono">Court 01 · Made in Dubai</span>
         <h1 className="hv-h"><span className="ln">Leave your mark</span><img className="hv-mark" src={asset("/p/leno-logo.png")} alt="" width={307} height={320} /></h1>
-        <div className="hv-cta"><Link className="pill dark" href="/shop/">Shop the collection</Link><Link className="pill line" href="/story/">Our story</Link></div>
+        <div className="hv-cta"><Link className="pill white" href="/shop/">Shop now</Link><Link className="pill ghost" href="/shop/dresses/">Dresses</Link><Link className="pill ghost" href="/shop/sets/">Sets</Link></div>
       </div></div>
+      <a className="hv-scroll" href="#after-hero" aria-label="Scroll to the collection"><span>Scroll</span><i /></a>
     </section>
   );
 }
@@ -259,7 +260,7 @@ export function Edits() {
   const n = (cat: string) => vis.filter((p) => STYLES[p.style].cat === cat).length;
   const tiles: [string, string, string, string, number][] = [["/shop/dresses/", "Dresses", "Pleat, Knot and Tulle", "h-knot-navy", n("dresses")], ["/shop/sets/", "Sets", "The Studio Set", "h-set-white", n("sets")]];
   return (
-    <section className="edits" aria-label="Shop by edit">{tiles.map(([h, t, sub, im, c]) => (
+    <section className="edits" id="after-hero" aria-label="Shop by edit">{tiles.map(([h, t, sub, im, c]) => (
       <Link className="edit" href={h} key={h} data-cursor="Shop">
         <div className="edit-m" data-reveal><img src={img(im)} alt={`${t}: ${sub}`} loading="lazy" /></div>
         <div className="edit-t"><span className="mono">{String(c).padStart(2, "0")} pieces</span><h2 className="H">{t}</h2><span className="edit-sub">{sub}</span><span className="edit-go">Shop {t.toLowerCase()} <i>→</i></span></div>

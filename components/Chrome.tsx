@@ -41,12 +41,13 @@ export function Header() {
   }, [path]);
   return (
     <header className={"hdr g" + (solid ? " solid" : "") + (path === "/" && !solid ? " over" : "") + (hide && !Object.values(s.ui).some(Boolean) ? " hide" : "")}>
-      {/* the home hero carries the LENO kiss in its title, so the header logo only appears on other pages */}
-      {path === "/" ? <span className="logo-gap" /> : <Link className="logo" href="/" aria-label="LENO WEAR home"><Logo /></Link>}
+      <nav className="l" aria-label="Primary">
+        <button className="burger3" type="button" aria-label="Open menu" aria-expanded={s.ui.menu} onClick={() => s.open("menu")}><i /><i /><i /><span>Menu</span></button>
+      </nav>
+      <Link className="logo" href="/" aria-label="LENO WEAR home"><Logo /></Link>
       <nav className="r" aria-label="Utility">
         <Link className="nl ic hide-m" href="/wishlist/" aria-label="Wishlist"><Heart />{s.wish.length > 0 && <span className="cnt">{s.wish.length}</span>}</Link>
         <button className="nl ic" type="button" data-bag-target onClick={() => s.open("bag")} aria-label={`Bag, ${s.count} items`}><Bag /><span>Bag</span>{s.count > 0 && <span className="cnt" key={s.count} style={{ animation: "pop .6s" }}>{s.count}</span>}</button>
-        <button className="burger3" type="button" aria-label="Open menu" aria-expanded={s.ui.menu} onClick={() => s.open("menu")}><i /><i /><i /><span>Menu</span></button>
       </nav>
     </header>
   );
