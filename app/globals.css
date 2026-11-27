@@ -2688,3 +2688,18 @@ html.kc-on,html.kc-on *{cursor:auto}
 .cb:hover i{background:var(--ink);color:#fff}
 @media (max-width:1100px){.cb-row{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:900px){.cb-row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:calc(var(--gut,16px) * -1);padding-inline:var(--gut,16px);scrollbar-width:none}.cb{flex:0 0 78%;scroll-snap-align:start}.cb-hd span{display:none}}
+
+/* v40 — mobile: sign-up stacks, nothing overflows sideways */
+html,body{overflow-x:clip}
+@media (max-width:900px){
+  .su-in{grid-template-columns:1fr!important;gap:22px;padding-block:56px}
+  .su .sx-h{font-size:clamp(38px,11vw,56px)!important;line-height:.95}
+  .su .sx-h br{display:none}
+  .su p{font-size:15px;max-width:none}
+  .su-f{width:100%}
+  .su-f input{padding:0 14px;font-size:16px}
+  .su-f .btn{height:46px;padding-inline:18px}
+}
+@media (max-width:380px){.su-f{flex-direction:column;border-radius:18px;padding:8px}.su-f input{height:46px}.su-f .btn{width:100%}}
+.bd-tot{align-items:center;flex-wrap:wrap}.bd-tot>div{display:flex;align-items:baseline;white-space:nowrap}.bd-tot s,.bd-tot>span{white-space:nowrap}
+@media (max-width:420px){.bd-tot b{font-size:24px;margin-right:8px}.bd-tot s{font-size:13px}.bd-tot>span{font-size:11px;padding:5px 9px}}
